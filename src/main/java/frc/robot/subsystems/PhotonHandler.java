@@ -44,13 +44,12 @@ import org.photonvision.targeting.PhotonTrackedTarget;
      public PhotonHandler(EstimateConsumer estConsumer, String kCameraName, Transform3d kRobotToCam ) {
          this.estConsumer = estConsumer;
 
-        AprilTagFieldLayout kTagLayout = AprilTagFieldLayout.loadField(AprilTagFields.k2025ReefscapeWelded); 
+        AprilTagFieldLayout kTagLayout = AprilTagFieldLayout.loadField(AprilTagFields.k2026RebuiltWelded); 
 
          camera = new PhotonCamera(kCameraName);
  
          photonEstimator =
-                 new PhotonPoseEstimator(kTagLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, kRobotToCam);
-         photonEstimator.setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY);
+                 new PhotonPoseEstimator(kTagLayout, kRobotToCam);
  
          // ----- Simulation
          if (Robot.isSimulation()) {
