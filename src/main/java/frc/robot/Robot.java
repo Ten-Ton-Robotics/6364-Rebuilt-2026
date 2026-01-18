@@ -15,16 +15,16 @@ import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.PhotonHandler;
 
 public class Robot extends TimedRobot {
-  private CommandSwerveDrivetrain drivetrain = RobotContainer.drivetrain;
+  private CommandSwerveDrivetrain drivetrain = RobotContainer.m_drivetrain;
   private Command m_autonomousCommand;
-  private PhotonHandler vision; 
+  public static PhotonHandler m_vision;
 
   private final RobotContainer m_robotContainer;
 
   public Robot() {
     m_robotContainer = new RobotContainer();
     Transform3d cameraToRobot = new Transform3d(new Translation3d(0.5, 0.0, 0.5), new Rotation3d(0,0,0));
-    vision = new PhotonHandler(drivetrain::addVisionMeasurement, "Practice_Cam" , cameraToRobot);
+    m_vision = new PhotonHandler(drivetrain::addVisionMeasurement, "Practice_Cam" , cameraToRobot);
     
   }
 
@@ -35,7 +35,7 @@ public class Robot extends TimedRobot {
   @Override
   public void robotPeriodic() {
     CommandScheduler.getInstance().run(); 
-    vision.periodic(); 
+    m_vision.periodic(); 
   }
 
   @Override

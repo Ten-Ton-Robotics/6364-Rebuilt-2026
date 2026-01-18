@@ -22,6 +22,7 @@ import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.simulation.PhotonCameraSim;
 import org.photonvision.simulation.SimCameraProperties;
 import org.photonvision.simulation.VisionSystemSim;
+import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
  
  public class PhotonHandler {
@@ -35,6 +36,8 @@ import org.photonvision.targeting.PhotonTrackedTarget;
      // Simulation
      private PhotonCameraSim cameraSim;
      private VisionSystemSim visionSim;
+
+     public List<PhotonPipelineResult> latestResults;
  
      /**
       * @param estConsumer Lamba that will accept a pose estimate and pass it to your desired {@link
@@ -75,7 +78,10 @@ import org.photonvision.targeting.PhotonTrackedTarget;
  
      public void periodic() {
          Optional<EstimatedRobotPose> visionEst = Optional.empty();
-         for (var change : camera.getAllUnreadResults()) {
+        
+         latestResults = camera.getAllUnreadResults();
+
+         for (var change : latestResults) {
              visionEst = photonEstimator.update(change);
              updateEstimationStdDevs(visionEst, change.getTargets());
  
