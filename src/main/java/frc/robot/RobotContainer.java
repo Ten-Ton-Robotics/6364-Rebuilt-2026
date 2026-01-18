@@ -98,7 +98,9 @@ public class RobotContainer {
 
     public double getYawToTargetInRadian() {
         List<PhotonPipelineResult> latestResults = Robot.m_vision.latestResults;
-        PhotonPipelineResult latestResult = latestResults.get(0);
+        try {
+             PhotonPipelineResult latestResult = latestResults.get(0);
+        
         boolean doesLatestResultHaveTargets = latestResult.hasTargets();
 
         if (doesLatestResultHaveTargets) {
@@ -111,6 +113,9 @@ public class RobotContainer {
         } else {
             return 0;
         }
+        } catch (Exception e) {
+         return 0;        
+        }
     }
 
     public SwerveRequest.FieldCentricFacingAngle getCurrentSwerveRequest() {
@@ -118,7 +123,10 @@ public class RobotContainer {
             return m_drive
                 .withVelocityX(-m_controller.getLeftY() * MaxSpeed) // Drive forward with negative Y (forward)
                 .withVelocityY(-m_controller.getLeftX() * MaxSpeed) // Drive left with negative X (left)
-                .withTargetDirection(new Rotation2d(getYawToTargetInRadian()));
+                .withTargetDirection(new Rotation2d(getYawToTargetInRadian()))
+                .withHeadingPID(2, 1, 1)
+                ;
+                 
         } else {
             return m_drive
                 .withVelocityX(-m_controller.getLeftY() * MaxSpeed) // Drive forward with negative Y (forward)
