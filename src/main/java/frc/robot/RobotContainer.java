@@ -98,23 +98,24 @@ public class RobotContainer {
 
     public double getYawToTargetInRadian() {
         List<PhotonPipelineResult> latestResults = Robot.m_vision.latestResults;
-        try {
-             PhotonPipelineResult latestResult = latestResults.get(0);
         
-        boolean doesLatestResultHaveTargets = latestResult.hasTargets();
+        try {
+            PhotonPipelineResult latestResult = latestResults.get(0);
+        
+            boolean doesLatestResultHaveTargets = latestResult.hasTargets();
 
-        if (doesLatestResultHaveTargets) {
-            PhotonTrackedTarget bestTarget = latestResult.getBestTarget();
+            if (doesLatestResultHaveTargets) {
+                PhotonTrackedTarget bestTarget = latestResult.getBestTarget();
 
-            double yaw = bestTarget.getYaw();
-            double yawInRadian = Units.degreesToRadians(yaw);
+                double yaw = bestTarget.getYaw();
+                double yawInRadian = Units.degreesToRadians(yaw);
 
-            return yawInRadian;
-        } else {
-            return 0;
-        }
+                return yawInRadian;
+            } else {
+                return 0;
+            }   
         } catch (Exception e) {
-         return 0;        
+            return 0;
         }
     }
 
@@ -124,9 +125,7 @@ public class RobotContainer {
                 .withVelocityX(-m_controller.getLeftY() * MaxSpeed) // Drive forward with negative Y (forward)
                 .withVelocityY(-m_controller.getLeftX() * MaxSpeed) // Drive left with negative X (left)
                 .withTargetDirection(new Rotation2d(getYawToTargetInRadian()))
-                .withHeadingPID(2, 1, 1)
-                ;
-                 
+                .withHeadingPID(2, 1, 1);
         } else {
             return m_drive
                 .withVelocityX(-m_controller.getLeftY() * MaxSpeed) // Drive forward with negative Y (forward)
