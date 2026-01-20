@@ -6,6 +6,7 @@ package frc.robot;
 
 import static edu.wpi.first.units.Units.*;
 
+import java.io.Console;
 import java.util.List;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
@@ -101,10 +102,8 @@ public class RobotContainer {
         
         try {
             PhotonPipelineResult latestResult = latestResults.get(0);
-        
-            boolean doesLatestResultHaveTargets = latestResult.hasTargets();
 
-            if (doesLatestResultHaveTargets) {
+            if (latestResult.hasTargets()) {
                 PhotonTrackedTarget bestTarget = latestResult.getBestTarget();
 
                 double yaw = bestTarget.getYaw();
