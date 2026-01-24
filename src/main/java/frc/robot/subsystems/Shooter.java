@@ -14,9 +14,9 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 public class Shooter extends SubsystemBase {
     // Constants
-    public static final CANBus kMotorBus = new CANBus("CANCAN");
+    public static final CANBus kMotorBus = CANBus.roboRIO();
     public static final int kMotorID = 21;
-    public static final int kSpeed = 50;
+    public static final int kSpeed = 80;
 
     // Controller gains
     public static final double kKP = 0.35;
