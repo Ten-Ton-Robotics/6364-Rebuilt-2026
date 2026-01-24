@@ -1,6 +1,8 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix6.CANBus;
+import com.ctre.phoenix6.configs.Slot0Configs;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.StaticBrake;
 import com.ctre.phoenix6.controls.VelocityTorqueCurrentFOC;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -16,17 +18,35 @@ public class Shooter extends SubsystemBase {
     public static final int kMotorID = 21;
     public static final int kSpeed = 50;
 
+    // Controller gains
+    public static final double kKP = 0.35;
+    public static final double kKI = 0;
+    public static final double kKD = 0;
+
     // Motor
     private final TalonFX m_motor = new TalonFX(kMotorID, kMotorBus);
 
     // Motor Output
     private final VelocityTorqueCurrentFOC m_output = new VelocityTorqueCurrentFOC(kSpeed);
 
+    public Shooter() {
+        super();
+
+        // configure motor
+        final TalonFXConfiguration config = new TalonFXConfiguration();
+
+        // set controller gains
+        config.Slot0 = new Slot0Configs().withKP(kKP).withKI(kKI).withKD(kKD);
+
+        // apply configuration
+        m_motor.getConfigurator().apply(config);
+    }
+
     // Commands
     public Command shoot() {
         return this.runOnce(() -> {
             this.setMotorSpeed(kSpeed);
-            new WaitCommand(0.5);
+            new WaitCommand(5);
             this.stopMotor();
         });
     }
