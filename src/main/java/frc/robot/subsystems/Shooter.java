@@ -15,7 +15,7 @@ public class Shooter extends SubsystemBase {
     // Constants
     public static final CANBus kMotorBus = new CANBus("CANCAN");
     public static final int kMotorID = 21;
-    public static final int kSpeed = -10;
+    public static final int kSpeed = -5;
 
     // Motor
     private final TalonFX m_motor = new TalonFX(kMotorID, kMotorBus);
