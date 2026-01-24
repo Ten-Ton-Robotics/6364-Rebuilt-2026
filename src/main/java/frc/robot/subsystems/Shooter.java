@@ -1,6 +1,8 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix6.CANBus;
+import com.ctre.phoenix6.configs.Slot0Configs;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.StaticBrake;
 import com.ctre.phoenix6.controls.VelocityTorqueCurrentFOC;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -12,7 +14,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Shooter extends SubsystemBase {
     // Constants
-    public static final CANBus kMotorBus = CANBus.roboRIO();
+    public static final CANBus kMotorBus = new CANBus("CANCAN");
     public static final int kMotorID = 21;
     public static final int kSpeed = -65;
 
@@ -24,6 +26,22 @@ public class Shooter extends SubsystemBase {
 
     // Toggle Boolean
     public boolean isOn = false;
+
+    public Shooter() {
+        // Configure PID/feedforward gains for velocity control
+        var slot0Configs = new Slot0Configs()
+            .withKP(5.0)    // Proportional gain - adjust as needed
+            .withKI(0.0)    // Integral gain
+            .withKD(0.0)    // Derivative gain
+            .withKS(0.0)    // Static friction feedforward
+            .withKV(0.12);  // Velocity feedforward - tune this value
+
+        var motorConfig = new TalonFXConfiguration()
+            .withSlot0(slot0Configs);
+
+        m_motor.getConfigurator().apply(motorConfig);
+        m_motor.setNeutralMode(NeutralModeValue.Coast);
+    }
 
     // Commands
     public Command toggleShooting() {
