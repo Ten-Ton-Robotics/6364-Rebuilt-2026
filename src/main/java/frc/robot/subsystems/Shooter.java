@@ -45,7 +45,7 @@ public class Shooter extends SubsystemBase {
 
     // Commands
     public Command toggleShooting() {
-        return new InstantCommand(() -> {
+        return this.runOnce(() -> {
             isOn = !isOn;
 
             if (isOn) {
