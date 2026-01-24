@@ -31,12 +31,6 @@ public class Shooter extends SubsystemBase {
         });
     }
 
-    // public Command setSpeed(double speed) {
-    //     return this.runOnce(() -> {
-    //         this.setMotorSpeed(speed);
-    //     });
-    // }
-
     // Fuctions
     private void setMotorSpeed(double speed) {
         m_output.Velocity = speed;
