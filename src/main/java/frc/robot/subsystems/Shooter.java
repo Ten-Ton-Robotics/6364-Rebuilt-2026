@@ -29,7 +29,7 @@ public class Shooter extends SubsystemBase {
     public Shooter() {
         // Configure PID/feedforward gains for velocity control
         var slot0Configs = new Slot0Configs()
-            .withKP(5.0)    // Proportional gain - adjust as needed
+            .withKP(0.1)    // Proportional gain - adjust as needed
             .withKI(0.0)    // Integral gain
             .withKD(0.0)    // Derivative gain
             .withKS(0.0)    // Static friction feedforward
