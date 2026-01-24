@@ -74,7 +74,7 @@ public class RobotContainer {
         m_controller.b().whileTrue(m_drivetrain.applyRequest(() ->
             point.withModuleDirection(new Rotation2d(-m_controller.getLeftY(), -m_controller.getLeftX()))
         ));
-        m_controller.x().onTrue(m_Shooter.shoot());
+        m_controller.x().onTrue(m_Shooter.toggleShooting());
 
         // Run SysId routines when holding back/start and X/Y.
         // Note that each routine should be run exactly once in a single log.
