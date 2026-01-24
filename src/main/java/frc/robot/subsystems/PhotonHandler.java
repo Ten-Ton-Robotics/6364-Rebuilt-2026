@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
  
 import java.lang.String;
+import java.lang.StackWalker.Option;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
@@ -11,6 +12,8 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import frc.robot.Robot;
 
@@ -22,6 +25,7 @@ import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.simulation.PhotonCameraSim;
 import org.photonvision.simulation.SimCameraProperties;
 import org.photonvision.simulation.VisionSystemSim;
+import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
  
  public class PhotonHandler {
@@ -35,6 +39,8 @@ import org.photonvision.targeting.PhotonTrackedTarget;
      // Simulation
      private PhotonCameraSim cameraSim;
      private VisionSystemSim visionSim;
+
+     public List<PhotonPipelineResult> latestResults;
  
      /**
       * @param estConsumer Lamba that will accept a pose estimate and pass it to your desired {@link
@@ -75,29 +81,32 @@ import org.photonvision.targeting.PhotonTrackedTarget;
  
      public void periodic() {
          Optional<EstimatedRobotPose> visionEst = Optional.empty();
-         for (var change : camera.getAllUnreadResults()) {
-             visionEst = photonEstimator.update(change);
-             updateEstimationStdDevs(visionEst, change.getTargets());
+        
+         latestResults = camera.getAllUnreadResults();
+
+        //  for (var change : latestResults) {
+        //      visionEst = photonEstimator.update(change);
+        //      updateEstimationStdDevs(visionEst, change.getTargets());
  
-             if (Robot.isSimulation()) {
-                 visionEst.ifPresentOrElse(
-                         est ->
-                                 getSimDebugField()
-                                         .getObject("VisionEstimation")
-                                         .setPose(est.estimatedPose.toPose2d()),
-                         () -> {
-                             getSimDebugField().getObject("VisionEstimation").setPoses();
-                         });
-             }
+        //      if (Robot.isSimulation()) {
+        //          visionEst.ifPresentOrElse(
+        //                  est ->
+        //                          getSimDebugField()
+        //                                  .getObject("VisionEstimation")
+        //                                  .setPose(est.estimatedPose.toPose2d()),
+        //                  () -> {
+        //                      getSimDebugField().getObject("VisionEstimation").setPoses();
+        //                  });
+        //      }
  
-             visionEst.ifPresent(
-                     est -> {
-                         // Change our trust in the measurement based on the tags we can see
-                         var estStdDevs = getEstimationStdDevs();
+        //      visionEst.ifPresent(
+        //              est -> {
+        //                  // Change our trust in the measurement based on the tags we can see
+        //                  var estStdDevs = getEstimationStdDevs();
  
-                         estConsumer.accept(est.estimatedPose.toPose2d(), est.timestampSeconds, estStdDevs);
-                     });
-         }
+        //                  estConsumer.accept(est.estimatedPose.toPose2d(), est.timestampSeconds, estStdDevs);
+        //              });
+        //  }
      }
  
      /**
@@ -179,5 +188,22 @@ import org.photonvision.targeting.PhotonTrackedTarget;
      @FunctionalInterface
      public static interface EstimateConsumer {
          public void accept(Pose2d pose, double timestamp, Matrix<N3, N1> estimationStdDevs);
+     }
+
+     public boolean doesTagMatchAlliance(int id) {
+        final List<Integer> blueIds = List.of(17, 28, 18, 27, 19, 20, 26, 25, 21, 24, 22, 23, 29, 30, 31, 32);
+        final List<Integer> redIDs = List.of(7, 6, 8, 5, 9, 10, 4, 3, 11, 2, 12, 1, 16, 15, 14, 13);
+
+        Optional<Alliance> alliance = DriverStation.getAlliance();
+
+        if (alliance.isPresent()) {
+            if (alliance.get() == DriverStation.Alliance.Blue) {
+                return blueIds.contains(id);
+            } else {
+                return redIDs.contains(id);
+            }
+        } else {
+            return false;
+        }
      }
  }
