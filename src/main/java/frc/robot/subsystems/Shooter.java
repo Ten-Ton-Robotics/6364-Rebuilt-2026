@@ -4,7 +4,7 @@ import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.StaticBrake;
-import com.ctre.phoenix6.controls.VelocityTorqueCurrentFOC;
+import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
@@ -15,13 +15,13 @@ public class Shooter extends SubsystemBase {
     // Constants
     public static final CANBus kMotorBus = new CANBus("CANCAN");
     public static final int kMotorID = 21;
-    public static final int kSpeed = -65;
+    public static final int kSpeed = -10;
 
     // Motor
     private final TalonFX m_motor = new TalonFX(kMotorID, kMotorBus);
 
     // Motor Output
-    private final VelocityTorqueCurrentFOC m_output = new VelocityTorqueCurrentFOC(kSpeed);
+    private final VelocityVoltage m_output = new VelocityVoltage(kSpeed);
 
     // Toggle Boolean
     public boolean isOn = false;
