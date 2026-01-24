@@ -33,7 +33,7 @@ public class Shooter extends SubsystemBase {
             .withKI(0.0)    // Integral gain
             .withKD(0.0)    // Derivative gain
             .withKS(0.0)    // Static friction feedforward
-            .withKV(0.12);  // Velocity feedforward - tune this value
+            .withKV(0.0);  // Velocity feedforward - tune this value
 
         var motorConfig = new TalonFXConfiguration()
             .withSlot0(slot0Configs);
