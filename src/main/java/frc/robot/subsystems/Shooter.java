@@ -15,7 +15,7 @@ public class Shooter extends SubsystemBase {
     // Constants
     public static final CANBus kMotorBus = new CANBus("CANCAN");
     public static final int kMotorID = 21;
-    public static final int kSpeed = -5;
+    public static final double kSpeed = -10;
 
     // Motor
     private final TalonFX m_motor = new TalonFX(kMotorID, kMotorBus);
@@ -29,7 +29,7 @@ public class Shooter extends SubsystemBase {
     public Shooter() {
         // Configure PID/feedforward gains for velocity control
         var slot0Configs = new Slot0Configs()
-            .withKP(5.0)    // Proportional gain - adjust as needed
+            .withKP(0.1)    // Proportional gain - adjust as needed
             .withKI(0.0)    // Integral gain
             .withKD(0.0)    // Derivative gain
             .withKS(0.0)    // Static friction feedforward
@@ -68,5 +68,12 @@ public class Shooter extends SubsystemBase {
 
     private void stopMotor() {
         m_motor.setControl(new StaticBrake());
+    }
+
+    public Command changeSpeed(double difference) {
+        return this.runOnce(() -> {
+            double speed = m_output.Velocity + difference; 
+            setMotorSpeed(speed);   
+        });   
     }
 }
