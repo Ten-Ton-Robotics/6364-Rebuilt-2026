@@ -12,12 +12,12 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import java.lang.*;
 
-public class Shooter extends SubsystemBase {
+public class Feed extends SubsystemBase {
     // Constants
     private static final CANBus kMotorBus = new CANBus("CANCAN");
-    private static final int kMotorID = 13;
-    private static double TargetSpeed = -45;
-    private static double MaxSpeed = -65;
+    private static final int kMotorID = 21;
+    private static double TargetSpeed = -15;
+    private static double MaxSpeed = -30;
 
     // Motor
     private final TalonFX m_motor = new TalonFX(kMotorID, kMotorBus);
@@ -28,14 +28,14 @@ public class Shooter extends SubsystemBase {
     // Toggle Boolean
     public boolean isOn = false;
 
-    public Shooter() {
+    public Feed() {
         // Configure PID/feedforward gains for velocity control
         var slot0Configs = new Slot0Configs()
             .withKP(0.1)    // Proportional gain - adjust as needed
             .withKI(0.0)    // Integral gain
             .withKD(0.0)    // Derivative gain
             .withKS(0.0)    // Static friction feedforward
-            .withKV(0.0);  // Velocity feedforward - tune this value
+            .withKV(0.12);  // Velocity feedforward - tune this value
 
         var motorConfig = new TalonFXConfiguration()
             .withSlot0(slot0Configs);
@@ -45,15 +45,15 @@ public class Shooter extends SubsystemBase {
     }
 
     // Commands
-    public Command toggleShooting() {
-        return this.runOnce(() -> {
-            isOn = !isOn;
+    public Command intake() {
+        return this.run(() -> {
+            setMotorSpeed(TargetSpeed);
+        });
+    }
 
-            if (isOn) {
-                setMotorSpeed(TargetSpeed);
-            } else {
-                stopMotor();
-            }
+    public Command stop(){
+        return this.runOnce(() -> {
+            stopMotor();
         });
     }
 
@@ -67,7 +67,6 @@ public class Shooter extends SubsystemBase {
             }
 
         TargetSpeed = new_speed;
-        System.out.println("New Speed is: " + new_speed);
 
         m_output.Velocity = TargetSpeed; 
         m_motor.setControl(m_output);
@@ -82,10 +81,7 @@ public class Shooter extends SubsystemBase {
         m_motor.setControl(new StaticBrake());
     }
 
-    public Command changeSpeed(double difference) {
-        return this.runOnce(() -> {
-            double new_speed = TargetSpeed + difference; 
-            setMotorSpeed(new_speed);   
-        });   
-    }
+    
+
 }
+
