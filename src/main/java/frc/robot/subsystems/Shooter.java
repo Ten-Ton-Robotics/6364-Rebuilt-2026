@@ -10,18 +10,20 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import java.lang.*;
 
 public class Shooter extends SubsystemBase {
     // Constants
-    public static final CANBus kMotorBus = new CANBus("CANCAN");
-    public static final int kMotorID = 21;
-    public static final double kSpeed = -10;
+    private static final CANBus kMotorBus = new CANBus("CANCAN");
+    private static final int kMotorID = 21;
+    private static double TargetSpeed = -10;
+    private static double MaxSpeed = -60;
 
     // Motor
     private final TalonFX m_motor = new TalonFX(kMotorID, kMotorBus);
 
     // Motor Output
-    private final VelocityVoltage m_output = new VelocityVoltage(kSpeed);
+    private final VelocityVoltage m_output = new VelocityVoltage(TargetSpeed);
 
     // Toggle Boolean
     public boolean isOn = false;
@@ -48,7 +50,7 @@ public class Shooter extends SubsystemBase {
             isOn = !isOn;
 
             if (isOn) {
-                setMotorSpeed(kSpeed);
+                setMotorSpeed(TargetSpeed);
             } else {
                 stopMotor();
             }
@@ -56,12 +58,22 @@ public class Shooter extends SubsystemBase {
     }
 
     // Fuctions
-    private void setMotorSpeed(double speed) {
-        m_output.Velocity = speed;
+    private void setMotorSpeed(double new_speed) {
+        if(new_speed > 0.0){ //DO NOT GO BACKWARDS
+            new_speed = 0.0;
+        }
+        if(new_speed < MaxSpeed){
+                new_speed = -60;
+            }
+
+        TargetSpeed = new_speed;
+        System.out.println("New Speed is: " + new_speed);
+
+        m_output.Velocity = TargetSpeed; 
         m_motor.setControl(m_output);
         m_motor.setNeutralMode(NeutralModeValue.Brake);
-
-        if (speed == 0.0) {
+        
+        if (TargetSpeed == 0.0) {
             stopMotor();
         }
     }
@@ -72,8 +84,8 @@ public class Shooter extends SubsystemBase {
 
     public Command changeSpeed(double difference) {
         return this.runOnce(() -> {
-            double speed = m_output.Velocity + difference; 
-            setMotorSpeed(speed);   
+            double new_speed = TargetSpeed + difference; 
+            setMotorSpeed(new_speed);   
         });   
     }
 }
