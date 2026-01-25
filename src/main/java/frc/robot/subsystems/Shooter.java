@@ -10,18 +10,23 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import java.lang.*;
+import java.io.PrintStream;
 
+
+//shooting 
 public class Shooter extends SubsystemBase {
     // Constants
     private static final CANBus kMotorBus = new CANBus("CANCAN");
     private static final int kMotorID = 21;
+    private static final int feedKmotorID = 67; /*change later */
     private static double TargetSpeed = -10;
     private static double MaxSpeed = -60;
 
+
+
     // Motor
     private final TalonFX m_motor = new TalonFX(kMotorID, kMotorBus);
-
+    private final TalonFx n_motor = new TalonFX(feedKmotorID, KMotorBus);
     // Motor Output
     private final VelocityVoltage m_output = new VelocityVoltage(TargetSpeed);
 
@@ -42,6 +47,9 @@ public class Shooter extends SubsystemBase {
 
         m_motor.getConfigurator().apply(motorConfig);
         m_motor.setNeutralMode(NeutralModeValue.Coast);
+
+        n_motor.getConfigurator().apply(motorConfig); 
+        n_motor.setNeutralMode(NeutralModeValue.Coast); 
     }
 
     // Commands
