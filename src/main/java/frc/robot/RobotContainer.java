@@ -69,11 +69,10 @@ public class RobotContainer {
             m_drivetrain.applyRequest(() -> idle).ignoringDisable(true)
         );
 
-        // Controllers
+        //April Tag Snapping
         m_controller.a().onTrue(toggleAprilTagSnapCommand());
-        m_controller.b().whileTrue(m_drivetrain.applyRequest(() ->
-            point.withModuleDirection(new Rotation2d(-m_controller.getLeftY(), -m_controller.getLeftX()))
-        ));
+        
+        //Shooter and Feed Control 
         m_controller.x().onTrue(m_Shooter.toggleShooting());
         m_controller.povDown().onTrue(m_Shooter.changeSpeed(5));
         m_controller.povUp().onTrue(m_Shooter.changeSpeed(-5));
@@ -92,10 +91,6 @@ public class RobotContainer {
 
         m_drivetrain.registerTelemetry(logger::telemeterize);
 
-        m_controller.y().whileTrue(
-            m_drivetrain.applyRequest(() -> m_drive.withTargetDirection(new Rotation2d(Math.PI/2))
-            .withHeadingPID(0.1, 0.1, 0.1))
-            );
     }  
 
     public Command getAutonomousCommand() {
