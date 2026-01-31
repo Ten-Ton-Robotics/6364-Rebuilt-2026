@@ -36,11 +36,9 @@ public class Shooter extends SubsystemBase {
             .withKS(0.0)    // Static friction feedforward
             .withKV(0.12);  // Velocity feedforward - tune this value
 
-        var motorConfig = new TalonFXConfiguration()
-            .withSlot0(slot0Configs);
+        var motorConfig = new TalonFXConfiguration().withSlot0(slot0Configs);
         m_motor.getConfigurator().apply(motorConfig);
         m_motor.setNeutralMode(NeutralModeValue.Coast);
-
     }
 
     // Commands
@@ -85,7 +83,7 @@ public class Shooter extends SubsystemBase {
     public Command changeSpeed(double difference) {
         return this.runOnce(() -> {
             double new_speed = TargetSpeed + difference; 
-            setMotorSpeed(new_speed);   
-        });   
+            setMotorSpeed(new_speed);
+        });
     }
 }
