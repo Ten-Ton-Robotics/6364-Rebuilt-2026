@@ -102,8 +102,8 @@ public class Telemetry {
         driveTimestamp.set(state.Timestamp);
         driveOdometryFrequency.set(1.0 / state.OdometryPeriod);
 
-        SmartDashboard.putData(m_field);
         m_field.setRobotPose(state.Pose);
+        SmartDashboard.putData(m_field);
 
         /* Also write to log file */
         m_poseArray[0] = state.Pose.getX();
