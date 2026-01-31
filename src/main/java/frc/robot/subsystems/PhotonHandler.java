@@ -11,9 +11,8 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Robot;
 
 import java.util.List;
@@ -46,7 +45,7 @@ import org.photonvision.targeting.PhotonTrackedTarget;
       *     edu.wpi.first.math.estimator.SwerveDrivePoseEstimator}
       */
      public PhotonHandler(EstimateConsumer estConsumer, String kCameraName, Transform3d kRobotToCam ) {
-         this.estConsumer = estConsumer;
+        this.estConsumer = estConsumer;
 
         AprilTagFieldLayout kTagLayout = AprilTagFieldLayout.loadField(AprilTagFields.k2026RebuiltWelded); 
 
@@ -83,29 +82,29 @@ import org.photonvision.targeting.PhotonTrackedTarget;
         
          latestResults = camera.getAllUnreadResults();
 
-        //  for (var change : latestResults) {
-        //      visionEst = photonEstimator.update(change);
-        //      updateEstimationStdDevs(visionEst, change.getTargets());
+         for (var change : latestResults) {
+             visionEst = photonEstimator.estimateLowestAmbiguityPose(change);
+             updateEstimationStdDevs(visionEst, change.getTargets());
  
-        //      if (Robot.isSimulation()) {
-        //          visionEst.ifPresentOrElse(
-        //                  est ->
-        //                          getSimDebugField()
-        //                                  .getObject("VisionEstimation")
-        //                                  .setPose(est.estimatedPose.toPose2d()),
-        //                  () -> {
-        //                      getSimDebugField().getObject("VisionEstimation").setPoses();
-        //                  });
-        //      }
+             if (Robot.isSimulation()) {
+                 visionEst.ifPresentOrElse(
+                         est ->
+                                 getSimDebugField()
+                                         .getObject("VisionEstimation")
+                                         .setPose(est.estimatedPose.toPose2d()),
+                         () -> {
+                             getSimDebugField().getObject("VisionEstimation").setPoses();
+                         });
+             }
  
-        //      visionEst.ifPresent(
-        //              est -> {
-        //                  // Change our trust in the measurement based on the tags we can see
-        //                  var estStdDevs = getEstimationStdDevs();
+             visionEst.ifPresent(
+                     est -> {
+                         // Change our trust in the measurement based on the tags we can see
+                         var estStdDevs = getEstimationStdDevs();
  
-        //                  estConsumer.accept(est.estimatedPose.toPose2d(), est.timestampSeconds, estStdDevs);
-        //              });
-        //  }
+                         estConsumer.accept(est.estimatedPose.toPose2d(), est.timestampSeconds, estStdDevs);
+                     });
+         }
      }
  
      /**
@@ -187,22 +186,5 @@ import org.photonvision.targeting.PhotonTrackedTarget;
      @FunctionalInterface
      public static interface EstimateConsumer {
          public void accept(Pose2d pose, double timestamp, Matrix<N3, N1> estimationStdDevs);
-     }
-
-     public boolean doesTagMatchAlliance(int id) {
-        final List<Integer> blueIds = List.of(17, 28, 18, 27, 19, 20, 26, 25, 21, 24, 22, 23, 29, 30, 31, 32);
-        final List<Integer> redIDs = List.of(7, 6, 8, 5, 9, 10, 4, 3, 11, 2, 12, 1, 16, 15, 14, 13);
-
-        Optional<Alliance> alliance = DriverStation.getAlliance();
-
-        if (alliance.isPresent()) {
-            if (alliance.get() == DriverStation.Alliance.Blue) {
-                return blueIds.contains(id);
-            } else {
-                return redIDs.contains(id);
-            }
-        } else {
-            return false;
-        }
      }
  }
