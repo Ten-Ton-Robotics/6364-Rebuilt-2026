@@ -102,6 +102,7 @@ public class Telemetry {
         driveTimestamp.set(state.Timestamp);
         driveOdometryFrequency.set(1.0 / state.OdometryPeriod);
 
+        // Set the robot pose BEFORE putting the data!!!
         m_field.setRobotPose(state.Pose);
         SmartDashboard.putData(m_field);
 
