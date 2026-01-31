@@ -27,6 +27,7 @@ import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 
 import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.AprilTagHandler;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Feed;
@@ -37,6 +38,7 @@ public class RobotContainer {
     // Subsystems
     public static final Shooter m_Shooter = new Shooter();
     public static final Feed m_Feed = new Feed();
+    public static final AprilTagHandler m_AprilTagHandler = new AprilTagHandler();
 
     private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond)  * 0.3; // kSpeedAt12Volts desired top speed
     private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
@@ -75,7 +77,7 @@ public class RobotContainer {
 
         //April Tag Snapping
         m_controller.a().onTrue(toggleAprilTagSnapCommand());
-        m_controller.povRight().onTrue(testWhetherTheBestTargetAprilTagIsFromAlliance());
+        m_controller.povRight().onTrue(m_AprilTagHandler.testWhetherTheBestTargetAprilTagIsFromAlliance());
         
         //Shooter and Feed Control 
         m_controller.x().onTrue(m_Shooter.toggleShooting());
@@ -106,58 +108,12 @@ public class RobotContainer {
         return new InstantCommand(() -> { isSnapToggleOn = !isSnapToggleOn; });
     }
 
-    public double getYawToTargetInRadian() {
-        List<PhotonPipelineResult> latestResults = Robot.m_vision.latestResults;
-        
-        try {
-            PhotonPipelineResult latestResult = latestResults.get(0);
-
-            if (latestResult.hasTargets()) {
-                PhotonTrackedTarget bestTarget = latestResult.getBestTarget();
-
-                if (doesTagMatchAlliance(bestTarget.getFiducialId())) {
-                    double yaw = bestTarget.getYaw();
-                    double yawInRadian = Units.degreesToRadians(yaw);
-
-                    return yawInRadian;
-                } else {
-                    return 0;
-                }
-            } else {
-                return 0;
-            }   
-        } catch (Exception e) {
-            return 0;
-        }
-    }
-
-    // This Command is purely for testing whether the AprilTag filtering works
-    private Command testWhetherTheBestTargetAprilTagIsFromAlliance() {
-        return new InstantCommand(() -> {
-            List<PhotonPipelineResult> latestResults = Robot.m_vision.latestResults;
-
-            try {
-                PhotonPipelineResult latestResult = latestResults.get(0);
-
-                if (latestResult.hasTargets()) {
-                    PhotonTrackedTarget bestTarget = latestResult.getBestTarget();
-
-                    System.out.println(doesTagMatchAlliance(bestTarget.getFiducialId()) ? "The April Tag matches our current alliance" : "The April Tag does NOT match our current alliance");
-                } else {
-                    System.out.println("The result has no target");
-                }
-            } catch (Exception e) {
-                System.out.println("Failed to get latest result with exception: " + e.getLocalizedMessage());
-            }
-        });
-    }
-
     public SwerveRequest.FieldCentricFacingAngle getCurrentSwerveRequest() {
         if (isSnapToggleOn) {
             return m_drive
                 .withVelocityX(-m_controller.getLeftY() * MaxSpeed) // Drive forward with negative Y (forward)
                 .withVelocityY(-m_controller.getLeftX() * MaxSpeed) // Drive left with negative X (left)
-                .withTargetDirection(new Rotation2d(getYawToTargetInRadian()))
+                .withTargetDirection(new Rotation2d(m_AprilTagHandler.getYawToTargetInRadian()))
                 .withHeadingPID(2, 1, 1);
         } else {
             return m_drive
@@ -166,21 +122,4 @@ public class RobotContainer {
                 .withTargetRateFeedforward(MaxAngularRate * m_controller.getRightX());
         }
     }
-
-    public boolean doesTagMatchAlliance(int id) {
-        final List<Integer> blueIds = List.of(17, 28, 18, 27, 19, 20, 26, 25, 21, 24, 22, 23, 29, 30, 31, 32);
-        final List<Integer> redIDs = List.of(7, 6, 8, 5, 9, 10, 4, 3, 11, 2, 12, 1, 16, 15, 14, 13);
-
-        Optional<Alliance> alliance = DriverStation.getAlliance();
-
-        if (alliance.isPresent()) {
-            if (alliance.get() == DriverStation.Alliance.Blue) {
-                return blueIds.contains(id);
-            } else {
-                return redIDs.contains(id);
-            }
-        } else {
-            return false;
-        }
-     }
 }
