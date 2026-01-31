@@ -12,6 +12,7 @@ import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Robot;
 
 import java.util.List;
@@ -44,7 +45,7 @@ import org.photonvision.targeting.PhotonTrackedTarget;
       *     edu.wpi.first.math.estimator.SwerveDrivePoseEstimator}
       */
      public PhotonHandler(EstimateConsumer estConsumer, String kCameraName, Transform3d kRobotToCam ) {
-         this.estConsumer = estConsumer;
+        this.estConsumer = estConsumer;
 
         AprilTagFieldLayout kTagLayout = AprilTagFieldLayout.loadField(AprilTagFields.k2026RebuiltWelded); 
 
