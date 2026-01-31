@@ -7,6 +7,8 @@ package frc.robot;
 import static edu.wpi.first.units.Units.*;
 
 import java.util.List;
+import java.util.Optional;
+
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
@@ -15,6 +17,8 @@ import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -110,10 +114,14 @@ public class RobotContainer {
             if (latestResult.hasTargets()) {
                 PhotonTrackedTarget bestTarget = latestResult.getBestTarget();
 
-                double yaw = bestTarget.getYaw();
-                double yawInRadian = Units.degreesToRadians(yaw);
+                if (doesTagMatchAlliance(bestTarget.getFiducialId())) {
+                    double yaw = bestTarget.getYaw();
+                    double yawInRadian = Units.degreesToRadians(yaw);
 
-                return yawInRadian;
+                    return yawInRadian;
+                } else {
+                    return 0;
+                }
             } else {
                 return 0;
             }   
@@ -136,4 +144,21 @@ public class RobotContainer {
                 .withTargetRateFeedforward(MaxAngularRate * m_controller.getRightX());
         }
     }
+
+    public boolean doesTagMatchAlliance(int id) {
+        final List<Integer> blueIds = List.of(17, 28, 18, 27, 19, 20, 26, 25, 21, 24, 22, 23, 29, 30, 31, 32);
+        final List<Integer> redIDs = List.of(7, 6, 8, 5, 9, 10, 4, 3, 11, 2, 12, 1, 16, 15, 14, 13);
+
+        Optional<Alliance> alliance = DriverStation.getAlliance();
+
+        if (alliance.isPresent()) {
+            if (alliance.get() == DriverStation.Alliance.Blue) {
+                return blueIds.contains(id);
+            } else {
+                return redIDs.contains(id);
+            }
+        } else {
+            return false;
+        }
+     }
 }

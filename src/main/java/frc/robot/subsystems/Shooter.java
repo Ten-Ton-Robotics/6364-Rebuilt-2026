@@ -10,7 +10,6 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import java.lang.*;
 
 public class Shooter extends SubsystemBase {
     // Constants
@@ -62,9 +61,10 @@ public class Shooter extends SubsystemBase {
         if(new_speed > 0.0){ //DO NOT GO BACKWARDS
             new_speed = 0.0;
         }
+
         if(new_speed < MaxSpeed){
-                new_speed = MaxSpeed;
-            }
+            new_speed = MaxSpeed;
+        }
 
         TargetSpeed = new_speed;
         System.out.println("New Speed is: " + new_speed);

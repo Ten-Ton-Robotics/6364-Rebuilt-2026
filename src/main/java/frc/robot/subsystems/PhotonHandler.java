@@ -188,21 +188,4 @@ import org.photonvision.targeting.PhotonTrackedTarget;
      public static interface EstimateConsumer {
          public void accept(Pose2d pose, double timestamp, Matrix<N3, N1> estimationStdDevs);
      }
-
-     public boolean doesTagMatchAlliance(int id) {
-        final List<Integer> blueIds = List.of(17, 28, 18, 27, 19, 20, 26, 25, 21, 24, 22, 23, 29, 30, 31, 32);
-        final List<Integer> redIDs = List.of(7, 6, 8, 5, 9, 10, 4, 3, 11, 2, 12, 1, 16, 15, 14, 13);
-
-        Optional<Alliance> alliance = DriverStation.getAlliance();
-
-        if (alliance.isPresent()) {
-            if (alliance.get() == DriverStation.Alliance.Blue) {
-                return blueIds.contains(id);
-            } else {
-                return redIDs.contains(id);
-            }
-        } else {
-            return false;
-        }
-     }
  }
