@@ -75,6 +75,7 @@ public class RobotContainer {
 
         //April Tag Snapping
         m_controller.a().onTrue(toggleAprilTagSnapCommand());
+        m_controller.povRight().onTrue(testWhetherTheBestTargetAprilTagIsFromAlliance());
         
         //Shooter and Feed Control 
         m_controller.x().onTrue(m_Shooter.toggleShooting());
@@ -128,6 +129,27 @@ public class RobotContainer {
         } catch (Exception e) {
             return 0;
         }
+    }
+
+    // This Command is purely for testing whether the AprilTag filtering works
+    private Command testWhetherTheBestTargetAprilTagIsFromAlliance() {
+        return new InstantCommand(() -> {
+            List<PhotonPipelineResult> latestResults = Robot.m_vision.latestResults;
+
+            try {
+                PhotonPipelineResult latestResult = latestResults.get(0);
+
+                if (latestResult.hasTargets()) {
+                    PhotonTrackedTarget bestTarget = latestResult.getBestTarget();
+
+                    System.out.println(doesTagMatchAlliance(bestTarget.getFiducialId()) ? "The April Tag matches our current alliance" : "The April Tag does NOT match our current alliance");
+                } else {
+                    System.out.println("The result has no target");
+                }
+            } catch (Exception e) {
+                System.out.println("Failed to get latest result with exception: " + e.getLocalizedMessage());
+            }
+        });
     }
 
     public SwerveRequest.FieldCentricFacingAngle getCurrentSwerveRequest() {
