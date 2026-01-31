@@ -81,29 +81,29 @@ import org.photonvision.targeting.PhotonTrackedTarget;
         
          latestResults = camera.getAllUnreadResults();
 
-        //  for (var change : latestResults) {
-        //      visionEst = photonEstimator.update(change);
-        //      updateEstimationStdDevs(visionEst, change.getTargets());
+         for (var change : latestResults) {
+             visionEst = photonEstimator.update(change);
+             updateEstimationStdDevs(visionEst, change.getTargets());
  
-        //      if (Robot.isSimulation()) {
-        //          visionEst.ifPresentOrElse(
-        //                  est ->
-        //                          getSimDebugField()
-        //                                  .getObject("VisionEstimation")
-        //                                  .setPose(est.estimatedPose.toPose2d()),
-        //                  () -> {
-        //                      getSimDebugField().getObject("VisionEstimation").setPoses();
-        //                  });
-        //      }
+             if (Robot.isSimulation()) {
+                 visionEst.ifPresentOrElse(
+                         est ->
+                                 getSimDebugField()
+                                         .getObject("VisionEstimation")
+                                         .setPose(est.estimatedPose.toPose2d()),
+                         () -> {
+                             getSimDebugField().getObject("VisionEstimation").setPoses();
+                         });
+             }
  
-        //      visionEst.ifPresent(
-        //              est -> {
-        //                  // Change our trust in the measurement based on the tags we can see
-        //                  var estStdDevs = getEstimationStdDevs();
+             visionEst.ifPresent(
+                     est -> {
+                         // Change our trust in the measurement based on the tags we can see
+                         var estStdDevs = getEstimationStdDevs();
  
-        //                  estConsumer.accept(est.estimatedPose.toPose2d(), est.timestampSeconds, estStdDevs);
-        //              });
-        //  }
+                         estConsumer.accept(est.estimatedPose.toPose2d(), est.timestampSeconds, estStdDevs);
+                     });
+         }
      }
  
      /**
