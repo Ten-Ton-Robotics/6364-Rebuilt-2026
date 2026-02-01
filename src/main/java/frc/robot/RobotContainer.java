@@ -75,11 +75,9 @@ public class RobotContainer {
             point.withModuleDirection(new Rotation2d(-m_controller.getLeftY(), -m_controller.getLeftX()))
         ));
         m_controller.x().onTrue(m_Shooter.toggleShooting());
-        m_controller.povDown().onTrue(m_Shooter.changeSpeed(5));
-        m_controller.povUp().onTrue(m_Shooter.changeSpeed(-5));
 
-        m_controller.leftTrigger().and(m_controller.povDown().onTrue(m_Shooter.changeSpeed(1)));
-        m_controller.leftTrigger().and(m_controller.povUp().onTrue(m_Shooter.changeSpeed(-1)));
+        m_controller.povUp().onTrue(m_Shooter.changeSpeed(true));
+        m_controller.povDown().onTrue(m_Shooter.changeSpeed(false));
         
         m_controller.rightTrigger().onTrue(m_Feed.intake()); 
         m_controller.rightTrigger().onFalse(m_Feed.stop()); 
