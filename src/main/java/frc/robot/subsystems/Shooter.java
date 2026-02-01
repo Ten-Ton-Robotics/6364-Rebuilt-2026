@@ -42,6 +42,7 @@ public class Shooter extends SubsystemBase {
             .withSlot0(slot0Configs);
         m_motor.getConfigurator().apply(motorConfig);
         m_motor.setNeutralMode(NeutralModeValue.Coast);
+        SmartDashboard.putNumber("Shooter Target (RPS)", -TargetSpeed);
 
     }
 
@@ -71,8 +72,8 @@ public class Shooter extends SubsystemBase {
 
         TargetSpeed = new_speed;
         
-        SmartDashboard.putNumber("Shooter Speed", TargetSpeed);
-
+        SmartDashboard.putNumber("Shooter Target (RPS)", -TargetSpeed);
+        
         m_output.Velocity = TargetSpeed; 
         m_motor.setControl(m_output);
         m_motor.setNeutralMode(NeutralModeValue.Coast);
@@ -84,6 +85,10 @@ public class Shooter extends SubsystemBase {
 
     private void stopMotor() {
         m_motor.setControl(new StaticBrake());
+    }
+
+    public double getMotorRPS(){
+        return m_motor.getVelocity().getValueAsDouble();
     }
 
     /**
@@ -106,6 +111,16 @@ public class Shooter extends SubsystemBase {
             int SpeedChanger = SpeedUp ? 1 : -1 ;  
             double new_speed = TargetSpeed - (defaultSpeedChange * SpeedChanger); 
             setMotorSpeed(new_speed);   
+        });   
+    }
+
+    /**
+     * Changes the speed of the motor. Note currently starts the motor on when called. 
+     * @param difference How much you want to speed the motor up. Positive number speeds up motor and negative number slows down motor  
+     */
+    public Command perciseControl(int change) {
+        return this.runOnce(() -> { 
+               defaultSpeedChange = change; 
         });   
     }
 }

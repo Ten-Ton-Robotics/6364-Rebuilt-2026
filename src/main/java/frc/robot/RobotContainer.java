@@ -79,6 +79,10 @@ public class RobotContainer {
         m_controller.povUp().onTrue(m_Shooter.changeSpeed(true));
         m_controller.povDown().onTrue(m_Shooter.changeSpeed(false));
         
+        
+        m_controller.leftTrigger().onTrue(m_Shooter.perciseControl(1)); 
+        m_controller.leftTrigger().onFalse(m_Shooter.perciseControl(5)); 
+
         m_controller.rightTrigger().onTrue(m_Feed.intake()); 
         m_controller.rightTrigger().onFalse(m_Feed.stop()); 
 
