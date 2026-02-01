@@ -56,8 +56,10 @@ public class Shooter extends SubsystemBase {
             }
         });
     }
-
-    // Fuctions
+    /**
+     * Sets the speed of the motor. Note that we want the motor to spin backwards so the speed should be negative.  
+     * @param new_speed The new speed of the motor. Gets capped between zero and the max speed.    
+     */
     private void setMotorSpeed(double new_speed) {
         if(new_speed > 0.0){ //DO NOT GO BACKWARDS
             new_speed = 0.0;
@@ -82,9 +84,13 @@ public class Shooter extends SubsystemBase {
         m_motor.setControl(new StaticBrake());
     }
 
+    /**
+     * Changes the speed of the motor. Note currently starts the motor on when called. 
+     * @param difference How much you want to speed the motor up. Positive number speeds up motor and negative number slows down motor  
+     */
     public Command changeSpeed(double difference) {
         return this.runOnce(() -> {
-            double new_speed = TargetSpeed + difference; 
+            double new_speed = TargetSpeed - difference; 
             setMotorSpeed(new_speed);   
         });   
     }
