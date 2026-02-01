@@ -8,9 +8,9 @@ import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import java.lang.*;
 
 public class Shooter extends SubsystemBase {
     // Constants
@@ -18,6 +18,7 @@ public class Shooter extends SubsystemBase {
     private static final int kMotorID = 13;
     private static double TargetSpeed = -45;
     private static double MaxSpeed = -65;
+    private static double defaultSpeedChange = 5; 
 
     // Motor
     private final TalonFX m_motor = new TalonFX(kMotorID, kMotorBus);
@@ -69,7 +70,8 @@ public class Shooter extends SubsystemBase {
             }
 
         TargetSpeed = new_speed;
-        System.out.println("New Speed is: " + new_speed);
+        
+        SmartDashboard.putNumber("Shooter Speed", TargetSpeed);
 
         m_output.Velocity = TargetSpeed; 
         m_motor.setControl(m_output);
@@ -91,6 +93,18 @@ public class Shooter extends SubsystemBase {
     public Command changeSpeed(double difference) {
         return this.runOnce(() -> {
             double new_speed = TargetSpeed - difference; 
+            setMotorSpeed(new_speed);   
+        });   
+    }
+
+    /**
+     * Changes the speed of the motor. Note currently starts the motor on when called. 
+     * @param difference How much you want to speed the motor up. Positive number speeds up motor and negative number slows down motor  
+     */
+    public Command changeSpeed(Boolean SpeedUp) {
+        return this.runOnce(() -> { 
+            int SpeedChanger = SpeedUp ? 1 : -1 ;  
+            double new_speed = TargetSpeed - (defaultSpeedChange * SpeedChanger); 
             setMotorSpeed(new_speed);   
         });   
     }
