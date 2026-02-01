@@ -71,7 +71,7 @@ public class Shooter extends SubsystemBase {
 
         m_output.Velocity = TargetSpeed; 
         m_motor.setControl(m_output);
-        m_motor.setNeutralMode(NeutralModeValue.Brake);
+        m_motor.setNeutralMode(NeutralModeValue.Coast);
         
         if (TargetSpeed == 0.0) {
             stopMotor();

@@ -77,8 +77,12 @@ public class RobotContainer {
         m_controller.x().onTrue(m_Shooter.toggleShooting());
         m_controller.povDown().onTrue(m_Shooter.changeSpeed(5));
         m_controller.povUp().onTrue(m_Shooter.changeSpeed(-5));
-        m_controller.leftTrigger().onTrue(m_Feed.intake()); 
-        m_controller.leftTrigger().onFalse(m_Feed.stop()); 
+
+        m_controller.leftTrigger().and(m_controller.povDown().onTrue(m_Shooter.changeSpeed(1)));
+        m_controller.leftTrigger().and(m_controller.povUp().onTrue(m_Shooter.changeSpeed(-1)));
+        
+        m_controller.rightTrigger().onTrue(m_Feed.intake()); 
+        m_controller.rightTrigger().onFalse(m_Feed.stop()); 
 
         // Run SysId routines when holding back/start and X/Y.
         // Note that each routine should be run exactly once in a single log.
@@ -92,10 +96,6 @@ public class RobotContainer {
 
         m_drivetrain.registerTelemetry(logger::telemeterize);
 
-        m_controller.y().whileTrue(
-            m_drivetrain.applyRequest(() -> m_drive.withTargetDirection(new Rotation2d(Math.PI/2))
-            .withHeadingPID(0.1, 0.1, 0.1))
-            );
     }  
 
     public Command getAutonomousCommand() {
