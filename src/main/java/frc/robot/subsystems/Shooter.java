@@ -38,8 +38,7 @@ public class Shooter extends SubsystemBase {
             .withKS(0.0)    // Static friction feedforward
             .withKV(0.12);  // Velocity feedforward - tune this value
 
-        var motorConfig = new TalonFXConfiguration()
-            .withSlot0(slot0Configs);
+        var motorConfig = new TalonFXConfiguration().withSlot0(slot0Configs);
         m_motor.getConfigurator().apply(motorConfig);
         m_motor.setNeutralMode(NeutralModeValue.Coast);
         SmartDashboard.putNumber("Shooter Target (RPS)", -TargetSpeed);
@@ -66,9 +65,10 @@ public class Shooter extends SubsystemBase {
         if(new_speed > 0.0){ //DO NOT GO BACKWARDS
             new_speed = 0.0;
         }
+
         if(new_speed < MaxSpeed){
-                new_speed = MaxSpeed;
-            }
+            new_speed = MaxSpeed;
+        }
 
         TargetSpeed = new_speed;
         

@@ -61,9 +61,10 @@ public class Feed extends SubsystemBase {
         if(new_speed > 0.0){ //DO NOT GO BACKWARDS
             new_speed = 0.0;
         }
+
         if(new_speed < MaxSpeed){
-                new_speed = MaxSpeed;
-            }
+            new_speed = MaxSpeed;
+        }
 
         TargetSpeed = new_speed;
 
@@ -79,8 +80,5 @@ public class Feed extends SubsystemBase {
     private void stopMotor() {
         m_motor.setControl(new StaticBrake());
     }
-
-    
-
 }
 
