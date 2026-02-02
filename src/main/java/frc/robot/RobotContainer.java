@@ -72,10 +72,16 @@ public class RobotContainer {
         
         //Shooter and Feed Control 
         m_controller.x().onTrue(m_Shooter.toggleShooting());
-        m_controller.povDown().onTrue(m_Shooter.changeSpeed(5));
-        m_controller.povUp().onTrue(m_Shooter.changeSpeed(-5));
-        m_controller.leftTrigger().onTrue(m_Feed.intake()); 
-        m_controller.leftTrigger().onFalse(m_Feed.stop()); 
+
+        m_controller.povUp().onTrue(m_Shooter.changeSpeed(true));
+        m_controller.povDown().onTrue(m_Shooter.changeSpeed(false));
+        
+        
+        m_controller.leftTrigger().onTrue(m_Shooter.perciseControl(1)); 
+        m_controller.leftTrigger().onFalse(m_Shooter.perciseControl(5)); 
+
+        m_controller.rightTrigger().onTrue(m_Feed.intake()); 
+        m_controller.rightTrigger().onFalse(m_Feed.stop()); 
 
         // m_controller.b().onTrue(m_drivetrain.FindAndFollowPath()); 
         
@@ -90,7 +96,7 @@ public class RobotContainer {
         m_controller.leftBumper().onTrue(m_drivetrain.runOnce(() -> m_drivetrain.seedFieldCentric()));
 
         m_drivetrain.registerTelemetry(logger::telemeterize);
-        m_drivetrain.resetPose(null);
+
     }  
 
     public Command getAutonomousCommand() {
