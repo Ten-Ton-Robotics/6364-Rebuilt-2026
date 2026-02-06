@@ -13,6 +13,7 @@ import com.ctre.phoenix6.swerve.SwerveRequest;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -25,6 +26,12 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
 import frc.robot.generated.TunerConstants.TunerSwerveDrivetrain;
 
+import com.pathplanner.lib.config.RobotConfig; 
+import com.pathplanner.lib.auto.AutoBuilder; 
+import com.pathplanner.lib.controllers.PPHolonomicDriveController; 
+import com.pathplanner.lib.config.PIDConstants;
+
+
 /**
  * Class that extends the Phoenix 6 SwerveDrivetrain class and implements
  * Subsystem so it can easily be used in command-based projects.
@@ -33,6 +40,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     private static final double kSimLoopPeriod = 0.005; // 5 ms
     private Notifier m_simNotifier = null;
     private double m_lastSimTime;
+    private final SwerveRequest.ApplyRobotSpeeds m_robotSpeeds = new SwerveRequest.ApplyRobotSpeeds();
 
     /* Blue alliance sees forward as 0 degrees (toward red alliance wall) */
     private static final Rotation2d kBlueAlliancePerspectiveRotation = Rotation2d.kZero;
@@ -63,6 +71,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     );
 
     /* SysId routine for characterizing steer. This is used to find PID gains for the steer motors. */
+    @SuppressWarnings("unused")
     private final SysIdRoutine m_sysIdRoutineSteer = new SysIdRoutine(
         new SysIdRoutine.Config(
             null,        // Use default ramp rate (1 V/s)
@@ -83,6 +92,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
      * This is used to find PID gains for the FieldCentricFacingAngle HeadingController.
      * See the documentation of SwerveRequest.SysIdSwerveRotation for info on importing the log to SysId.
      */
+    @SuppressWarnings("unused")
     private final SysIdRoutine m_sysIdRoutineRotation = new SysIdRoutine(
         new SysIdRoutine.Config(
             /* This is in radians per second², but SysId only supports "volts per second" */
@@ -126,6 +136,41 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         if (Utils.isSimulation()) {
             startSimThread();
         }
+
+        //Robot Config for Path Planner 
+        RobotConfig config;
+        try{
+        config = RobotConfig.fromGUISettings();
+        
+        AutoBuilder.configure(
+            this::getPose, // Robot pose supplier
+            this::resetPose, // Method to reset odometry (will be called if your auto has a starting pose)
+            this::getRobotRelativeSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
+            
+            (speeds, feedforwards) -> driveRobotRelative(speeds), // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds. Also optionally outputs individual module feedforwards
+            new PPHolonomicDriveController( // PPHolonomicController is the built in path following controller for holonomic drive trains
+            new PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
+            new PIDConstants(5.0, 0.0, 0.0) // Rotation PID constants
+            ),
+            config, // The robot configuration
+            () -> {
+            //   Boolean supplier that controls when the path will be mirrored for the red alliance
+            //   This will flip the path being followed to the red side of the field.
+            //   THE ORIGIN WILL REMAIN ON THE BLUE SIDE
+
+             var alliance = DriverStation.getAlliance();
+             if (alliance.isPresent()) {
+               return alliance.get() == DriverStation.Alliance.Red;
+             }
+             return false;
+            },
+            this // Reference to this subsystem to set requirements
+    );
+        } catch (Exception e) {
+        // Handle exception as needed
+        e.printStackTrace();
+        }  
+        
     }
 
     /**
@@ -285,4 +330,28 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     ) {
         super.addVisionMeasurement(visionRobotPoseMeters, Utils.fpgaToCurrentTime(timestampSeconds), visionMeasurementStdDevs);
     }
+
+    /**
+     * Returns the robots current 2D postion on the field. Used by PathPlanner. 
+     * 
+     * @return The robots position on the field as a Pose2d
+     */
+    public Pose2d getPose(){
+        return this.getState().Pose;
+    }   
+    /**
+     * Returns the robots . Used by PathPlanner. 
+     * 
+     * @return The robots position on the field as a Pose2d
+     */
+    public ChassisSpeeds getRobotRelativeSpeeds() {
+        return this.getKinematics().toChassisSpeeds(getState().ModuleStates);
+    }
+
+    public void driveRobotRelative(ChassisSpeeds speeds) {
+        m_robotSpeeds.Speeds = speeds;  // Set the desired robot-relative speeds
+        this.setControl(m_robotSpeeds); // Apply the control request to the drivetrain
+    }
+
+    
 }
