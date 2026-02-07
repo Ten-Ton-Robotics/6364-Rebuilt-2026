@@ -62,7 +62,7 @@ public class RobotContainer {
                 // Check AprilTag snapping toggle state and apply appropriate heading control
                 if (isSnapToggleOn) {
                     return baseDrive
-                        .withTargetDirection(new Rotation2d(m_AprilTagHandler.getYawToTargetInRadian()))
+                        .withTargetDirection(new Rotation2d(m_AprilTagHandler.getYawToTargetInRadian() + Math.PI))
                         .withHeadingPID(2, 1, 1);
                 } else {
                     return baseDrive
