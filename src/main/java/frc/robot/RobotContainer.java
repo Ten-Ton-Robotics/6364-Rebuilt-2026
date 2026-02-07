@@ -20,10 +20,7 @@ import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 
 import frc.robot.generated.TunerConstants;
-import frc.robot.subsystems.AprilTagHandler;
-import frc.robot.subsystems.CommandSwerveDrivetrain;
-import frc.robot.subsystems.Shooter;
-import frc.robot.subsystems.Feed;
+import frc.robot.subsystems.*;
 
 public class RobotContainer {
     public boolean isSnapToggleOn = false;
@@ -31,6 +28,7 @@ public class RobotContainer {
     // Subsystems
     public static final Shooter m_Shooter = new Shooter();
     public static final Feed m_Feed = new Feed();
+    public static final Intake m_Intake = new Intake(); 
     public static final AprilTagHandler m_AprilTagHandler = new AprilTagHandler();
 
     private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond)  * 0.3; // kSpeedAt12Volts desired top speed
@@ -98,6 +96,9 @@ public class RobotContainer {
 
         m_controller.rightTrigger().onTrue(m_Feed.intake()); 
         m_controller.rightTrigger().onFalse(m_Feed.stop()); 
+        
+        m_controller.rightBumper().onTrue(m_Intake.intake()); 
+        m_controller.rightBumper().onTrue(m_Intake.stop()); 
 
         // m_controller.b().onTrue(m_drivetrain.FindAndFollowPath()); 
         
