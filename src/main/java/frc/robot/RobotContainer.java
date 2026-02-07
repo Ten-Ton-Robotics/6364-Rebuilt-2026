@@ -11,6 +11,9 @@ import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.units.Unit;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -37,7 +40,7 @@ public class RobotContainer {
 
     /* Setting up bindings for necessary control of the swerve m_drive platform */
     private final SwerveRequest.FieldCentricFacingAngle m_drive = new SwerveRequest.FieldCentricFacingAngle()
-            .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
+            .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.01) // Add a 10% deadband
             .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for m_drive motors
 
     private final Telemetry logger = new Telemetry(MaxSpeed);
@@ -60,13 +63,15 @@ public class RobotContainer {
                     .withVelocityY(-m_controller.getLeftX() * MaxSpeed); // Drive left with negative X (left)
 
                 // Check AprilTag snapping toggle state and apply appropriate heading control
+                SmartDashboard.putBoolean("Snap Toggle", isSnapToggleOn);
                 if (isSnapToggleOn) {
                     return baseDrive
-                        .withTargetDirection(new Rotation2d(m_AprilTagHandler.getYawToTargetInRadian() + Math.PI))
-                        .withHeadingPID(2, 1, 1);
+                        .withTargetDirection(new Rotation2d(Units.radiansToDegrees(1.57)))
+                        .withHeadingPID(MaxAngularRate, 0, 0);
                 } else {
                     return baseDrive
-                        .withTargetRateFeedforward(MaxAngularRate * m_controller.getRightX());
+                        .withTargetRateFeedforward(MaxAngularRate * m_controller.getRightX())
+                        .withHeadingPID(0, 0, 0);
                 }
             })
         );

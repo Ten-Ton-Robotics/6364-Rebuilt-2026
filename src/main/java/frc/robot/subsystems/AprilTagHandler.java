@@ -23,10 +23,10 @@ public class AprilTagHandler {
         SmartDashboard.putNumber("AprilTag Yaw", getYawToTargetInRadian());
     }
 
-    public double getYawToTargetInRadian() {
-        List<PhotonPipelineResult> latestResults = Robot.m_vision.latestResults;
-        
+    public double getYawToTargetInRadian() {        
         try {
+            List<PhotonPipelineResult> latestResults = Robot.m_vision.latestResults;
+
             PhotonPipelineResult latestResult = latestResults.get(0);
 
             if (latestResult.hasTargets()) {
@@ -36,6 +36,9 @@ public class AprilTagHandler {
                     double yaw = bestTarget.getYaw();
                     double yawInRadian = Units.degreesToRadians(yaw);
 
+                    SmartDashboard.putNumber("AprilTag Yaw", yawInRadian);
+
+                    
                     return yawInRadian;
                 } else {
                     return 0;
