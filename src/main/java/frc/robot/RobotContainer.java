@@ -54,12 +54,21 @@ public class RobotContainer {
         // and Y is defined as to the left according to WPILib convention.
         m_drivetrain.setDefaultCommand(
             // Drivetrain will execute this command periodically
-            m_drivetrain.applyRequest(() ->
-                m_drive
+            m_drivetrain.applyRequest(() -> {
+                var baseDrive = m_drive
                     .withVelocityX(-m_controller.getLeftY() * MaxSpeed) // Drive forward with negative Y (forward)
-                    .withVelocityY(-m_controller.getLeftX() * MaxSpeed) // Drive left with negative X (left)
-                    .withTargetRateFeedforward(MaxAngularRate * m_controller.getRightX())
-            )
+                    .withVelocityY(-m_controller.getLeftX() * MaxSpeed); // Drive left with negative X (left)
+
+                // Check AprilTag snapping toggle state and apply appropriate heading control
+                if (isSnapToggleOn) {
+                    return baseDrive
+                        .withTargetDirection(new Rotation2d(m_AprilTagHandler.getYawToTargetInRadian()))
+                        .withHeadingPID(2, 1, 1);
+                } else {
+                    return baseDrive
+                        .withTargetRateFeedforward(MaxAngularRate * m_controller.getRightX());
+                }
+            })
         );
 
         // Idle while the robot is disabled. This ensures the configured
@@ -107,44 +116,8 @@ public class RobotContainer {
     }
 
     private Command toggleAprilTagSnapCommand() {
-        return new InstantCommand(() -> { 
-            isSnapToggleOn = !isSnapToggleOn; 
-
-            if (isSnapToggleOn) {
-                m_drivetrain.setControl(
-                    m_drive
-                        .withVelocityX(-m_controller.getLeftY() * MaxSpeed) // Drive forward with negative Y (forward)
-                        .withVelocityY(-m_controller.getLeftX() * MaxSpeed) // Drive left with negative X (left)
-                        .withTargetDirection(new Rotation2d(m_AprilTagHandler.getYawToTargetInRadian()))
-                        .withHeadingPID(2, 1, 1)
-                );                
-            } else {
-                m_drivetrain.setControl(
-                    m_drive
-                        .withVelocityX(-m_controller.getLeftY() * MaxSpeed) // Drive forward with negative Y (forward)
-                        .withVelocityY(-m_controller.getLeftX() * MaxSpeed) // Drive left with negative X (left)
-                        .withTargetRateFeedforward(MaxAngularRate * m_controller.getRightX())
-                );
-            }
+        return new InstantCommand(() -> {
+            isSnapToggleOn = !isSnapToggleOn;
         });
-    }
-
-    /**
-     * @deprecated Use {@link #toggleAprilTagSnapCommand()} instead
-     */
-    @Deprecated(forRemoval = true)
-    public SwerveRequest.FieldCentricFacingAngle getCurrentSwerveRequest() {
-        if (isSnapToggleOn) {
-            return m_drive
-                .withVelocityX(-m_controller.getLeftY() * MaxSpeed) // Drive forward with negative Y (forward)
-                .withVelocityY(-m_controller.getLeftX() * MaxSpeed) // Drive left with negative X (left)
-                .withTargetDirection(new Rotation2d(m_AprilTagHandler.getYawToTargetInRadian()))
-                .withHeadingPID(2, 1, 1);
-        } else {
-            return m_drive
-                .withVelocityX(-m_controller.getLeftY() * MaxSpeed) // Drive forward with negative Y (forward)
-                .withVelocityY(-m_controller.getLeftX() * MaxSpeed) // Drive left with negative X (left)
-                .withTargetRateFeedforward(-MaxAngularRate * m_controller.getRightX());
-        }
     }
 }
