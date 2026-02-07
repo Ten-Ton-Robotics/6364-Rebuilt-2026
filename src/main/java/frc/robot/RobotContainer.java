@@ -67,7 +67,7 @@ public class RobotContainer {
                 
                 if (isSnapToggleOn) {
                     return baseDrive
-                        .withTargetDirection(new Rotation2d(1.57))  // 1.57 radians = ~90 degrees
+                        .withTargetDirection(new Rotation2d(Math.PI*0.5))  // 1.57 radians = ~90 degrees
                         .withHeadingPID(MaxAngularRate, 0, 0);
                 } else {
                     return baseDrive

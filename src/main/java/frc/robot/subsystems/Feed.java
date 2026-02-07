@@ -14,9 +14,9 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class Feed extends SubsystemBase {
     // Constants
     private static final CANBus kMotorBus = new CANBus("CANCAN");
-    private static final int kMotorID = 21;
-    private static double TargetSpeed = -15;
-    private static double MaxSpeed = -30;
+    private static final int kMotorID = 13;
+    private static double TargetSpeed = 15;
+    private static double MaxSpeed = 30;
 
     // Motor
     private final TalonFX m_motor = new TalonFX(kMotorID, kMotorBus);
