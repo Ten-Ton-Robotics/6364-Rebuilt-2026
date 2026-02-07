@@ -64,9 +64,10 @@ public class RobotContainer {
 
                 // Check AprilTag snapping toggle state and apply appropriate heading control
                 SmartDashboard.putBoolean("Snap Toggle", isSnapToggleOn);
+                
                 if (isSnapToggleOn) {
                     return baseDrive
-                        .withTargetDirection(new Rotation2d(Units.radiansToDegrees(1.57)))
+                        .withTargetDirection(new Rotation2d(1.57))  // 1.57 radians = ~90 degrees
                         .withHeadingPID(MaxAngularRate, 0, 0);
                 } else {
                     return baseDrive
