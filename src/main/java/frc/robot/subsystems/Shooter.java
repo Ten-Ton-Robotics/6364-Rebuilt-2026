@@ -15,7 +15,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class Shooter extends SubsystemBase {
     // Constants
     private static final CANBus kMotorBus = new CANBus("CANCAN");
-    private static final int kMotorID = 13;
+    private static final int kMotorID = 21;
     private static double TargetSpeed = -45;
     private static double MaxSpeed = -65;
     private static double defaultSpeedChange = 5; 

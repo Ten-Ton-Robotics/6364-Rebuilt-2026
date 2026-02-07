@@ -18,10 +18,10 @@ public class AprilTagHandler {
     public static final List<Integer> kBlueIds = List.of(17, 28, 18, 27, 19, 20, 26, 25, 21, 24, 22, 23, 29, 30, 31, 32);
     public static final List<Integer> kRedIDs = List.of(7, 6, 8, 5, 9, 10, 4, 3, 11, 2, 12, 1, 16, 15, 14, 13);
 
-    public double getYawToTargetInRadian() {
-        List<PhotonPipelineResult> latestResults = Robot.m_vision.latestResults;
-        
+    public double getYawToTargetInRadian() {        
         try {
+            List<PhotonPipelineResult> latestResults = Robot.m_vision.latestResults;
+
             PhotonPipelineResult latestResult = latestResults.get(0);
 
             if (latestResult.hasTargets()) {
@@ -30,7 +30,7 @@ public class AprilTagHandler {
                 if (doesTagMatchAlliance(bestTarget.getFiducialId())) {
                     double yaw = bestTarget.getYaw();
                     double yawInRadian = Units.degreesToRadians(yaw);
-
+                    
                     return yawInRadian;
                 } else {
                     return 0;
