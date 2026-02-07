@@ -55,7 +55,10 @@ public class RobotContainer {
         m_drivetrain.setDefaultCommand(
             // Drivetrain will execute this command periodically
             m_drivetrain.applyRequest(() ->
-                getCurrentSwerveRequest()
+                m_drive
+                    .withVelocityX(-m_controller.getLeftY() * MaxSpeed) // Drive forward with negative Y (forward)
+                    .withVelocityY(-m_controller.getLeftX() * MaxSpeed) // Drive left with negative X (left)
+                    .withTargetRateFeedforward(MaxAngularRate * m_controller.getRightX())
             )
         );
 
@@ -104,9 +107,32 @@ public class RobotContainer {
     }
 
     private Command toggleAprilTagSnapCommand() {
-        return new InstantCommand(() -> { isSnapToggleOn = !isSnapToggleOn; });
+        return new InstantCommand(() -> { 
+            isSnapToggleOn = !isSnapToggleOn; 
+
+            if (isSnapToggleOn) {
+                m_drivetrain.setControl(
+                    m_drive
+                        .withVelocityX(-m_controller.getLeftY() * MaxSpeed) // Drive forward with negative Y (forward)
+                        .withVelocityY(-m_controller.getLeftX() * MaxSpeed) // Drive left with negative X (left)
+                        .withTargetDirection(new Rotation2d(m_AprilTagHandler.getYawToTargetInRadian()))
+                        .withHeadingPID(2, 1, 1)
+                );                
+            } else {
+                m_drivetrain.setControl(
+                    m_drive
+                        .withVelocityX(-m_controller.getLeftY() * MaxSpeed) // Drive forward with negative Y (forward)
+                        .withVelocityY(-m_controller.getLeftX() * MaxSpeed) // Drive left with negative X (left)
+                        .withTargetRateFeedforward(MaxAngularRate * m_controller.getRightX())
+                );
+            }
+        });
     }
 
+    /**
+     * @deprecated Use {@link #toggleAprilTagSnapCommand()} instead
+     */
+    @Deprecated(forRemoval = true)
     public SwerveRequest.FieldCentricFacingAngle getCurrentSwerveRequest() {
         if (isSnapToggleOn) {
             return m_drive
