@@ -144,7 +144,7 @@ public class RobotContainer {
             return m_drive
                 .withVelocityX(-m_controller.getLeftY() * MaxSpeed) // Drive forward with negative Y (forward)
                 .withVelocityY(-m_controller.getLeftX() * MaxSpeed) // Drive left with negative X (left)
-                .withTargetRateFeedforward(MaxAngularRate * m_controller.getRightX());
+                .withTargetRateFeedforward(-MaxAngularRate * m_controller.getRightX());
         }
     }
 }
