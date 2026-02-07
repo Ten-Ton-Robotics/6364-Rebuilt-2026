@@ -11,8 +11,6 @@ import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.util.Units;
-import edu.wpi.first.units.Unit;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -28,7 +26,7 @@ import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Feed;
 
 public class RobotContainer {
-    private boolean isSnapToggleOn = false;
+    public boolean isSnapToggleOn = false;
 
     // Subsystems
     public static final Shooter m_Shooter = new Shooter();
@@ -64,7 +62,7 @@ public class RobotContainer {
 
                 // Check AprilTag snapping toggle state and apply appropriate heading control
                 SmartDashboard.putBoolean("Snap Toggle", isSnapToggleOn);
-                
+
                 if (isSnapToggleOn) {
                     return baseDrive
                         .withTargetDirection(new Rotation2d(1.57))  // 1.57 radians = ~90 degrees
