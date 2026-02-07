@@ -36,6 +36,8 @@ public class AprilTagHandler {
                     double yaw = bestTarget.getYaw();
                     double yawInRadian = Units.degreesToRadians(yaw);
 
+                    SmartDashboard.putNumber("AprilTag Yaw", getYawToTargetInRadian());
+
                     return yawInRadian;
                 } else {
                     return 0;
