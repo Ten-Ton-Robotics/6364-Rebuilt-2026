@@ -26,9 +26,9 @@ public class RobotContainer {
     public boolean isSnapToggleOn = false;
 
     // Subsystems
-    public static final Shooter m_Shooter = new Shooter();
-    public static final Feed m_Feed = new Feed();
-    public static final Intake m_Intake = new Intake(); 
+    // public static final Shooter m_Shooter = new Shooter();
+    // public static final Feed m_Feed = new Feed();
+    // public static final Intake m_Intake = new Intake(); 
     public static final AprilTagHandler m_AprilTagHandler = new AprilTagHandler();
 
     private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond)  * 0.3; // kSpeedAt12Volts desired top speed
@@ -66,8 +66,9 @@ public class RobotContainer {
                         .withTargetDirection(new Rotation2d(Math.PI*0.5))  // 1.57 radians = ~90 degrees
                         .withHeadingPID(MaxAngularRate, 0, 0);
                 } else {
+                    double rightJoyStick = Math.abs(m_controller.getRightX()) < 0.1 ? 0 : m_controller.getRightX() ;
                     return baseDrive
-                        .withTargetRateFeedforward(MaxAngularRate * m_controller.getRightX())
+                        .withTargetRateFeedforward(MaxAngularRate * rightJoyStick)
                         .withHeadingPID(0, 0, 0);
                 }
             })
@@ -85,20 +86,22 @@ public class RobotContainer {
         m_controller.povRight().onTrue(m_AprilTagHandler.testWhetherTheBestTargetAprilTagIsFromAlliance());
         
         //Shooter and Feed Control 
-        m_controller.x().onTrue(m_Shooter.toggleShooting());
+        // m_controller.x().onTrue(m_Shooter.toggleShooting());
 
-        m_controller.povUp().onTrue(m_Shooter.changeSpeed(true));
-        m_controller.povDown().onTrue(m_Shooter.changeSpeed(false));
+        // m_controller.povUp().onTrue(m_Shooter.changeSpeed(true));
+        // m_controller.povDown().onTrue(m_Shooter.changeSpeed(false));
         
         
-        m_controller.leftTrigger().onTrue(m_Shooter.perciseControl(1)); 
-        m_controller.leftTrigger().onFalse(m_Shooter.perciseControl(5)); 
+        // m_controller.leftTrigger().onTrue(m_Shooter.perciseControl(1)); 
+        // m_controller.leftTrigger().onFalse(m_Shooter.perciseControl(5)); 
 
-        m_controller.rightTrigger().onTrue(m_Feed.intake()); 
-        m_controller.rightTrigger().onFalse(m_Feed.stop()); 
+        // m_controller.rightTrigger().onTrue(m_Feed.intake()); 
+        // m_controller.rightTrigger().onFalse(m_Feed.stop()); 
         
-        m_controller.rightBumper().onTrue(m_Intake.intake()); 
-        m_controller.rightBumper().onTrue(m_Intake.stop()); 
+        // m_controller.rightBumper().onTrue(m_Intake.intake()); 
+        // m_controller.rightBumper().onTrue(m_Intake.stop());
+
+        
 
         // m_controller.b().onTrue(m_drivetrain.FindAndFollowPath()); 
         
