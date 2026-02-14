@@ -22,7 +22,7 @@ public class Intake extends SubsystemBase {
 // ██████╔╝╚██████╔╝██║ ╚████║╚██████╗██║  ██║██║ ╚████║
 // ╚═════╝  ╚═════╝ ╚═╝  ╚═══╝ ╚═════╝╚═╝  ╚═╝╚═╝  ╚═══╝
 
-    private static final int kMotorID = 13; //Get motor ID from TunerX put that one here
+    private static final int kMotorID = 14; //Get motor ID from TunerX put that one here
     private static double TargetSpeed = 30; //If the motor is going the wrong way add a negative sign here
     private static double MaxSpeed = 40;
 

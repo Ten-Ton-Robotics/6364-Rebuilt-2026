@@ -94,7 +94,7 @@ public class Telemetry {
     /** Accept the swerve drive state and telemeterize it to SmartDashboard and SignalLogger. */
     public void telemeterize(SwerveDriveState state) {
         
-        SmartDashboard.putNumber("Shooter Speed (RPS)", -RobotContainer.m_Shooter.getMotorRPS());
+        // SmartDashboard.putNumber("Shooter Speed (RPS)", -RobotContainer.m_Shooter.getMotorRPS());
         
         /* Telemeterize the swerve drive state */
         drivePose.set(state.Pose);
