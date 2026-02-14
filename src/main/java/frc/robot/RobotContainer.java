@@ -26,6 +26,7 @@ import frc.robot.subsystems.*;
 
 public class RobotContainer {
     public boolean isHubSnappingOn = false;
+    public Rotation2d hubTargetAngle = new Rotation2d(0.0);
 
     // Subsystems
     // public static final Shooter m_Shooter = new Shooter();
@@ -63,10 +64,8 @@ public class RobotContainer {
                 SmartDashboard.putBoolean("Hub Snap Toggle", isHubSnappingOn);
 
                 if (isHubSnappingOn) {
-                    Rotation2d targetAngle = getAngleToHub();
-
                     return baseDrive
-                        .withTargetDirection(targetAngle)
+                        .withTargetDirection(hubTargetAngle)
                         .withHeadingPID(MaxAngularRate, 0, 0);
                 } else {
                     double rightJoyStick = Math.abs(m_controller.getRightX()) < 0.1 ? 0 : m_controller.getRightX() ;
@@ -129,6 +128,7 @@ public class RobotContainer {
 
     private Command toggleSnappingToHub() {
         return new InstantCommand(() -> {
+            hubTargetAngle = getAngleToHub();
             isHubSnappingOn = !isHubSnappingOn;
         });
     }
