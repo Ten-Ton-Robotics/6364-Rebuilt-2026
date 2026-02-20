@@ -10,7 +10,9 @@ import static edu.wpi.first.units.Units.*;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -23,7 +25,8 @@ import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.*;
 
 public class RobotContainer {
-    public boolean isSnapToggleOn = false;
+    public boolean isHubSnappingOn = false;
+    public Rotation2d hubTargetAngle = new Rotation2d(0.0);
 
     // Subsystems
     // public static final Shooter m_Shooter = new Shooter();
@@ -58,12 +61,11 @@ public class RobotContainer {
                     .withVelocityX(-m_controller.getLeftY() * MaxSpeed) // Drive forward with negative Y (forward)
                     .withVelocityY(-m_controller.getLeftX() * MaxSpeed); // Drive left with negative X (left)
 
-                // Check AprilTag snapping toggle state and apply appropriate heading control
-                SmartDashboard.putBoolean("Snap Toggle", isSnapToggleOn);
+                SmartDashboard.putBoolean("Hub Snap Toggle", isHubSnappingOn);
 
-                if (isSnapToggleOn) {
+                if (isHubSnappingOn) {
                     return baseDrive
-                        .withTargetDirection(new Rotation2d(Math.PI*0.5))  // 1.57 radians = ~90 degrees
+                        .withTargetDirection(hubTargetAngle)
                         .withHeadingPID(MaxAngularRate, 0, 0);
                 } else {
                     double rightJoyStick = Math.abs(m_controller.getRightX()) < 0.1 ? 0 : m_controller.getRightX() ;
@@ -81,8 +83,9 @@ public class RobotContainer {
             m_drivetrain.applyRequest(() -> idle).ignoringDisable(true)
         );
 
-        //April Tag Snapping
-        m_controller.a().onTrue(toggleAprilTagSnapCommand());
+        // Hub Snapping
+        m_controller.a().onTrue(toggleSnappingToHub());
+
         m_controller.povRight().onTrue(m_AprilTagHandler.testWhetherTheBestTargetAprilTagIsFromAlliance());
         
         //Shooter and Feed Control 
@@ -123,9 +126,22 @@ public class RobotContainer {
         return Commands.print("No autonomous command configured");
     }
 
-    private Command toggleAprilTagSnapCommand() {
+    private Command toggleSnappingToHub() {
         return new InstantCommand(() -> {
-            isSnapToggleOn = !isSnapToggleOn;
+            hubTargetAngle = getAngleToHub();
+            isHubSnappingOn = !isHubSnappingOn;
         });
+    }
+
+    private Rotation2d getAngleToHub() {
+        Translation2d hubPosition = FieldConstants.getHubPositionMatchingAlliance();
+
+        Pose2d currentPose = m_drivetrain.getPose();
+        Translation2d robotPosition = currentPose.getTranslation();
+
+        double xDifference = hubPosition.getX() - robotPosition.getX();
+        double yDifference = hubPosition.getY() - robotPosition.getY();
+
+        return new Rotation2d(Math.atan2(yDifference, xDifference));
     }
 }
