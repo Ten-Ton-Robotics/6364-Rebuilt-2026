@@ -29,13 +29,17 @@ public class RobotContainer {
     public Rotation2d hubTargetAngle = new Rotation2d(0.0);
 
     // Subsystems
-    // public static final Shooter m_Shooter = new Shooter();
-    // public static final Feed m_Feed = new Feed();
+    public static final Shooter m_Middle_Shooter = new Shooter(44);
+    public static final Shooter m_Left_Shooter = new Shooter(37);
+    public static final Shooter m_Right_Shooter = new Shooter(35);
+
+    public static final Feed m_Feed = new Feed();
     // public static final Intake m_Intake = new Intake(); 
+
     public static final AprilTagHandler m_AprilTagHandler = new AprilTagHandler();
 
     private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond)  * 0.3; // kSpeedAt12Volts desired top speed
-    private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
+    private double MaxAngularRate = RotationsPerSecond.of(0.25).in(RadiansPerSecond); // 1/4 of a rotation per second max angular velocity
 
     /* Setting up bindings for necessary control of the swerve m_drive platform */
     private final SwerveRequest.FieldCentricFacingAngle m_drive = new SwerveRequest.FieldCentricFacingAngle()
@@ -89,17 +93,33 @@ public class RobotContainer {
         m_controller.povRight().onTrue(m_AprilTagHandler.testWhetherTheBestTargetAprilTagIsFromAlliance());
         
         //Shooter and Feed Control 
-        // m_controller.x().onTrue(m_Shooter.toggleShooting());
+        m_controller.x().onTrue(m_Middle_Shooter.toggleShooting());
+        m_controller.x().onTrue(m_Right_Shooter.toggleShooting());
+        m_controller.x().onTrue(m_Left_Shooter.toggleShooting());
 
-        // m_controller.povUp().onTrue(m_Shooter.changeSpeed(true));
-        // m_controller.povDown().onTrue(m_Shooter.changeSpeed(false));
+        m_controller.povUp().onTrue(m_Middle_Shooter.changeSpeed(true));
+        m_controller.povDown().onTrue(m_Middle_Shooter.changeSpeed(false));
         
-        
-        // m_controller.leftTrigger().onTrue(m_Shooter.perciseControl(1)); 
-        // m_controller.leftTrigger().onFalse(m_Shooter.perciseControl(5)); 
+        m_controller.povUp().onTrue(m_Left_Shooter.changeSpeed(true));
+        m_controller.povDown().onTrue(m_Left_Shooter.changeSpeed(false));
 
-        // m_controller.rightTrigger().onTrue(m_Feed.intake()); 
-        // m_controller.rightTrigger().onFalse(m_Feed.stop()); 
+        m_controller.povUp().onTrue(m_Right_Shooter.changeSpeed(true));
+        m_controller.povDown().onTrue(m_Right_Shooter.changeSpeed(false));
+        
+        m_controller.povUp().onTrue(m_Middle_Shooter.changeSpeed(true));
+        m_controller.povDown().onTrue(m_Middle_Shooter.changeSpeed(false));
+        
+        m_controller.leftTrigger().onTrue(m_Middle_Shooter.perciseControl(1)); 
+        m_controller.leftTrigger().onFalse(m_Middle_Shooter.perciseControl(5)); 
+
+        m_controller.leftTrigger().onTrue(m_Right_Shooter.perciseControl(1)); 
+        m_controller.leftTrigger().onFalse(m_Right_Shooter.perciseControl(5)); 
+        
+        m_controller.leftTrigger().onTrue(m_Left_Shooter.perciseControl(1)); 
+        m_controller.leftTrigger().onFalse(m_Left_Shooter.perciseControl(5)); 
+
+        m_controller.rightTrigger().onTrue(m_Feed.intake()); 
+        m_controller.rightTrigger().onFalse(m_Feed.stop()); 
         
         // m_controller.rightBumper().onTrue(m_Intake.intake()); 
         // m_controller.rightBumper().onTrue(m_Intake.stop());
@@ -136,12 +156,15 @@ public class RobotContainer {
     private Rotation2d getAngleToHub() {
         Translation2d hubPosition = FieldConstants.getHubPositionMatchingAlliance();
 
+        
         Pose2d currentPose = m_drivetrain.getPose();
         Translation2d robotPosition = currentPose.getTranslation();
 
         double xDifference = hubPosition.getX() - robotPosition.getX();
         double yDifference = hubPosition.getY() - robotPosition.getY();
 
-        return new Rotation2d(Math.atan2(yDifference, xDifference));
+        Rotation2d hubAngle = new Rotation2d(Math.atan2(yDifference, xDifference)); 
+        SmartDashboard.putNumber("Hub Angle", hubAngle.getRadians()); 
+        return hubAngle; 
     }
 }

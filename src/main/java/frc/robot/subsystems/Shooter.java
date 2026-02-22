@@ -1,11 +1,13 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix6.CANBus;
+import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.StaticBrake;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -14,14 +16,14 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Shooter extends SubsystemBase {
     // Constants
-    private static final CANBus kMotorBus = new CANBus("CANCAN");
-    private static final int kMotorID = 16;
-    private static double TargetSpeed = -45;
-    private static double MaxSpeed = -65;
-    private static double defaultSpeedChange = 5; 
+    private final CANBus kMotorBus = new CANBus("CANCAN"); 
+    private final int kMotorID;
+    private final TalonFX m_motor;
 
-    // Motor
-    private final TalonFX m_motor = new TalonFX(kMotorID, kMotorBus);
+    //Speed Variables
+    private double TargetSpeed = -45;
+    private double MaxSpeed = -65;
+    private double defaultSpeedChange = 5;
 
     // Motor Output
     private final VelocityVoltage m_output = new VelocityVoltage(TargetSpeed);
@@ -29,7 +31,10 @@ public class Shooter extends SubsystemBase {
     // Toggle Boolean
     public boolean isOn = false;
 
-    public Shooter() {
+    public Shooter(int id) {
+        kMotorID = id; 
+        m_motor = new TalonFX(kMotorID, kMotorBus);
+
         // Configure PID/feedforward gains for velocity control
         var slot0Configs = new Slot0Configs()
             .withKP(0.1)    // Proportional gain - adjust as needed
@@ -38,7 +43,9 @@ public class Shooter extends SubsystemBase {
             .withKS(0.0)    // Static friction feedforward
             .withKV(0.12);  // Velocity feedforward - tune this value
 
-        var motorConfig = new TalonFXConfiguration().withSlot0(slot0Configs);
+        var motorConfig = new TalonFXConfiguration().withSlot0(slot0Configs).withMotorOutput(
+            new MotorOutputConfigs().withInverted(InvertedValue.Clockwise_Positive));
+
         m_motor.getConfigurator().apply(motorConfig);
         m_motor.setNeutralMode(NeutralModeValue.Coast);
         SmartDashboard.putNumber("Shooter Target (RPS)", -TargetSpeed);
