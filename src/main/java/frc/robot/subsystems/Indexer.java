@@ -1,22 +1,24 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix6.CANBus;
+import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.StaticBrake;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class Feed extends SubsystemBase {
+public class Indexer extends SubsystemBase {
     // Constants
     private final CANBus kMotorBus = new CANBus("CANCAN");
     private final int kMotorID;
-    private double TargetSpeed = 15;
-    private double MaxSpeed = 30;
+    private double TargetSpeed = 20;
+    private double MaxSpeed = 35;
 
     // Motor
     private final TalonFX m_motor;
@@ -27,7 +29,7 @@ public class Feed extends SubsystemBase {
     // Toggle Boolean
     public boolean isOn = false;
 
-    public Feed(int id) {
+    public Indexer(int id) {
         kMotorID = id; 
         m_motor = new TalonFX(kMotorID, kMotorBus); 
 
@@ -39,8 +41,8 @@ public class Feed extends SubsystemBase {
             .withKS(0.0)    // Static friction feedforward
             .withKV(0.12);  // Velocity feedforward - tune this value
 
-        var motorConfig = new TalonFXConfiguration()
-            .withSlot0(slot0Configs);
+        var motorConfig = new TalonFXConfiguration().withSlot0(slot0Configs).withMotorOutput(
+            new MotorOutputConfigs().withInverted(InvertedValue.Clockwise_Positive));
         m_motor.getConfigurator().apply(motorConfig);
         m_motor.setNeutralMode(NeutralModeValue.Coast);
 

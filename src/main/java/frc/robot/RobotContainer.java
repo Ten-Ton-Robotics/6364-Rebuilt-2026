@@ -34,7 +34,7 @@ public class RobotContainer {
     public static final Shooter m_Right_Shooter = new Shooter(35);
 
     public static final Feed m_Feed = new Feed(13);
-    public static final Feed m_Indexer = new Feed(21); 
+    public static final Indexer m_Indexer = new Indexer(21); 
     public static final Intake m_Intake = new Intake(); 
 
     public static final AprilTagHandler m_AprilTagHandler = new AprilTagHandler();
