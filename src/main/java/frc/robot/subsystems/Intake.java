@@ -1,11 +1,13 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix6.CANBus;
+import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.StaticBrake;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.wpilibj2.command.Command;
@@ -22,7 +24,7 @@ public class Intake extends SubsystemBase {
 // ██████╔╝╚██████╔╝██║ ╚████║╚██████╗██║  ██║██║ ╚████║
 // ╚═════╝  ╚═════╝ ╚═╝  ╚═══╝ ╚═════╝╚═╝  ╚═╝╚═╝  ╚═══╝
 
-    private static final int kMotorID = 14; //Get motor ID from TunerX put that one here
+    private static final int kMotorID = 34; //Get motor ID from TunerX put that one here
     private static double TargetSpeed = 30; //If the motor is going the wrong way add a negative sign here
     private static double MaxSpeed = 40;
 
@@ -52,8 +54,9 @@ public class Intake extends SubsystemBase {
             .withKS(0.0)    // Static friction feedforward
             .withKV(0.12);  // Velocity feedforward - tune this value
 
-        var motorConfig = new TalonFXConfiguration()
-            .withSlot0(slot0Configs);
+        var motorConfig = new TalonFXConfiguration().withSlot0(slot0Configs).withMotorOutput(
+            new MotorOutputConfigs().withInverted(InvertedValue.Clockwise_Positive)
+            );
         m_motor.getConfigurator().apply(motorConfig);
         m_motor.setNeutralMode(NeutralModeValue.Coast);
 

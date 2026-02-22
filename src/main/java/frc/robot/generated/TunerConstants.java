@@ -127,7 +127,7 @@ public class TunerConstants {
 
     // Front Left
     private static final int kFrontLeftDriveMotorId = 6;
-    private static final int kFrontLeftSteerMotorId = 3;
+    private static final int kFrontLeftSteerMotorId = 45;
     private static final int kFrontLeftEncoderId = 11;
     private static final Angle kFrontLeftEncoderOffset = Rotations.of(0.339599609375);
     private static final boolean kFrontLeftSteerMotorInverted = false;

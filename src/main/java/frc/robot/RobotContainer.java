@@ -33,11 +33,12 @@ public class RobotContainer {
     public static final Shooter m_Left_Shooter = new Shooter(37);
     public static final Shooter m_Right_Shooter = new Shooter(35);
 
-    public static final Feed m_Feed = new Feed();
-    // public static final Intake m_Intake = new Intake(); 
+    public static final Feed m_Feed = new Feed(13);
+    public static final Feed m_Indexer = new Feed(21); 
+    public static final Intake m_Intake = new Intake(); 
 
     public static final AprilTagHandler m_AprilTagHandler = new AprilTagHandler();
-
+    
     private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond)  * 0.3; // kSpeedAt12Volts desired top speed
     private double MaxAngularRate = RotationsPerSecond.of(0.25).in(RadiansPerSecond); // 1/4 of a rotation per second max angular velocity
 
@@ -121,9 +122,11 @@ public class RobotContainer {
         m_controller.rightTrigger().onTrue(m_Feed.intake()); 
         m_controller.rightTrigger().onFalse(m_Feed.stop()); 
         
-        // m_controller.rightBumper().onTrue(m_Intake.intake()); 
-        // m_controller.rightBumper().onTrue(m_Intake.stop());
-
+        m_controller.rightTrigger().onTrue(m_Indexer.intake()); 
+        m_controller.rightTrigger().onFalse(m_Indexer.stop()); 
+        
+        m_controller.rightBumper().onTrue(m_Intake.intake()); 
+        m_controller.rightBumper().onFalse(m_Intake.stop()); 
         
 
         // m_controller.b().onTrue(m_drivetrain.FindAndFollowPath()); 
