@@ -29,9 +29,9 @@ public class RobotContainer {
     public Rotation2d hubTargetAngle = new Rotation2d(0.0);
 
     // Subsystems
-    public static final Shooter m_Middle_Shooter = new Shooter(44);
-    public static final Shooter m_Left_Shooter = new Shooter(37);
-    public static final Shooter m_Right_Shooter = new Shooter(35);
+    public static final Shooter m_Middle_Shooter = new Shooter(44, "Middle");
+    public static final Shooter m_Left_Shooter = new Shooter(37, "Left");
+    public static final Shooter m_Right_Shooter = new Shooter(35, "Right");
 
     public static final Feed m_Feed = new Feed(13);
     public static final Indexer m_Indexer = new Indexer(21); 
@@ -106,9 +106,6 @@ public class RobotContainer {
 
         m_controller.povUp().onTrue(m_Right_Shooter.changeSpeed(true));
         m_controller.povDown().onTrue(m_Right_Shooter.changeSpeed(false));
-        
-        m_controller.povUp().onTrue(m_Middle_Shooter.changeSpeed(true));
-        m_controller.povDown().onTrue(m_Middle_Shooter.changeSpeed(false));
         
         m_controller.leftTrigger().onTrue(m_Middle_Shooter.perciseControl(1)); 
         m_controller.leftTrigger().onFalse(m_Middle_Shooter.perciseControl(5)); 

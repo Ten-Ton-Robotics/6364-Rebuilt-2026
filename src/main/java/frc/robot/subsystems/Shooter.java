@@ -19,11 +19,13 @@ public class Shooter extends SubsystemBase {
     private final CANBus kMotorBus = new CANBus("CANCAN"); 
     private final int kMotorID;
     private final TalonFX m_motor;
+    public final String kname; 
 
     //Speed Variables
     private double TargetSpeed = -45;
     private double MaxSpeed = -65;
     private double defaultSpeedChange = 5;
+
 
     // Motor Output
     private final VelocityVoltage m_output = new VelocityVoltage(TargetSpeed);
@@ -31,8 +33,9 @@ public class Shooter extends SubsystemBase {
     // Toggle Boolean
     public boolean isOn = false;
 
-    public Shooter(int id) {
+    public Shooter(int id, String name) {
         kMotorID = id; 
+        kname = name; 
         m_motor = new TalonFX(kMotorID, kMotorBus);
 
         // Configure PID/feedforward gains for velocity control
@@ -48,8 +51,8 @@ public class Shooter extends SubsystemBase {
 
         m_motor.getConfigurator().apply(motorConfig);
         m_motor.setNeutralMode(NeutralModeValue.Coast);
-        SmartDashboard.putNumber("Shooter Target (RPS)", -TargetSpeed);
-
+        SmartDashboard.putNumber("Shooter " + id + "Target (RPS)", -TargetSpeed);
+        
     }
 
     // Commands
