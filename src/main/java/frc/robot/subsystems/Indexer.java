@@ -63,11 +63,11 @@ public class Indexer extends SubsystemBase {
 
     // Fuctions
     private void setMotorSpeed(double new_speed) {
-        if(new_speed > 0.0){ 
+        if(new_speed < 0.0){ 
             new_speed = 0.0;
         }
 
-        if(new_speed < MaxSpeed){
+        if(new_speed > MaxSpeed){
             new_speed = MaxSpeed;
         }
 
@@ -84,6 +84,10 @@ public class Indexer extends SubsystemBase {
 
     private void stopMotor() {
         m_motor.setControl(new StaticBrake());
+    }
+
+    public double getMotorRPS(){
+        return m_motor.getVelocity().getValueAsDouble();
     }
 }
 

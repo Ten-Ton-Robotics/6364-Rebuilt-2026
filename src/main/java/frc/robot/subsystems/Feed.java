@@ -15,7 +15,7 @@ public class Feed extends SubsystemBase {
     // Constants
     private final CANBus kMotorBus = new CANBus("CANCAN");
     private final int kMotorID;
-    private double TargetSpeed = 15;
+    private double TargetSpeed = 30;
     private double MaxSpeed = 30;
 
     // Motor
@@ -61,11 +61,11 @@ public class Feed extends SubsystemBase {
 
     // Fuctions
     private void setMotorSpeed(double new_speed) {
-        if(new_speed > 0.0){ 
+        if(new_speed < 0.0){ 
             new_speed = 0.0;
         }
 
-        if(new_speed < MaxSpeed){
+        if(new_speed > MaxSpeed){
             new_speed = MaxSpeed;
         }
 

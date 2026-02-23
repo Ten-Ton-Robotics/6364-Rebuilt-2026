@@ -16,25 +16,10 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class Intake extends SubsystemBase {
     // Constants
     private static final CANBus kMotorBus = new CANBus("CANCAN");
-// DUNCAN 
-// ██████╗ ██╗   ██╗███╗   ██╗ ██████╗ █████╗ ███╗   ██╗
-// ██╔══██╗██║   ██║████╗  ██║██╔════╝██╔══██╗████╗  ██║
-// ██║  ██║██║   ██║██╔██╗ ██║██║     ███████║██╔██╗ ██║
-// ██║  ██║██║   ██║██║╚██╗██║██║     ██╔══██║██║╚██╗██║
-// ██████╔╝╚██████╔╝██║ ╚████║╚██████╗██║  ██║██║ ╚████║
-// ╚═════╝  ╚═════╝ ╚═╝  ╚═══╝ ╚═════╝╚═╝  ╚═╝╚═╝  ╚═══╝
 
     private static final int kMotorID = 34; //Get motor ID from TunerX put that one here
     private static double TargetSpeed = 30; //If the motor is going the wrong way add a negative sign here
     private static double MaxSpeed = 40;
-
-
-// ██████╗ ██╗   ██╗███╗   ██╗ ██████╗ █████╗ ███╗   ██╗
-// ██╔══██╗██║   ██║████╗  ██║██╔════╝██╔══██╗████╗  ██║
-// ██║  ██║██║   ██║██╔██╗ ██║██║     ███████║██╔██╗ ██║
-// ██║  ██║██║   ██║██║╚██╗██║██║     ██╔══██║██║╚██╗██║
-// ██████╔╝╚██████╔╝██║ ╚████║╚██████╗██║  ██║██║ ╚████║
-// ╚═════╝  ╚═════╝ ╚═╝  ╚═══╝ ╚═════╝╚═╝  ╚═╝╚═╝  ╚═══╝
 
     // Motor
     private final TalonFX m_motor = new TalonFX(kMotorID, kMotorBus);
@@ -77,11 +62,11 @@ public class Intake extends SubsystemBase {
 
     // Fuctions
     private void setMotorSpeed(double new_speed) {
-        if(new_speed > 0.0){ //DO NOT GO BACKWARDS
+        if(new_speed < 0.0){ 
             new_speed = 0.0;
         }
 
-        if(new_speed < MaxSpeed){
+        if(new_speed > MaxSpeed){
             new_speed = MaxSpeed;
         }
 

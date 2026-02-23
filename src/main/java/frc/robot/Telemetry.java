@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
+import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Shooter;
 
 public class Telemetry {
@@ -97,11 +98,13 @@ public class Telemetry {
         Shooter Middle = RobotContainer.m_Middle_Shooter; 
         Shooter Left = RobotContainer.m_Left_Shooter; 
         Shooter Right = RobotContainer.m_Right_Shooter; 
+        Indexer Index = RobotContainer.m_Indexer; 
         
         SmartDashboard.putNumber(Middle.kname + " Shooter Speed (RPS)", -Middle.getMotorRPS());
         SmartDashboard.putNumber(Left.kname + " Shooter Speed (RPS)", -Left.getMotorRPS());
         SmartDashboard.putNumber(Right.kname + " Shooter Speed (RPS)", -Right.getMotorRPS());
-        
+        SmartDashboard.putNumber("Index Speed (RPS)", Index.getMotorRPS());
+
         /* Telemeterize the swerve drive state */
         drivePose.set(state.Pose);
         driveSpeeds.set(state.Speeds);
