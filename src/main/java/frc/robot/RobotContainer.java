@@ -6,8 +6,6 @@ package frc.robot;
 
 import static edu.wpi.first.units.Units.*;
 
-import java.security.Guard;
-
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
@@ -175,7 +173,7 @@ public class RobotContainer {
 
         return (isLeftShooterWithinRange && isMiddleShooterWithinRange && isRighttShooterWithinRange);
     }
-    
+
     private Command toggleSnappingToHub() {
         return new InstantCommand(() -> {
             hubTargetAngle = getAngleToHub();
