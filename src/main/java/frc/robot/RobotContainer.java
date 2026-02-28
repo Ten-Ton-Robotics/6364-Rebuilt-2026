@@ -173,6 +173,11 @@ public class RobotContainer {
         );
     }
 
+    /**
+     * Changes the value that shooter uses to change the target speed
+     * @param difference The difference you want to use
+     * @return A SequentialCommandGroup
+     */
     private Command changeShooterSpeedDifference(int difference) {
         return new SequentialCommandGroup(
             m_Middle_Shooter.changeShooterSpeedDifference(difference),
