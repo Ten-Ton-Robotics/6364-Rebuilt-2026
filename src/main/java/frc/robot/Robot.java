@@ -5,6 +5,8 @@
 package frc.robot;
 
 
+import com.pathplanner.lib.commands.FollowPathCommand;
+
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
@@ -28,9 +30,10 @@ public class Robot extends TimedRobot {
     // CameraServer.startAutomaticCapture();
   }
 
-  // @Override
-  // public void robotInit(){
-  //     }
+  @Override
+  public void robotInit(){
+    CommandScheduler.getInstance().schedule(FollowPathCommand.warmupCommand());
+      }
 
   @Override
   public void robotPeriodic() {
