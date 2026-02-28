@@ -159,6 +159,7 @@ public class RobotContainer {
             }),
 
             m_Feed.intake(),
+            new WaitCommand(0.1),
             m_Indexer.intake()
         );
     }
