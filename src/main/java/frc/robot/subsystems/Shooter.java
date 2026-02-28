@@ -134,10 +134,10 @@ public class Shooter extends SubsystemBase {
      * @param difference How much you want to speed the motor up. Positive number speeds up motor and negative number slows down motor  
      */
     public Command changeSpeed(Boolean SpeedUp) {
-        return this.runOnce(() -> { 
-            int SpeedChanger = SpeedUp ? 1 : -1 ;  
-            double new_speed = targetSpeed + (defaultSpeedChange * SpeedChanger); 
-            setMotorSpeed(new_speed);   
+        return this.runOnce(() -> {
+            int SpeedChanger = SpeedUp ? 1 : -1 ;
+            double new_speed = targetSpeed + (defaultSpeedChange * SpeedChanger);
+            if (isOn) { setMotorSpeed(new_speed); }
         });   
     }
 
