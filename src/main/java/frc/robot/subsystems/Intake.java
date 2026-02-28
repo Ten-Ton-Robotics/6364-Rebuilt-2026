@@ -21,8 +21,8 @@ public class Intake extends SubsystemBase {
     private static final CANBus kMotorBus = new CANBus("CANCAN");
 
     private static final int kMotorID = 34; //Get motor ID from TunerX put that one here
-    private static double TargetSpeed = 30; //If the motor is going the wrong way add a negative sign here
-    private static double MaxSpeed = 40;
+    private static double TargetSpeed = 50; //If the motor is going the wrong way add a negative sign here
+    private static double MaxSpeed = 50;
 
     // Motor
     private final TalonFX m_motor = new TalonFX(kMotorID, kMotorBus);
@@ -45,12 +45,12 @@ public class Intake extends SubsystemBase {
         var motorConfig = new TalonFXConfiguration()
         .withCurrentLimits(
                 new CurrentLimitsConfigs()
-                    .withStatorCurrentLimit(Amps.of(80))
+                    .withStatorCurrentLimit(Amps.of(40))
                     .withStatorCurrentLimitEnable(true)
             )
         .withSlot0(slot0Configs)
         .withMotorOutput(
-            new MotorOutputConfigs().withInverted(InvertedValue.Clockwise_Positive)
+            new MotorOutputConfigs().withInverted(InvertedValue.CounterClockwise_Positive)
             );
         m_motor.getConfigurator().apply(motorConfig);
         m_motor.setNeutralMode(NeutralModeValue.Coast);

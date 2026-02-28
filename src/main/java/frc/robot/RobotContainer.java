@@ -119,8 +119,8 @@ public class RobotContainer {
         m_controller.rightTrigger().onTrue(m_Feed.intake()); 
         m_controller.rightTrigger().onFalse(m_Feed.stop()); 
         
-        m_controller.rightTrigger().onTrue(m_Indexer.intake()); 
-        m_controller.rightTrigger().onFalse(m_Indexer.stop()); 
+        m_controller.rightBumper().onTrue(m_Indexer.intake()); 
+        m_controller.rightBumper().onFalse(m_Indexer.stop()); 
         
         m_controller.rightBumper().onTrue(m_Intake.intake()); 
         m_controller.rightBumper().onFalse(m_Intake.stop()); 
