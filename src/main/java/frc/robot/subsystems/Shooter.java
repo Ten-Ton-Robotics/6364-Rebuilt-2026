@@ -25,13 +25,13 @@ public class Shooter extends SubsystemBase {
     public final String kname; 
 
     //Speed Variables
-    private double TargetSpeed = 45;
-    private double MaxSpeed = 65;
+    public double targetSpeed = 45;
+    private double maxSpeed = 65;
     private double defaultSpeedChange = 5;
 
 
     // Motor Output
-    private final VelocityVoltage m_output = new VelocityVoltage(TargetSpeed);
+    private final VelocityVoltage m_output = new VelocityVoltage(targetSpeed);
 
     // Toggle Boolean
     public boolean isOn = false;
@@ -61,7 +61,7 @@ public class Shooter extends SubsystemBase {
 
         m_motor.getConfigurator().apply(motorConfig);
         m_motor.setNeutralMode(NeutralModeValue.Coast);
-        SmartDashboard.putNumber(kname + "Shooter Target (RPS)", TargetSpeed);
+        SmartDashboard.putNumber(kname + "Shooter Target (RPS)", targetSpeed);
         
     }
 
@@ -71,7 +71,7 @@ public class Shooter extends SubsystemBase {
             isOn = !isOn;
 
             if (isOn) {
-                setMotorSpeed(TargetSpeed);
+                setMotorSpeed(targetSpeed);
             } else {
                 stopMotor();
             }
@@ -81,7 +81,7 @@ public class Shooter extends SubsystemBase {
     public Command startShooting() {
         return this.runOnce(() -> {
             if (!isOn) {
-                setMotorSpeed(TargetSpeed);
+                setMotorSpeed(targetSpeed);
             }
         });
     }
@@ -95,15 +95,15 @@ public class Shooter extends SubsystemBase {
             new_speed = 0.0;
         }
 
-        if(new_speed > MaxSpeed){
-            new_speed = MaxSpeed;
+        if(new_speed > maxSpeed){
+            new_speed = maxSpeed;
         }
 
-        TargetSpeed = new_speed;
+        targetSpeed = new_speed;
         
-        SmartDashboard.putNumber(kname + "Shooter Target (RPS)", TargetSpeed);
+        SmartDashboard.putNumber(kname + "Shooter Target (RPS)", targetSpeed);
         
-        m_output.Velocity = TargetSpeed; 
+        m_output.Velocity = targetSpeed; 
         m_motor.setControl(m_output);
         m_motor.setNeutralMode(NeutralModeValue.Coast);
     }
@@ -112,7 +112,7 @@ public class Shooter extends SubsystemBase {
         m_motor.setControl(new StaticBrake());
     }
 
-    public double getMotorRPS(){
+    public double getCurrentMotorRPS(){
         return m_motor.getVelocity().getValueAsDouble();
     }
 
@@ -122,7 +122,7 @@ public class Shooter extends SubsystemBase {
      */
     public Command changeSpeed(double difference) {
         return this.runOnce(() -> {
-            double new_speed = TargetSpeed - difference; 
+            double new_speed = targetSpeed - difference; 
             setMotorSpeed(new_speed);   
         });   
     }
@@ -134,7 +134,7 @@ public class Shooter extends SubsystemBase {
     public Command changeSpeed(Boolean SpeedUp) {
         return this.runOnce(() -> { 
             int SpeedChanger = SpeedUp ? 1 : -1 ;  
-            double new_speed = TargetSpeed + (defaultSpeedChange * SpeedChanger); 
+            double new_speed = targetSpeed + (defaultSpeedChange * SpeedChanger); 
             setMotorSpeed(new_speed);   
         });   
     }

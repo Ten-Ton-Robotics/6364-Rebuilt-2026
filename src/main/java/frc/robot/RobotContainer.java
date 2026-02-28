@@ -6,6 +6,7 @@ package frc.robot;
 
 import static edu.wpi.first.units.Units.*;
 
+import java.security.Guard;
 
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
@@ -152,12 +153,29 @@ public class RobotContainer {
             m_Left_Shooter.startShooting(),
             m_Middle_Shooter.startShooting(),
             m_Right_Shooter.startShooting(),
-            new WaitCommand(0.5),
+
+            new InstantCommand(() -> {
+                while (!areAllShootersWithinTargetSpeedRange()) {
+                    new WaitCommand(0.2);
+                } 
+            }),
+
             m_Feed.intake(),
             m_Indexer.intake()
         );
     }
 
+    private Boolean areAllShootersWithinTargetSpeedRange() {
+        Double minimumSpeed = m_Middle_Shooter.targetSpeed - 1;
+        Double maximumSpeed = m_Middle_Shooter.targetSpeed + 1;
+
+        Boolean isLeftShooterWithinRange = (minimumSpeed <= m_Left_Shooter.getCurrentMotorRPS() && m_Left_Shooter.getCurrentMotorRPS() <= maximumSpeed);
+        Boolean isMiddleShooterWithinRange = (minimumSpeed <= m_Middle_Shooter.getCurrentMotorRPS() && m_Middle_Shooter.getCurrentMotorRPS() <= maximumSpeed);
+        Boolean isRighttShooterWithinRange = (minimumSpeed <= m_Right_Shooter.getCurrentMotorRPS() && m_Right_Shooter.getCurrentMotorRPS() <= maximumSpeed);
+
+        return (isLeftShooterWithinRange && isMiddleShooterWithinRange && isRighttShooterWithinRange);
+    }
+    
     private Command toggleSnappingToHub() {
         return new InstantCommand(() -> {
             hubTargetAngle = getAngleToHub();
