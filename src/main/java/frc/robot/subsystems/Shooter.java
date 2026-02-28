@@ -143,7 +143,7 @@ public class Shooter extends SubsystemBase {
      * Changes the speed of the motor. Note currently starts the motor on when called. 
      * @param difference How much you want to speed the motor up. Positive number speeds up motor and negative number slows down motor  
      */
-    public Command perciseControl(int change) {
+    public Command changeShooterSpeedDifference(int change) {
         return this.runOnce(() -> { 
                defaultSpeedChange = change; 
         });   

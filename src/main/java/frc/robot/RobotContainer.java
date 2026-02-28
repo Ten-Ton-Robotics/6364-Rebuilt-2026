@@ -95,28 +95,18 @@ public class RobotContainer {
         m_controller.a().onTrue(toggleSnappingToHub());
 
         // Sequential Commands
-        m_controller.y().onTrue(shoot());
+        m_controller.y().onTrue(shootSequentially());
         
         // Shooter toggle
-        m_controller.x().onTrue(m_Middle_Shooter.toggleShooting());
-        m_controller.x().onTrue(m_Right_Shooter.toggleShooting());
-        m_controller.x().onTrue(m_Left_Shooter.toggleShooting());
+        m_controller.x().onTrue(toggleShooting());
 
         // Shooter speed control
-        m_controller.povUp().onTrue(m_Middle_Shooter.changeSpeed(true));
-        m_controller.povDown().onTrue(m_Middle_Shooter.changeSpeed(false));
-        m_controller.povUp().onTrue(m_Left_Shooter.changeSpeed(true));
-        m_controller.povDown().onTrue(m_Left_Shooter.changeSpeed(false));
-        m_controller.povUp().onTrue(m_Right_Shooter.changeSpeed(true));
-        m_controller.povDown().onTrue(m_Right_Shooter.changeSpeed(false));
+        m_controller.povUp().onTrue(changeShooterSpeed(true));
+        m_controller.povDown().onTrue(changeShooterSpeed(false));
         
         // Shooter speed precise control
-        m_controller.leftTrigger().onTrue(m_Middle_Shooter.perciseControl(1)); 
-        m_controller.leftTrigger().onFalse(m_Middle_Shooter.perciseControl(5)); 
-        m_controller.leftTrigger().onTrue(m_Right_Shooter.perciseControl(1)); 
-        m_controller.leftTrigger().onFalse(m_Right_Shooter.perciseControl(5)); 
-        m_controller.leftTrigger().onTrue(m_Left_Shooter.perciseControl(1)); 
-        m_controller.leftTrigger().onFalse(m_Left_Shooter.perciseControl(5)); 
+        m_controller.leftTrigger().onTrue(changeShooterSpeedDifference(1));
+        m_controller.leftTrigger().onFalse(changeShooterSpeedDifference(5));
 
         // Feed
         m_controller.rightTrigger().onTrue(m_Feed.intake()); 
@@ -146,7 +136,7 @@ public class RobotContainer {
         m_drivetrain.registerTelemetry(logger::telemeterize);
     }  
 
-    private Command shoot() {
+    private Command shootSequentially() {
         return new SequentialCommandGroup(
             m_Left_Shooter.startShooting(),
             m_Middle_Shooter.startShooting(),
@@ -164,15 +154,28 @@ public class RobotContainer {
         );
     }
 
-    private Boolean areAllShootersWithinTargetSpeedRange() {
-        Double minimumSpeed = m_Middle_Shooter.targetSpeed - 1;
-        Double maximumSpeed = m_Middle_Shooter.targetSpeed + 1;
+    private Command toggleShooting() {
+        return new SequentialCommandGroup(
+            m_Middle_Shooter.toggleShooting(),
+            m_Left_Shooter.toggleShooting(),
+            m_Right_Shooter.toggleShooting()
+        );
+    }
 
-        Boolean isLeftShooterWithinRange = (minimumSpeed <= m_Left_Shooter.getCurrentMotorRPS() && m_Left_Shooter.getCurrentMotorRPS() <= maximumSpeed);
-        Boolean isMiddleShooterWithinRange = (minimumSpeed <= m_Middle_Shooter.getCurrentMotorRPS() && m_Middle_Shooter.getCurrentMotorRPS() <= maximumSpeed);
-        Boolean isRighttShooterWithinRange = (minimumSpeed <= m_Right_Shooter.getCurrentMotorRPS() && m_Right_Shooter.getCurrentMotorRPS() <= maximumSpeed);
+    private Command changeShooterSpeed(boolean speedUp) {
+        return new SequentialCommandGroup(
+            m_Middle_Shooter.changeSpeed(speedUp),
+            m_Left_Shooter.changeSpeed(speedUp),
+            m_Right_Shooter.changeSpeed(speedUp)
+        );
+    }
 
-        return (isLeftShooterWithinRange && isMiddleShooterWithinRange && isRighttShooterWithinRange);
+    private Command changeShooterSpeedDifference(int difference) {
+        return new SequentialCommandGroup(
+            m_Middle_Shooter.changeShooterSpeedDifference(difference),
+            m_Left_Shooter.changeShooterSpeedDifference(difference),
+            m_Right_Shooter.changeShooterSpeedDifference(difference)
+        );
     }
 
     private Command toggleSnappingToHub() {
@@ -192,11 +195,21 @@ public class RobotContainer {
         double yDifference = hubPosition.getY() - robotPosition.getY();
 
         hubDistance = Math.sqrt(Math.pow(xDifference, 2) + Math.pow(yDifference, 2)); 
-        SmartDashboard.putNumber("Hub Distance", hubDistance); 
 
         Rotation2d hubAngle = new Rotation2d(Math.atan2(yDifference, xDifference) + Math.PI); 
         SmartDashboard.putNumber("Hub Angle", hubAngle.getRadians()); 
         return hubAngle;
+    }
+
+    private Boolean areAllShootersWithinTargetSpeedRange() {
+        Double minimumSpeed = m_Middle_Shooter.targetSpeed - 1;
+        Double maximumSpeed = m_Middle_Shooter.targetSpeed + 1;
+
+        Boolean isLeftShooterWithinRange = (minimumSpeed <= m_Left_Shooter.getCurrentMotorRPS() && m_Left_Shooter.getCurrentMotorRPS() <= maximumSpeed);
+        Boolean isMiddleShooterWithinRange = (minimumSpeed <= m_Middle_Shooter.getCurrentMotorRPS() && m_Middle_Shooter.getCurrentMotorRPS() <= maximumSpeed);
+        Boolean isRighttShooterWithinRange = (minimumSpeed <= m_Right_Shooter.getCurrentMotorRPS() && m_Right_Shooter.getCurrentMotorRPS() <= maximumSpeed);
+
+        return (isLeftShooterWithinRange && isMiddleShooterWithinRange && isRighttShooterWithinRange);
     }
 
     public Command getAutonomousCommand() {
