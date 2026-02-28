@@ -7,7 +7,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 
 public class FieldConstants {
-    public static final Translation2d kBlueHub = new Translation2d(4.625594, 4.034536);
+    public static final Translation2d kBlueHub = new Translation2d(4.655594, 3.8);
     public static final Translation2d kRedHub = new Translation2d(11.915394, 4.034536);
 
     public static Translation2d getHubPositionMatchingAlliance() {

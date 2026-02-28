@@ -40,11 +40,12 @@ public class RobotContainer {
     public static final AprilTagHandler m_AprilTagHandler = new AprilTagHandler();
     
     private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond)  * 0.3; // kSpeedAt12Volts desired top speed
-    private double MaxAngularRate = RotationsPerSecond.of(0.25).in(RadiansPerSecond); // 1/4 of a rotation per second max angular velocity
+    private double MaxAngularRate = RotationsPerSecond.of(.50).in(RadiansPerSecond); // 1/2 of a rotation per second max angular velocity
 
+    public double hubDistance = 0; 
     /* Setting up bindings for necessary control of the swerve m_drive platform */
     private final SwerveRequest.FieldCentricFacingAngle m_drive = new SwerveRequest.FieldCentricFacingAngle()
-            .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.01) // Add a 10% deadband
+            .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.001) 
             .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for m_drive motors
 
     private final Telemetry logger = new Telemetry(MaxSpeed);
@@ -157,12 +158,13 @@ public class RobotContainer {
     private Rotation2d getAngleToHub() {
         Translation2d hubPosition = FieldConstants.getHubPositionMatchingAlliance();
 
-        
         Pose2d currentPose = m_drivetrain.getPose();
         Translation2d robotPosition = currentPose.getTranslation();
 
         double xDifference = hubPosition.getX() - robotPosition.getX();
         double yDifference = hubPosition.getY() - robotPosition.getY();
+
+        hubDistance = Math.sqrt(Math.pow(xDifference, 2) + Math.pow(yDifference, 2)); 
 
         Rotation2d hubAngle = new Rotation2d(Math.atan2(yDifference, xDifference) + Math.PI); 
         SmartDashboard.putNumber("Hub Angle", hubAngle.getRadians()); 
