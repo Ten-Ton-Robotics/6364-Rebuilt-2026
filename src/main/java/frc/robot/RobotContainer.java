@@ -17,6 +17,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
@@ -93,37 +95,39 @@ public class RobotContainer {
         // Hub Snapping
         m_controller.a().onTrue(toggleSnappingToHub());
 
-        m_controller.povRight().onTrue(m_AprilTagHandler.testWhetherTheBestTargetAprilTagIsFromAlliance());
+        // Sequential Commands
+        m_controller.y().onTrue(shoot());
         
-        //Shooter and Feed Control 
+        // Shooter toggle
         m_controller.x().onTrue(m_Middle_Shooter.toggleShooting());
         m_controller.x().onTrue(m_Right_Shooter.toggleShooting());
         m_controller.x().onTrue(m_Left_Shooter.toggleShooting());
 
+        // Shooter speed control
         m_controller.povUp().onTrue(m_Middle_Shooter.changeSpeed(true));
         m_controller.povDown().onTrue(m_Middle_Shooter.changeSpeed(false));
-        
         m_controller.povUp().onTrue(m_Left_Shooter.changeSpeed(true));
         m_controller.povDown().onTrue(m_Left_Shooter.changeSpeed(false));
-
         m_controller.povUp().onTrue(m_Right_Shooter.changeSpeed(true));
         m_controller.povDown().onTrue(m_Right_Shooter.changeSpeed(false));
         
+        // Shooter speed precise control
         m_controller.leftTrigger().onTrue(m_Middle_Shooter.perciseControl(1)); 
         m_controller.leftTrigger().onFalse(m_Middle_Shooter.perciseControl(5)); 
-
         m_controller.leftTrigger().onTrue(m_Right_Shooter.perciseControl(1)); 
         m_controller.leftTrigger().onFalse(m_Right_Shooter.perciseControl(5)); 
-        
         m_controller.leftTrigger().onTrue(m_Left_Shooter.perciseControl(1)); 
         m_controller.leftTrigger().onFalse(m_Left_Shooter.perciseControl(5)); 
 
+        // Feed
         m_controller.rightTrigger().onTrue(m_Feed.intake()); 
         m_controller.rightTrigger().onFalse(m_Feed.stop()); 
         
-        m_controller.rightBumper().onTrue(m_Indexer.intake()); 
-        m_controller.rightBumper().onFalse(m_Indexer.stop()); 
+        // Indexer
+        m_controller.rightBumper().onTrue(m_Indexer.intake());
+        m_controller.rightBumper().onFalse(m_Indexer.stop());
         
+        // Intake
         // m_controller.rightBumper().onTrue(m_Intake.intake()); 
         // m_controller.rightBumper().onFalse(m_Intake.stop()); 
         
@@ -141,11 +145,17 @@ public class RobotContainer {
         m_controller.leftBumper().onTrue(m_drivetrain.runOnce(() -> m_drivetrain.seedFieldCentric()));
 
         m_drivetrain.registerTelemetry(logger::telemeterize);
-
     }  
 
-    public Command getAutonomousCommand() {
-        return Commands.print("No autonomous command configured");
+    private Command shoot() {
+        return new SequentialCommandGroup(
+            m_Left_Shooter.startShooting(),
+            m_Middle_Shooter.startShooting(),
+            m_Right_Shooter.startShooting(),
+            new WaitCommand(0.5),
+            m_Feed.intake(),
+            m_Indexer.intake()
+        );
     }
 
     private Command toggleSnappingToHub() {
@@ -169,5 +179,9 @@ public class RobotContainer {
         Rotation2d hubAngle = new Rotation2d(Math.atan2(yDifference, xDifference) + Math.PI); 
         SmartDashboard.putNumber("Hub Angle", hubAngle.getRadians()); 
         return hubAngle;
+    }
+
+    public Command getAutonomousCommand() {
+        return Commands.print("No autonomous command configured");
     }
 }

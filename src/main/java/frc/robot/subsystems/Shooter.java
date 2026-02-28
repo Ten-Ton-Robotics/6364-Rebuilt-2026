@@ -77,6 +77,15 @@ public class Shooter extends SubsystemBase {
             }
         });
     }
+
+    public Command startShooting() {
+        return this.runOnce(() -> {
+            if (!isOn) {
+                setMotorSpeed(TargetSpeed);
+            }
+        });
+    }
+
     /**
      * Sets the speed of the motor. Note that we want the motor to spin backwards so the speed should be negative.  
      * @param new_speed The new speed of the motor. Gets capped between zero and the max speed.    
