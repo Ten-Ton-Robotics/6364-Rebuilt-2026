@@ -165,6 +165,7 @@ public class RobotContainer {
         double yDifference = hubPosition.getY() - robotPosition.getY();
 
         hubDistance = Math.sqrt(Math.pow(xDifference, 2) + Math.pow(yDifference, 2)); 
+        SmartDashboard.putNumber("Hub Distance", hubDistance); 
 
         Rotation2d hubAngle = new Rotation2d(Math.atan2(yDifference, xDifference) + Math.PI); 
         SmartDashboard.putNumber("Hub Angle", hubAngle.getRadians()); 
