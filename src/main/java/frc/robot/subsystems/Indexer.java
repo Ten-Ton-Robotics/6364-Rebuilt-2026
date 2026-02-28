@@ -17,7 +17,7 @@ public class Indexer extends SubsystemBase {
     // Constants
     private final CANBus kMotorBus = new CANBus("CANCAN");
     private final int kMotorID;
-    private double TargetSpeed = 20;
+    private double TargetSpeed = 10;
     private double MaxSpeed = 35;
 
     // Motor

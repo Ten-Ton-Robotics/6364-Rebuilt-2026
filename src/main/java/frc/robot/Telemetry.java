@@ -100,9 +100,9 @@ public class Telemetry {
         Shooter Right = RobotContainer.m_Right_Shooter; 
         Indexer Index = RobotContainer.m_Indexer; 
         
-        SmartDashboard.putNumber(Middle.kname + " Shooter Speed (RPS)", -Middle.getMotorRPS());
-        SmartDashboard.putNumber(Left.kname + " Shooter Speed (RPS)", -Left.getMotorRPS());
-        SmartDashboard.putNumber(Right.kname + " Shooter Speed (RPS)", -Right.getMotorRPS());
+        SmartDashboard.putNumber(Middle.kname + " Shooter Speed (RPS)", Middle.getMotorRPS());
+        SmartDashboard.putNumber(Left.kname + " Shooter Speed (RPS)", Left.getMotorRPS());
+        SmartDashboard.putNumber(Right.kname + " Shooter Speed (RPS)", Right.getMotorRPS());
         SmartDashboard.putNumber("Index Speed (RPS)", Index.getMotorRPS());
 
         /* Telemeterize the swerve drive state */

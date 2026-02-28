@@ -22,8 +22,8 @@ public class Shooter extends SubsystemBase {
     public final String kname; 
 
     //Speed Variables
-    private double TargetSpeed = -45;
-    private double MaxSpeed = -65;
+    private double TargetSpeed = 45;
+    private double MaxSpeed = 65;
     private double defaultSpeedChange = 5;
 
 
@@ -47,11 +47,11 @@ public class Shooter extends SubsystemBase {
             .withKV(0.12);  // Velocity feedforward - tune this value
 
         var motorConfig = new TalonFXConfiguration().withSlot0(slot0Configs).withMotorOutput(
-            new MotorOutputConfigs().withInverted(InvertedValue.Clockwise_Positive));
+            new MotorOutputConfigs().withInverted(InvertedValue.CounterClockwise_Positive));
 
         m_motor.getConfigurator().apply(motorConfig);
         m_motor.setNeutralMode(NeutralModeValue.Coast);
-        SmartDashboard.putNumber("Shooter " + id + "Target (RPS)", -TargetSpeed);
+        SmartDashboard.putNumber(kname + "Shooter Target (RPS)", TargetSpeed);
         
     }
 
@@ -72,25 +72,21 @@ public class Shooter extends SubsystemBase {
      * @param new_speed The new speed of the motor. Gets capped between zero and the max speed.    
      */
     private void setMotorSpeed(double new_speed) {
-        if(new_speed > 0.0){ //DO NOT GO BACKWARDS
+        if(new_speed < 0.0){ 
             new_speed = 0.0;
         }
 
-        if(new_speed < MaxSpeed){
+        if(new_speed > MaxSpeed){
             new_speed = MaxSpeed;
         }
 
         TargetSpeed = new_speed;
         
-        SmartDashboard.putNumber("Shooter Target (RPS)", -TargetSpeed);
+        SmartDashboard.putNumber(kname + "Shooter Target (RPS)", TargetSpeed);
         
         m_output.Velocity = TargetSpeed; 
         m_motor.setControl(m_output);
         m_motor.setNeutralMode(NeutralModeValue.Coast);
-        
-        if (TargetSpeed == 0.0) {
-            stopMotor();
-        }
     }
 
     private void stopMotor() {
@@ -119,7 +115,7 @@ public class Shooter extends SubsystemBase {
     public Command changeSpeed(Boolean SpeedUp) {
         return this.runOnce(() -> { 
             int SpeedChanger = SpeedUp ? 1 : -1 ;  
-            double new_speed = TargetSpeed - (defaultSpeedChange * SpeedChanger); 
+            double new_speed = TargetSpeed + (defaultSpeedChange * SpeedChanger); 
             setMotorSpeed(new_speed);   
         });   
     }

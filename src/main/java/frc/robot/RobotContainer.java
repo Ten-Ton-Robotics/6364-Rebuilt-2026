@@ -30,7 +30,7 @@ public class RobotContainer {
 
     // Subsystems
     public static final Shooter m_Middle_Shooter = new Shooter(44, "Middle");
-    public static final Shooter m_Left_Shooter = new Shooter(36, "Left");
+    public static final Shooter m_Left_Shooter = new Shooter(37, "Left");
     public static final Shooter m_Right_Shooter = new Shooter(35, "Right");
 
     public static final Feed m_Feed = new Feed(13);
