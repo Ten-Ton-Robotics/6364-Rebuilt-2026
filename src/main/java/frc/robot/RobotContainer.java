@@ -71,7 +71,8 @@ public class RobotContainer {
                 if (isHubSnappingOn) {
                     return baseDrive
                         .withTargetDirection(hubTargetAngle)
-                        .withHeadingPID(MaxAngularRate, 0, 0);
+                        .withHeadingPID(3, 0, 0)
+                        .withMaxAbsRotationalRate(MaxAngularRate);
                 } else {
                     double rightJoyStick = Math.abs(m_controller.getRightX()) < 0.1 ? 0 : m_controller.getRightX() ;
                     return baseDrive
@@ -122,8 +123,8 @@ public class RobotContainer {
         m_controller.rightBumper().onTrue(m_Indexer.intake()); 
         m_controller.rightBumper().onFalse(m_Indexer.stop()); 
         
-        m_controller.rightBumper().onTrue(m_Intake.intake()); 
-        m_controller.rightBumper().onFalse(m_Intake.stop()); 
+        // m_controller.rightBumper().onTrue(m_Intake.intake()); 
+        // m_controller.rightBumper().onFalse(m_Intake.stop()); 
         
 
         // m_controller.b().onTrue(m_drivetrain.FindAndFollowPath()); 
@@ -163,7 +164,7 @@ public class RobotContainer {
         double xDifference = hubPosition.getX() - robotPosition.getX();
         double yDifference = hubPosition.getY() - robotPosition.getY();
 
-        Rotation2d hubAngle = new Rotation2d(Math.atan2(yDifference, xDifference)); 
+        Rotation2d hubAngle = new Rotation2d(Math.atan2(yDifference, xDifference) + Math.PI); 
         SmartDashboard.putNumber("Hub Angle", hubAngle.getRadians()); 
         return hubAngle;
     }

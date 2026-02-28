@@ -23,7 +23,7 @@ public class Robot extends TimedRobot {
 
   public Robot() {
     m_robotContainer = new RobotContainer();
-    Transform3d cameraToRobot = new Transform3d(new Translation3d(-0.09, -0.09, 0.660), new Rotation3d(0,0.107,0));
+    Transform3d cameraToRobot = new Transform3d(new Translation3d(-0.2286, 0.2794, 0.61876), new Rotation3d(0,0,Math.PI));
     m_vision = new PhotonHandler(drivetrain::addVisionMeasurement, "Practice_Cam" , cameraToRobot.inverse());
     // CameraServer.startAutomaticCapture();
   }
