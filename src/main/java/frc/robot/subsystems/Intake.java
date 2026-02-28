@@ -1,6 +1,9 @@
 package frc.robot.subsystems;
 
+import static edu.wpi.first.units.Units.*;
+
 import com.ctre.phoenix6.CANBus;
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
@@ -39,7 +42,14 @@ public class Intake extends SubsystemBase {
             .withKS(0.0)    // Static friction feedforward
             .withKV(0.12);  // Velocity feedforward - tune this value
 
-        var motorConfig = new TalonFXConfiguration().withSlot0(slot0Configs).withMotorOutput(
+        var motorConfig = new TalonFXConfiguration()
+        .withCurrentLimits(
+                new CurrentLimitsConfigs()
+                    .withStatorCurrentLimit(Amps.of(80))
+                    .withStatorCurrentLimitEnable(true)
+            )
+        .withSlot0(slot0Configs)
+        .withMotorOutput(
             new MotorOutputConfigs().withInverted(InvertedValue.Clockwise_Positive)
             );
         m_motor.getConfigurator().apply(motorConfig);

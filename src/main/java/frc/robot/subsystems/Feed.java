@@ -1,6 +1,9 @@
 package frc.robot.subsystems;
 
+import static edu.wpi.first.units.Units.*;
+
 import com.ctre.phoenix6.CANBus;
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.StaticBrake;
@@ -40,7 +43,13 @@ public class Feed extends SubsystemBase {
             .withKV(0.12);  // Velocity feedforward - tune this value
 
         var motorConfig = new TalonFXConfiguration()
+            .withCurrentLimits(
+                new CurrentLimitsConfigs()
+                    .withStatorCurrentLimit(Amps.of(80))
+                    .withStatorCurrentLimitEnable(true)
+            )
             .withSlot0(slot0Configs);
+
         m_motor.getConfigurator().apply(motorConfig);
         m_motor.setNeutralMode(NeutralModeValue.Coast);
 

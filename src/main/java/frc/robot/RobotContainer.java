@@ -165,6 +165,6 @@ public class RobotContainer {
 
         Rotation2d hubAngle = new Rotation2d(Math.atan2(yDifference, xDifference)); 
         SmartDashboard.putNumber("Hub Angle", hubAngle.getRadians()); 
-        return hubAngle; 
+        return hubAngle;
     }
 }
