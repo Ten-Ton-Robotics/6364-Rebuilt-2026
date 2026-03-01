@@ -117,7 +117,7 @@ public class RobotContainer {
         m_controller.a().onTrue(toggleSnappingToHub());
 
         // Sequential Commands
-        m_controller.y().onTrue(shootSequentially());
+        m_controller.y().onTrue(toggleSequentialShoot());
         
         // Shooter toggle
         m_controller.x().onTrue(toggleShooting());
@@ -158,7 +158,7 @@ public class RobotContainer {
         m_drivetrain.registerTelemetry(logger::telemeterize);
     }  
 
-    private Command shootSequentially() {
+    private Command toggleSequentialShoot() {
         return new InstantCommand(() -> {
             isSequentialShootingOn = !isSequentialShootingOn;
 

@@ -20,7 +20,7 @@ public class Robot extends TimedRobot {
   private CommandSwerveDrivetrain drivetrain = RobotContainer.m_drivetrain;
   private Command m_autonomousCommand;
 
-  public static PhotonHandler m_vision_front;
+  public static PhotonHandler m_vision_top;
   public static PhotonHandler m_vision_back;
 
   private final RobotContainer m_robotContainer;
@@ -28,8 +28,8 @@ public class Robot extends TimedRobot {
   public Robot() {
     m_robotContainer = new RobotContainer();
 
-    Transform3d cameraToRobotForFrontCamera = new Transform3d(new Translation3d(-0.06, 0.11, 0.738), new Rotation3d(0, 0.5759586532, Math.PI));
-    m_vision_front = new PhotonHandler(drivetrain::addVisionMeasurement, "TopCam" , cameraToRobotForFrontCamera.inverse());
+    Transform3d cameraToRobotForTopCamera = new Transform3d(new Translation3d(-0.06, 0.11, 0.738), new Rotation3d(0, 0.5759586532, Math.PI));
+    m_vision_top = new PhotonHandler(drivetrain::addVisionMeasurement, "TopCam" , cameraToRobotForTopCamera.inverse());
 
     // Transform3d cameraToRobotForBackCamera = new Transform3d(new Translation3d(-0.2286, 0.2794, 0.61876), new Rotation3d(0, 0, Math.PI));
     // m_vision_back = new PhotonHandler(drivetrain::addVisionMeasurement, "SideCam" , cameraToRobotForBackCamera.inverse());
