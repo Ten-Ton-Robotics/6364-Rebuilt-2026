@@ -73,7 +73,8 @@ public class Shooter extends SubsystemBase {
                 setMotorSpeed(targetSpeed);
                 SmartDashboard.putNumber(kname + "Shooter Target (RPS)", targetSpeed);
             } else {
-                setMotorSpeed(0);
+                m_output.Velocity = 0; 
+                m_motor.setControl(m_output);
             }
         });
     }
