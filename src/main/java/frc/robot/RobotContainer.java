@@ -32,6 +32,25 @@ public class RobotContainer {
     public boolean isHubSnappingOn = false;
     public Rotation2d hubTargetAngle = new Rotation2d(0.0);
 
+
+    public boolean isSequentialShootingOn = false;
+
+    SequentialCommandGroup sequentialShootingCommand = new SequentialCommandGroup(
+        m_Left_Shooter.startShooting(),
+        m_Middle_Shooter.startShooting(),
+        m_Right_Shooter.startShooting(),
+
+        new InstantCommand(() -> {
+            while (!areAllShootersWithinTargetSpeedRange()) {
+                new WaitCommand(0.2);
+            } 
+        }),
+
+        m_Feed.intake(),
+        new WaitCommand(0.1),
+        m_Indexer.intake()
+    );
+
     // Subsystems
     public static final Shooter m_Middle_Shooter = new Shooter(44, "Middle");
     public static final Shooter m_Left_Shooter = new Shooter(37, "Left");
@@ -140,21 +159,22 @@ public class RobotContainer {
     }  
 
     private Command shootSequentially() {
-        return new SequentialCommandGroup(
-            m_Left_Shooter.startShooting(),
-            m_Middle_Shooter.startShooting(),
-            m_Right_Shooter.startShooting(),
+        return new InstantCommand(() -> {
+            isSequentialShootingOn = !isSequentialShootingOn;
 
-            new InstantCommand(() -> {
-                while (!areAllShootersWithinTargetSpeedRange()) {
-                    new WaitCommand(0.2);
-                } 
-            }),
-
-            m_Feed.intake(),
-            new WaitCommand(0.1),
-            m_Indexer.intake()
-        );
+            if (isSequentialShootingOn) {
+                sequentialShootingCommand.execute();
+            } else {
+                if (!sequentialShootingCommand.isFinished()) {
+                    sequentialShootingCommand.end(true);
+                }
+                m_Left_Shooter.stopShooting();
+                m_Middle_Shooter.stopShooting();
+                m_Right_Shooter.stopShooting();
+                m_Intake.stop();
+                m_Feed.stop();
+            }
+        });
     }
 
     private Command toggleShooting() {
