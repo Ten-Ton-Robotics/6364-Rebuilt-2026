@@ -7,7 +7,6 @@ import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.controls.StaticBrake;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
@@ -72,8 +71,9 @@ public class Shooter extends SubsystemBase {
 
             if (isOn) {
                 setMotorSpeed(targetSpeed);
+                SmartDashboard.putNumber(kname + "Shooter Target (RPS)", targetSpeed);
             } else {
-                stopMotor();
+                setMotorSpeed(0);
             }
         });
     }
@@ -89,7 +89,7 @@ public class Shooter extends SubsystemBase {
     public Command stopShooting() {
         return this.runOnce(() -> {
             if (isOn) {
-                stopMotor();
+                setMotorSpeed(0);
             }
         });
     }
@@ -99,6 +99,14 @@ public class Shooter extends SubsystemBase {
      * @param new_speed The new speed of the motor. Gets capped between zero and the max speed.    
      */
     private void setMotorSpeed(double new_speed) {
+        targetSpeed = speedCap(new_speed);
+                
+        m_output.Velocity = targetSpeed; 
+        m_motor.setControl(m_output);
+        m_motor.setNeutralMode(NeutralModeValue.Coast);
+    }
+
+    private double speedCap(double new_speed){
         if(new_speed < 0.0){ 
             new_speed = 0.0;
         }
@@ -106,18 +114,7 @@ public class Shooter extends SubsystemBase {
         if(new_speed > maxSpeed){
             new_speed = maxSpeed;
         }
-
-        targetSpeed = new_speed;
-        
-        SmartDashboard.putNumber(kname + "Shooter Target (RPS)", targetSpeed);
-        
-        m_output.Velocity = targetSpeed; 
-        m_motor.setControl(m_output);
-        m_motor.setNeutralMode(NeutralModeValue.Coast);
-    }
-
-    private void stopMotor() {
-        m_motor.setControl(new StaticBrake());
+        return new_speed; 
     }
 
     public double getCurrentMotorRPS(){
@@ -143,7 +140,12 @@ public class Shooter extends SubsystemBase {
         return this.runOnce(() -> {
             int SpeedChanger = SpeedUp ? 1 : -1 ;
             double new_speed = targetSpeed + (defaultSpeedChange * SpeedChanger);
-            if (isOn) { setMotorSpeed(new_speed); }
+
+            new_speed = speedCap(new_speed);
+            SmartDashboard.putNumber(kname + "Shooter Target (RPS)", new_speed);
+             
+            if (isOn) { setMotorSpeed(new_speed); } 
+            else{targetSpeed = new_speed;}
         });   
     }
 
