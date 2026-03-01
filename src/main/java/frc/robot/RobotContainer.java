@@ -8,16 +8,14 @@ import static edu.wpi.first.units.Units.*;
 
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.path.PathPlannerPath;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -31,8 +29,6 @@ import frc.robot.subsystems.*;
 public class RobotContainer {
     public boolean isHubSnappingOn = false;
     public Rotation2d hubTargetAngle = new Rotation2d(0.0);
-
-
     public boolean isSequentialShootingOn = false;
 
     SequentialCommandGroup sequentialShootingCommand = new SequentialCommandGroup(
@@ -75,9 +71,14 @@ public class RobotContainer {
 
     private final CommandXboxController m_controller = new CommandXboxController(0);
     public final static CommandSwerveDrivetrain m_drivetrain = TunerConstants.createDrivetrain();
-    
+    private final SendableChooser<Command> autoChooser; 
+
+
     public RobotContainer() {
         configureBindings();
+        autoChooser = AutoBuilder.buildAutoChooser(); 
+        SmartDashboard.putData("Auto Chooser", autoChooser); 
+
     }
 
     private void configureBindings() {
@@ -242,13 +243,6 @@ public class RobotContainer {
     }
 
     public Command getAutonomousCommand() {
-        try{
-            PathPlannerPath path = PathPlannerPath.fromPathFile("Example Path"); 
-
-            return AutoBuilder.followPath(path); 
-        } catch(Exception e) {
-            DriverStation.reportError("Pathplanner Error:", e.getStackTrace());
-            return Commands.none(); 
-        }
+        return autoChooser.getSelected();
     }
 }
