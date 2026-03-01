@@ -139,8 +139,8 @@ public class RobotContainer {
         m_controller.rightBumper().onFalse(m_Indexer.stop());
         
         // Intake
-        // m_controller.rightBumper().onTrue(m_Intake.intake()); 
-        // m_controller.rightBumper().onFalse(m_Intake.stop()); 
+        m_controller.rightBumper().onTrue(m_Intake.intake()); 
+        m_controller.rightBumper().onFalse(m_Intake.stop()); 
         
 
         // m_controller.b().onTrue(m_drivetrain.FindAndFollowPath()); 
@@ -243,7 +243,7 @@ public class RobotContainer {
 
     public Command getAutonomousCommand() {
         try{
-            PathPlannerPath path = PathPlannerPath.fromPathFile("First Path"); 
+            PathPlannerPath path = PathPlannerPath.fromPathFile("Example Path"); 
 
             return AutoBuilder.followPath(path); 
         } catch(Exception e) {

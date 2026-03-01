@@ -21,7 +21,7 @@ public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
   public static PhotonHandler m_vision_top;
-  public static PhotonHandler m_vision_back;
+  // public static PhotonHandler m_vision_back;
 
   private final RobotContainer m_robotContainer;
 
@@ -45,7 +45,7 @@ public class Robot extends TimedRobot {
   @Override
   public void robotPeriodic() {
     CommandScheduler.getInstance().run(); 
-    m_vision_back.periodic(); 
+    m_vision_top.periodic(); 
   }
 
   @Override

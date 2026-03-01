@@ -50,7 +50,7 @@ public class Intake extends SubsystemBase {
             )
         .withSlot0(slot0Configs)
         .withMotorOutput(
-            new MotorOutputConfigs().withInverted(InvertedValue.CounterClockwise_Positive)
+            new MotorOutputConfigs().withInverted(InvertedValue.Clockwise_Positive)
             );
         m_motor.getConfigurator().apply(motorConfig);
         m_motor.setNeutralMode(NeutralModeValue.Coast);

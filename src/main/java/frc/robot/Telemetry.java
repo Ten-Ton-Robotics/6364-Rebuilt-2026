@@ -4,6 +4,7 @@ import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.swerve.SwerveDrivetrain.SwerveDriveState;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
@@ -91,8 +92,7 @@ public class Telemetry {
     private final double[] m_moduleStatesArray = new double[8];
     private final double[] m_moduleTargetsArray = new double[8];
 
-    private final Field2d m_field = new Field2d();
-
+    private final Field2d m_field = new Field2d();    
     /** Accept the swerve drive state and telemeterize it to SmartDashboard and SignalLogger. */
     public void telemeterize(SwerveDriveState state) {
         Shooter Middle = RobotContainer.m_Middle_Shooter; 
@@ -115,7 +115,8 @@ public class Telemetry {
         driveOdometryFrequency.set(1.0 / state.OdometryPeriod);
 
         // Set the robot pose BEFORE putting the data!!!
-        m_field.setRobotPose(state.Pose);
+        m_field.setRobotPose(state.Pose); 
+        m_field.getObject("Target").setPose(FieldConstants.getHubPositionMatchingAlliance().getX(), FieldConstants.getHubPositionMatchingAlliance().getY(), new Rotation2d());
         SmartDashboard.putData(m_field);
 
         /* Also write to log file */
@@ -137,6 +138,7 @@ public class Telemetry {
         /* Telemeterize the pose to a Field2d */
         fieldTypePub.set("Field2d");
         fieldPub.set(m_poseArray);
+        
         
         /* Telemeterize each module state to a Mechanism2d */
         for (int i = 0; i < 4; ++i) {

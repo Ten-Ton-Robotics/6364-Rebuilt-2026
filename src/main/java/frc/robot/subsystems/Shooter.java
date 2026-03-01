@@ -89,7 +89,8 @@ public class Shooter extends SubsystemBase {
     public Command stopShooting() {
         return this.runOnce(() -> {
             if (isOn) {
-                setMotorSpeed(0);
+                m_output.Velocity = 0; 
+                m_motor.setControl(m_output);
             }
         });
     }
