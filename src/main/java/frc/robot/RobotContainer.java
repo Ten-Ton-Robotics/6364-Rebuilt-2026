@@ -38,8 +38,8 @@ public class RobotContainer {
     public static final Shooter m_Right_Shooter = new Shooter(35, "Right");
 
     public static final Feed m_Feed = new Feed(13);
-    public static final Indexer m_Indexer = new Indexer(21); 
-    public static final Intake m_Intake = new Intake(); 
+    public static final Indexer m_Indexer = new Indexer(21);
+    public static final Intake m_Intake = new Intake();
 
     public static final AprilTagHandler m_AprilTagHandler = new AprilTagHandler();
     
@@ -173,6 +173,11 @@ public class RobotContainer {
         );
     }
 
+    /**
+     * Changes the value that shooter uses to change the target speed
+     * @param difference The difference you want to use
+     * @return A SequentialCommandGroup
+     */
     private Command changeShooterSpeedDifference(int difference) {
         return new SequentialCommandGroup(
             m_Middle_Shooter.changeShooterSpeedDifference(difference),
