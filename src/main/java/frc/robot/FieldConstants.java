@@ -39,8 +39,8 @@ public class FieldConstants {
         if (rangeMap.isEmpty()){
             fillTable();
         }
-        double rangeDelta = 0; 
-        double rangeKey = 0; 
+        double rangeDelta = rangeMap.get(rangeMap.firstKey()); 
+        double rangeKey = rangeMap.firstKey();
 
         for(double range: rangeMap.keySet()){
             double tempDelta = distance - range;

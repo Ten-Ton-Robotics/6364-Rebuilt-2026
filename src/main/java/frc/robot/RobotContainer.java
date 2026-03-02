@@ -198,7 +198,7 @@ public class RobotContainer {
         });
     }
     
-    private Command setTargetSpeed(double Speed){
+    private Command setTargetSpeed(double Speed){ 
         return new InstantCommand(() -> {
             m_Left_Shooter.setShooterSpeed(Speed); 
             m_Middle_Shooter.setShooterSpeed(Speed);
