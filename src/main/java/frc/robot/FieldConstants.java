@@ -42,11 +42,13 @@ public class FieldConstants {
         double rangeDelta = rangeMap.get(rangeMap.firstKey()); 
         double rangeKey = rangeMap.firstKey();
 
+
         for(double range: rangeMap.keySet()){
             double tempDelta = distance - range;
-            if(Math.abs(tempDelta) < Math.abs(rangeDelta)); 
+            if(Math.abs(tempDelta) < Math.abs(rangeDelta)){
                 rangeDelta = tempDelta; 
                 rangeKey = range; 
+            }
         }
         
         //If the delta is positive then the distance is greater than the point 
@@ -54,12 +56,15 @@ public class FieldConstants {
         double maxRange = (rangeDelta > 0) ? rangeMap.higherKey(rangeKey) : rangeKey; 
         double minRange = (rangeDelta > 0) ? rangeKey : rangeMap.lowerKey(rangeKey);   
         
-        if(Double.isNaN(minRange) || Double.isNaN(maxRange)){
+        maxRange = Optional.ofNullable(maxRange).orElse(rangeKey); 
+        minRange = Optional.ofNullable(minRange).orElse(rangeKey); 
+
+        if(maxRange == minRange){
             return rangeMap.get(rangeKey); 
         }
          
         //How much more the distance is than the lower range divided by distance between the two ranges  
-        double percentOfRange = (distance - minRange)/(maxRange - minRange)+ 1.0 ;             
+        double percentOfRange = (distance - minRange)/(maxRange - minRange);             
 
         //What the difference between the larger and smaller power
         double powerDifference = rangeMap.get(maxRange) - rangeMap.get(minRange);  
