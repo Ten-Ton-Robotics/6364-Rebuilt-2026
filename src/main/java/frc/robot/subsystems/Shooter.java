@@ -152,12 +152,23 @@ public class Shooter extends SubsystemBase {
     }
 
     /**
-     * Changes the speed of the motor. Note currently starts the motor on when called. 
-     * @param difference How much you want to speed the motor up. Positive number speeds up motor and negative number slows down motor  
+     * Changes the increment of the motor changes 
+     * @param change how much the speed should change by  
      */
     public Command changeShooterSpeedDifference(int change) {
         return this.runOnce(() -> { 
                defaultSpeedChange = change; 
         });   
     }
+
+    /**
+     * Sets the speed of the motor.  
+     * @param speed Speed of the motor in RPS 
+     */
+    public Command setShooterSpeed(double speed){
+        return this.run(() -> {
+            setMotorSpeed(speed);
+        }); 
+    }
+
 }

@@ -1,6 +1,7 @@
 package frc.robot;
 
 import java.util.Optional;
+import java.util.TreeMap;
 
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -9,7 +10,7 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 public class FieldConstants {
     public static final Translation2d kBlueHub = new Translation2d(4.6, 4.005);
     public static final Translation2d kRedHub = new Translation2d(11.915394, 4.034536);
-
+    private static TreeMap<Double, Double> rangeMap = new TreeMap<>();   
     /** 
      * @return Returns a Translation2d of the matching hub
      */
@@ -22,5 +23,48 @@ public class FieldConstants {
             System.out.println("FieldConstants tried to access Alliance but failed; returning Blue by default.");
             return kBlueHub;
         }
+    }
+    private static void fillTable(){
+        rangeMap.put(1.823, 43.0);
+        rangeMap.put(2.182, 45.0);
+        rangeMap.put(2.670, 50.0);
+        rangeMap.put(3.157, 51.0);
+        rangeMap.put(3.573, 53.0); 
+        rangeMap.put(4.021, 58.0); 
+        rangeMap.put(4.436, 60.0);
+        rangeMap.put(5.185, 64.0);  
+    }
+
+    public static double getPowerFromRange(double distance){
+        if (rangeMap.isEmpty()){
+            fillTable();
+        }
+        double rangeDelta = 0; 
+        double rangeKey = 0; 
+
+        for(double range: rangeMap.keySet()){
+            double tempDelta = distance - range;
+            if(Math.abs(tempDelta) < Math.abs(rangeDelta)); 
+                rangeDelta = tempDelta; 
+                rangeKey = range; 
+        }
+        
+        //If the delta is positive then the distance is greater than the point 
+        //Set to var as higherkey can return a double or null 
+        double maxRange = (rangeDelta > 0) ? rangeMap.higherKey(rangeKey) : rangeKey; 
+        double minRange = (rangeDelta > 0) ? rangeKey : rangeMap.lowerKey(rangeKey);   
+        
+        if(Double.isNaN(minRange) || Double.isNaN(maxRange)){
+            return rangeMap.get(rangeKey); 
+        }
+         
+        //How much more the distance is than the lower range divided by distance between the two ranges  
+        double percentOfRange = (distance - minRange)/(maxRange - minRange)+ 1.0 ;             
+
+        //What the difference between the larger and smaller power
+        double powerDifference = rangeMap.get(maxRange) - rangeMap.get(minRange);  
+        
+        //The smaller power plus an extra based on far it is from the next range point 
+        return rangeMap.get(minRange) + (powerDifference * percentOfRange);   
     }
 }

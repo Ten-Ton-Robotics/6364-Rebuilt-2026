@@ -31,22 +31,6 @@ public class RobotContainer {
     public Rotation2d hubTargetAngle = new Rotation2d(0.0);
     public boolean isSequentialShootingOn = false;
 
-    SequentialCommandGroup sequentialShootingCommand = new SequentialCommandGroup(
-        m_Left_Shooter.startShooting(),
-        m_Middle_Shooter.startShooting(),
-        m_Right_Shooter.startShooting(),
-
-        new InstantCommand(() -> {
-            while (!areAllShootersWithinTargetSpeedRange()) {
-                new WaitCommand(0.2);
-            } 
-        }),
-
-        m_Feed.intake(),
-        new WaitCommand(0.1),
-        m_Indexer.intake()
-    );
-
     // Subsystems
     public static final Shooter m_Middle_Shooter = new Shooter(44, "Middle");
     public static final Shooter m_Left_Shooter = new Shooter(37, "Left");
@@ -213,6 +197,31 @@ public class RobotContainer {
             isHubSnappingOn = !isHubSnappingOn;
         });
     }
+    
+    private Command setTargetSpeed(double Speed){
+        return new InstantCommand(() -> {
+            m_Left_Shooter.setShooterSpeed(Speed); 
+            m_Middle_Shooter.setShooterSpeed(Speed);
+            m_Right_Shooter.setShooterSpeed(Speed);
+        }); 
+    } 
+
+    SequentialCommandGroup sequentialShootingCommand = new SequentialCommandGroup(
+        
+        m_Left_Shooter.startShooting(),
+        m_Middle_Shooter.startShooting(),
+        m_Right_Shooter.startShooting(),
+
+        new InstantCommand(() -> {
+            while (!areAllShootersWithinTargetSpeedRange()) {
+                new WaitCommand(0.2);
+            } 
+        }),
+
+        m_Feed.intake(),
+        new WaitCommand(0.1),
+        m_Indexer.intake()
+    );
 
     private Rotation2d getAngleToHub() {
         Translation2d hubPosition = FieldConstants.getHubPositionMatchingAlliance();
@@ -226,11 +235,16 @@ public class RobotContainer {
         hubDistance = Math.sqrt(Math.pow(xDifference, 2) + Math.pow(yDifference, 2)); 
         SmartDashboard.putNumber("Hub Distance", hubDistance); 
 
+        SmartDashboard.putNumber("Suggested Power", FieldConstants.getPowerFromRange(hubDistance));
+
         Rotation2d hubAngle = new Rotation2d(Math.atan2(yDifference, xDifference) + Math.PI); 
         SmartDashboard.putNumber("Hub Angle", hubAngle.getRadians()); 
         return hubAngle; 
     }
 
+    /** Gets the middle shooter target speed and checks if all of the shooters are with 1 rps of the middle shooter target speed
+     * @return Returns true if all shooters are within 1 rps of middle target speed otherwise returns false
+    */
     private Boolean areAllShootersWithinTargetSpeedRange() {
         Double minimumSpeed = m_Middle_Shooter.targetSpeed - 1;
         Double maximumSpeed = m_Middle_Shooter.targetSpeed + 1;
