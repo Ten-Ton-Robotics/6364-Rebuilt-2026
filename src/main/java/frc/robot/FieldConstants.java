@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 
 public class FieldConstants {
-    public static final Translation2d kBlueHub = new Translation2d(4.6, 4.005);
+    public static final Translation2d kBlueHub = new Translation2d(4.6, 4.03);
     public static final Translation2d kRedHub = new Translation2d(11.915394, 4.034536);
     private static TreeMap<Double, Double> rangeMap = new TreeMap<>();   
     /** 

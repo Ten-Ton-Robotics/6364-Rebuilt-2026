@@ -24,15 +24,15 @@ public class Robot extends TimedRobot {
   public static PhotonHandler m_vision_back;
 
   private final RobotContainer m_robotContainer;
-
+  
   public Robot() {
     m_robotContainer = new RobotContainer();
 
     Transform3d cameraToRobotForTopCamera = new Transform3d(new Translation3d(-0.06, 0.11, 0.738), new Rotation3d(0, 0.5759586532, Math.PI));
-    m_vision_top = new PhotonHandler(drivetrain::addVisionMeasurement, "TopCam" , cameraToRobotForTopCamera.inverse());
+    m_vision_top = new PhotonHandler(drivetrain::addVisionMeasurement, "ShooterCam" , cameraToRobotForTopCamera.inverse());
 
     Transform3d cameraToRobotForBackCamera = new Transform3d(new Translation3d(-0.038, 0, 0.703), new Rotation3d(0, -0.9, 0));
-    m_vision_back = new PhotonHandler(drivetrain::addVisionMeasurement, "SideCam" , cameraToRobotForBackCamera.inverse());
+    m_vision_back = new PhotonHandler(drivetrain::addVisionMeasurement, "IntakeCam" , cameraToRobotForBackCamera.inverse());
 
     // CameraServer.startAutomaticCapture();
   }
