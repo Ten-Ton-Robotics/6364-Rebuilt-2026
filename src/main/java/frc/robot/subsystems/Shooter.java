@@ -162,13 +162,19 @@ public class Shooter extends SubsystemBase {
     }
 
     /**
-     * Sets the speed of the motor.  
+     * Sets the speed of the motor.
      * @param speed Speed of the motor in RPS 
      */
-    public Command setShooterSpeed(double speed){
-        return this.runOnce(() -> {
-            m_output.Velocity = speedCap(speed); 
-            m_motor.setControl(m_output);
+    public Command toggleWithSetShooterSpeed(double speed){
+        return this.runOnce(() -> { 
+            isOn = !isOn;
+            if (isOn) {
+                m_output.Velocity = speedCap(speed); 
+                m_motor.setControl(m_output);   
+            } else {
+                m_output.Velocity = 0; 
+                m_motor.setControl(m_output);
+            }
         }); 
     }
 

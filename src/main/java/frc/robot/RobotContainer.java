@@ -14,6 +14,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -43,10 +44,13 @@ public class RobotContainer {
     private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond)  * 0.3; // kSpeedAt12Volts desired top speed
     private double MaxAngularRate = RotationsPerSecond.of(.50).in(RadiansPerSecond); // 1/2 of a rotation per second max angular velocity
 
-    public double hubDistance = 0; 
+    private double hubDistance = 0; 
+    private double reccomendedPower = 0; 
+
+
     /* Setting up bindings for necessary control of the swerve m_drive platform */
     private final SwerveRequest.FieldCentricFacingAngle m_drive = new SwerveRequest.FieldCentricFacingAngle()
-            .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.001) 
+            .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.01) 
             .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for m_drive motors
 
     private final Telemetry logger = new Telemetry(MaxSpeed);
@@ -78,7 +82,7 @@ public class RobotContainer {
                 if (isHubSnappingOn) {
                     return baseDrive
                         .withTargetDirection(hubTargetAngle)
-                        .withHeadingPID(3, 0, 0)
+                        .withHeadingPID(5, 0, 0)
                         .withMaxAbsRotationalRate(MaxAngularRate);
                 } else {
                     double rightJoyStick = Math.abs(m_controller.getRightX()) < 0.1 ? 0 : m_controller.getRightX() ;
@@ -106,7 +110,7 @@ public class RobotContainer {
         m_controller.x().onTrue(toggleShooting());
 
         //Shooter Set Speed 
-        m_controller.b().onTrue(setTargetSpeed(FieldUtil.getPowerFromRange()));
+        m_controller.b().onTrue(changeReccomendedPower().andThen(toggleShooterWithSpeed(Math.round(reccomendedPower))));
 
         // Shooter speed control
         m_controller.povUp().onTrue(changeShooterSpeed(true));
@@ -163,8 +167,11 @@ public class RobotContainer {
         });
     }
 
+
+
     private Command toggleShooting() {
         return new SequentialCommandGroup(
+            Commands.print("Toggling"),
             m_Middle_Shooter.toggleShooting(),
             m_Left_Shooter.toggleShooting(),
             m_Right_Shooter.toggleShooting()
@@ -192,6 +199,13 @@ public class RobotContainer {
         );
     }
 
+    private Command changeReccomendedPower(){
+        return new InstantCommand(() -> {
+            reccomendedPower = FieldUtil.getPowerFromRange();
+            Commands.print("New power:" + reccomendedPower);
+        }); 
+    }
+
     private Command toggleSnappingToHub() {
         return new InstantCommand(() -> {
             hubTargetAngle = FieldUtil.getAngleToHub();
@@ -199,11 +213,11 @@ public class RobotContainer {
         });
     }
     
-    private Command setTargetSpeed(double Speed){ 
+    private Command toggleShooterWithSpeed(double Speed){ 
         return new SequentialCommandGroup(
-            m_Left_Shooter.setShooterSpeed(Speed), 
-            m_Middle_Shooter.setShooterSpeed(Speed),
-            m_Right_Shooter.setShooterSpeed(Speed)
+            m_Left_Shooter.toggleWithSetShooterSpeed(Speed), 
+            m_Middle_Shooter.toggleWithSetShooterSpeed(Speed),
+            m_Right_Shooter.toggleWithSetShooterSpeed(Speed)
         ); 
     } 
 

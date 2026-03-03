@@ -43,7 +43,8 @@ public class FieldUtil {
         if (rangeMap.isEmpty()){
             fillTable();
         }
-        double distance = FieldUtil.GetHubDistance(); 
+        double distance = FieldUtil.GetHubDistance();
+        SmartDashboard.putNumber("Hub Distance", distance); 
         double rangeDelta = rangeMap.get(rangeMap.firstKey()); 
         double rangeKey = rangeMap.firstKey();
 
@@ -73,7 +74,9 @@ public class FieldUtil {
         double powerDifference = rangeMap.get(maxRange) - rangeMap.get(minRange);  
         
         //The smaller power plus an extra based on far it is from the next range point 
-        return rangeMap.get(minRange) + (powerDifference * percentOfRange);   
+        double power = rangeMap.get(minRange) + (powerDifference * percentOfRange);  
+        SmartDashboard.putNumber("Reccomended Power", power); 
+        return power;   
     }
 
     public static Rotation2d getAngleToHub() {
