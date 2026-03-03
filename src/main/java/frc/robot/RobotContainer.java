@@ -107,6 +107,9 @@ public class RobotContainer {
         // Shooter toggle
         m_controller.x().onTrue(toggleShooting());
 
+        //Shooter Speed Set 
+        m_controller.b().onTrue(setMotorSpeed(FieldConstants.getPowerFromRange(hubDistance))); 
+
         // Shooter speed control
         m_controller.povUp().onTrue(changeShooterSpeed(true));
         m_controller.povDown().onTrue(changeShooterSpeed(false));
@@ -198,12 +201,12 @@ public class RobotContainer {
         });
     }
     
-    private Command setTargetSpeed(double Speed){ 
-        return new InstantCommand(() -> {
-            m_Left_Shooter.setShooterSpeed(Speed); 
-            m_Middle_Shooter.setShooterSpeed(Speed);
-            m_Right_Shooter.setShooterSpeed(Speed);
-        }); 
+    private Command setMotorSpeed(double Speed){ 
+        return new SequentialCommandGroup(
+            m_Left_Shooter.setShooterSpeed(Speed),
+            m_Middle_Shooter.setShooterSpeed(Speed),
+            m_Right_Shooter.setShooterSpeed(Speed)
+        ); 
     } 
 
     SequentialCommandGroup sequentialShootingCommand = new SequentialCommandGroup(
