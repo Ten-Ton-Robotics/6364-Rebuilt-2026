@@ -3,14 +3,19 @@ package frc.robot;
 import java.util.Optional;
 import java.util.TreeMap;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class FieldConstants {
     public static final Translation2d kBlueHub = new Translation2d(4.6, 4.03);
     public static final Translation2d kRedHub = new Translation2d(11.915394, 4.034536);
+    public static double hubDistance = 0; 
     private static TreeMap<Double, Double> rangeMap = new TreeMap<>();   
+    
     /** 
      * @return Returns a Translation2d of the matching hub
      */
@@ -69,5 +74,24 @@ public class FieldConstants {
         
         //The smaller power plus an extra based on far it is from the next range point 
         return rangeMap.get(minRange) + (powerDifference * percentOfRange);   
+    }
+
+    public static Rotation2d getAngleToHub() {
+        Translation2d hubPosition = FieldConstants.getHubPositionMatchingAlliance();
+
+        Pose2d currentPose = RobotContainer.m_drivetrain.getPose();
+        Translation2d robotPosition = currentPose.getTranslation();
+
+        double xDifference = hubPosition.getX() - robotPosition.getX();
+        double yDifference = hubPosition.getY() - robotPosition.getY();
+
+        hubDistance = Math.sqrt(Math.pow(xDifference, 2) + Math.pow(yDifference, 2)); 
+        SmartDashboard.putNumber("Hub Distance", hubDistance); 
+
+        SmartDashboard.putNumber("Suggested Power", FieldConstants.getPowerFromRange(hubDistance));
+
+        Rotation2d hubAngle = new Rotation2d(Math.atan2(yDifference, xDifference) + Math.PI); 
+        SmartDashboard.putNumber("Hub Angle", hubAngle.getRadians()); 
+        return hubAngle; 
     }
 }
