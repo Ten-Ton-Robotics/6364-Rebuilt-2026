@@ -14,6 +14,7 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Shooter extends SubsystemBase {
@@ -166,8 +167,9 @@ public class Shooter extends SubsystemBase {
      * @param speed Speed of the motor in RPS 
      */
     public Command setShooterSpeed(double speed){
-        return this.run(() -> {
-            setMotorSpeed(speed);
+        return this.runOnce(() -> {
+            m_output.Velocity = speedCap(speed); 
+            m_motor.setControl(m_output);
         }); 
     }
 
