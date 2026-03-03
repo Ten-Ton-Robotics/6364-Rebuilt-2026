@@ -53,11 +53,9 @@ public class FieldConstants {
         
         //If the delta is positive then the distance is greater than the point 
         //Set to var as higherkey can return a double or null 
-        double maxRange = (rangeDelta > 0) ? rangeMap.higherKey(rangeKey) : rangeKey; 
-        double minRange = (rangeDelta > 0) ? rangeKey : rangeMap.lowerKey(rangeKey);   
-        
-        maxRange = Optional.ofNullable(maxRange).orElse(rangeKey); 
-        minRange = Optional.ofNullable(minRange).orElse(rangeKey); 
+           
+        double maxRange = (rangeDelta > 0) ? Optional.ofNullable(rangeMap.higherKey(rangeKey)).orElse(rangeKey) : rangeKey; 
+        double minRange = (rangeDelta > 0) ? rangeKey : Optional.ofNullable(rangeMap.lowerKey(rangeKey)).orElse(rangeKey); 
 
         if(maxRange == minRange){
             return rangeMap.get(rangeKey); 
