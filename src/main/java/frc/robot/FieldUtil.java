@@ -3,17 +3,15 @@ package frc.robot;
 import java.util.Optional;
 import java.util.TreeMap;
 
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class FieldConstants {
+public class FieldUtil {
     public static final Translation2d kBlueHub = new Translation2d(4.6, 4.03);
     public static final Translation2d kRedHub = new Translation2d(11.915394, 4.034536);
-    public static double hubDistance = 0; 
     private static TreeMap<Double, Double> rangeMap = new TreeMap<>();   
     
     /** 
@@ -29,6 +27,7 @@ public class FieldConstants {
             return kBlueHub;
         }
     }
+    
     private static void fillTable(){
         rangeMap.put(1.823, 43.0);
         rangeMap.put(2.182, 45.0);
@@ -40,10 +39,11 @@ public class FieldConstants {
         rangeMap.put(5.185, 64.0);  
     }
 
-    public static double getPowerFromRange(double distance){
+    public static double getPowerFromRange(){
         if (rangeMap.isEmpty()){
             fillTable();
         }
+        double distance = FieldUtil.GetHubDistance(); 
         double rangeDelta = rangeMap.get(rangeMap.firstKey()); 
         double rangeKey = rangeMap.firstKey();
 
@@ -77,21 +77,27 @@ public class FieldConstants {
     }
 
     public static Rotation2d getAngleToHub() {
-        Translation2d hubPosition = FieldConstants.getHubPositionMatchingAlliance();
+        Translation2d hubPosition = FieldUtil.getHubPositionMatchingAlliance();
 
-        Pose2d currentPose = RobotContainer.m_drivetrain.getPose();
-        Translation2d robotPosition = currentPose.getTranslation();
+        Translation2d robotPosition = RobotContainer.m_drivetrain.getPose().getTranslation();
 
         double xDifference = hubPosition.getX() - robotPosition.getX();
         double yDifference = hubPosition.getY() - robotPosition.getY();
 
-        hubDistance = Math.sqrt(Math.pow(xDifference, 2) + Math.pow(yDifference, 2)); 
-        SmartDashboard.putNumber("Hub Distance", hubDistance); 
-
-        SmartDashboard.putNumber("Suggested Power", FieldConstants.getPowerFromRange(hubDistance));
-
         Rotation2d hubAngle = new Rotation2d(Math.atan2(yDifference, xDifference) + Math.PI); 
         SmartDashboard.putNumber("Hub Angle", hubAngle.getRadians()); 
         return hubAngle; 
+    }
+
+    public static double GetHubDistance(){
+        Translation2d hubPosition = FieldUtil.getHubPositionMatchingAlliance();
+        Translation2d robotPosition = RobotContainer.m_drivetrain.getPose().getTranslation();
+
+        double xDifference = hubPosition.getX() - robotPosition.getX();
+        double yDifference = hubPosition.getY() - robotPosition.getY();
+        
+        double hubDistance = Math.sqrt(Math.pow(xDifference, 2) + Math.pow(yDifference, 2)); 
+
+        return hubDistance;
     }
 }

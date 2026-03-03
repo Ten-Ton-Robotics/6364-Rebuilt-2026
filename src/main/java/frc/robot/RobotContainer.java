@@ -10,9 +10,7 @@ import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -107,8 +105,8 @@ public class RobotContainer {
         // Shooter toggle
         m_controller.x().onTrue(toggleShooting());
 
-        //Shooter Speed Set 
-        m_controller.b().onTrue(setMotorSpeed(FieldConstants.getPowerFromRange(hubDistance))); 
+        //Shooter Set Speed 
+        m_controller.b().onTrue(setTargetSpeed(FieldUtil.getPowerFromRange()));
 
         // Shooter speed control
         m_controller.povUp().onTrue(changeShooterSpeed(true));
@@ -196,14 +194,14 @@ public class RobotContainer {
 
     private Command toggleSnappingToHub() {
         return new InstantCommand(() -> {
-            hubTargetAngle = getAngleToHub();
+            hubTargetAngle = FieldUtil.getAngleToHub();
             isHubSnappingOn = !isHubSnappingOn;
         });
     }
     
-    private Command setMotorSpeed(double Speed){ 
+    private Command setTargetSpeed(double Speed){ 
         return new SequentialCommandGroup(
-            m_Left_Shooter.setShooterSpeed(Speed),
+            m_Left_Shooter.setShooterSpeed(Speed), 
             m_Middle_Shooter.setShooterSpeed(Speed),
             m_Right_Shooter.setShooterSpeed(Speed)
         ); 
@@ -226,24 +224,6 @@ public class RobotContainer {
         m_Indexer.intake()
     );
 
-    private Rotation2d getAngleToHub() {
-        Translation2d hubPosition = FieldConstants.getHubPositionMatchingAlliance();
-
-        Pose2d currentPose = m_drivetrain.getPose();
-        Translation2d robotPosition = currentPose.getTranslation();
-
-        double xDifference = hubPosition.getX() - robotPosition.getX();
-        double yDifference = hubPosition.getY() - robotPosition.getY();
-
-        hubDistance = Math.sqrt(Math.pow(xDifference, 2) + Math.pow(yDifference, 2)); 
-        SmartDashboard.putNumber("Hub Distance", hubDistance); 
-
-        SmartDashboard.putNumber("Suggested Power", FieldConstants.getPowerFromRange(hubDistance));
-
-        Rotation2d hubAngle = new Rotation2d(Math.atan2(yDifference, xDifference) + Math.PI); 
-        SmartDashboard.putNumber("Hub Angle", hubAngle.getRadians()); 
-        return hubAngle; 
-    }
 
     /** Gets the middle shooter target speed and checks if all of the shooters are with 1 rps of the middle shooter target speed
      * @return Returns true if all shooters are within 1 rps of middle target speed otherwise returns false
