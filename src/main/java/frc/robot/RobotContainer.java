@@ -8,6 +8,7 @@ import static edu.wpi.first.units.Units.*;
 
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -16,6 +17,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -38,11 +40,12 @@ public class RobotContainer {
     public static final Feed m_Feed = new Feed(13);
     public static final Indexer m_Indexer = new Indexer(21);
     public static final Intake m_Intake = new Intake();
+    public static final Pivot m_pivot = new Pivot();
 
     public static final AprilTagHandler m_AprilTagHandler = new AprilTagHandler();
     
-    private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond)  * 0.3; // kSpeedAt12Volts desired top speed
-    private double MaxAngularRate = RotationsPerSecond.of(.50).in(RadiansPerSecond); // 1/2 of a rotation per second max angular velocity
+    private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
+    private double MaxAngularRate = RotationsPerSecond.of(1).in(RadiansPerSecond); // 1/2 of a rotation per second max angular velocity
 
     private double hubDistance = 0; 
     private double recommendedPower = 0;
@@ -55,7 +58,8 @@ public class RobotContainer {
 
     private final Telemetry logger = new Telemetry(MaxSpeed);
 
-    private final CommandXboxController m_controller = new CommandXboxController(0);
+    private final CommandXboxController m_controller = new CommandXboxController(1);
+    private final CommandXboxController m_test_controller = new CommandXboxController(0); 
     public final static CommandSwerveDrivetrain m_drivetrain = TunerConstants.createDrivetrain();
     private final SendableChooser<Command> autoChooser; 
 
@@ -99,12 +103,18 @@ public class RobotContainer {
         RobotModeTriggers.disabled().whileTrue(
             m_drivetrain.applyRequest(() -> idle).ignoringDisable(true)
         );
+    
 
         // Hub Snapping
         m_controller.a().onTrue(toggleSnappingToHub());
 
         // Sequential Commands
-        m_controller.y().onTrue(toggleSequentialShoot());
+        m_test_controller.y().onTrue(m_Indexer.putOutIntake());
+        m_test_controller.y().onFalse(m_Indexer.stop()); 
+
+        m_test_controller.a().onTrue(m_pivot.pivot()); 
+        m_test_controller.a().onFalse(m_pivot.stop()); 
+
         
         // Shooter toggle
         m_controller.x().onTrue(toggleShooting());
@@ -146,6 +156,12 @@ public class RobotContainer {
         m_controller.leftBumper().onTrue(m_drivetrain.runOnce(() -> m_drivetrain.seedFieldCentric()));
 
         m_drivetrain.registerTelemetry(logger::telemeterize);
+
+        NamedCommands.registerCommand("Turn on Intake", m_Intake.intake());
+        NamedCommands.registerCommand("Stop Intake", m_Intake.stop());
+        NamedCommands.registerCommand("Toggle Shooter with Speed", toggleShooterWithSpeed(50));
+        NamedCommands.registerCommand("Start Feed", m_Feed.intake());
+        NamedCommands.registerCommand("Stop Feed", m_Feed.intake());
     }  
 
     private Command toggleSequentialShoot() {
@@ -170,7 +186,7 @@ public class RobotContainer {
 
 
     private Command toggleShooting() {
-        return new SequentialCommandGroup(
+        return new ParallelCommandGroup(
             Commands.print("Toggling"),
             m_Middle_Shooter.toggleShooting(),
             m_Left_Shooter.toggleShooting(),
@@ -179,7 +195,7 @@ public class RobotContainer {
     }
 
     private Command changeShooterSpeed(boolean speedUp) {
-        return new SequentialCommandGroup(
+        return new ParallelCommandGroup(
             m_Middle_Shooter.changeSpeed(speedUp),
             m_Left_Shooter.changeSpeed(speedUp),
             m_Right_Shooter.changeSpeed(speedUp)
@@ -189,14 +205,28 @@ public class RobotContainer {
     /**
      * Changes the value that shooter uses to change the target speed
      * @param difference The difference you want to use
-     * @return A SequentialCommandGroup
+     * @return A ParallelCommandGroup
      */
     private Command changeShooterSpeedDifference(int difference) {
-        return new SequentialCommandGroup(
+        return new ParallelCommandGroup(
             m_Middle_Shooter.changeShooterSpeedDifference(difference),
             m_Left_Shooter.changeShooterSpeedDifference(difference),
             m_Right_Shooter.changeShooterSpeedDifference(difference)
         );
+    }
+
+    private Command pushIntakeOut(){
+        return new ParallelCommandGroup(
+            m_pivot.pivot(), 
+            m_Indexer.putOutIntake()
+        ); 
+    }
+
+    public Command stopPushingIntake(){
+        return new ParallelCommandGroup(
+            m_pivot.stop(), 
+            m_Indexer.stop()
+        ); 
     }
 
     private Command changeRecommendedPower(){

@@ -21,7 +21,7 @@ public class Intake extends SubsystemBase {
     private static final CANBus kMotorBus = new CANBus("CANCAN");
 
     private static final int kMotorID = 34; //Get motor ID from TunerX put that one here
-    private static double TargetSpeed = 50; //If the motor is going the wrong way add a negative sign here
+    private static double TargetSpeed = 50; 
     private static double MaxSpeed = 50;
 
     // Motor

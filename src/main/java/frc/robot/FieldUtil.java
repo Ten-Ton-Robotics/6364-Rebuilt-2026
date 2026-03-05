@@ -79,6 +79,7 @@ public class FieldUtil {
     }
 
     public static Rotation2d getAngleToHub() {
+        Optional<Alliance> alliance = DriverStation.getAlliance();
         Translation2d hubPosition = FieldUtil.getHubPositionMatchingAlliance();
 
         Translation2d robotPosition = RobotContainer.m_drivetrain.getPose().getTranslation();
@@ -86,7 +87,7 @@ public class FieldUtil {
         double xDifference = hubPosition.getX() - robotPosition.getX();
         double yDifference = hubPosition.getY() - robotPosition.getY();
 
-        Rotation2d hubAngle = new Rotation2d(Math.atan2(yDifference, xDifference) + Math.PI); 
+        Rotation2d hubAngle = alliance.get() == Alliance.Blue ? new Rotation2d(Math.atan2(yDifference, xDifference) + Math.PI) : new Rotation2d(Math.atan2(yDifference, xDifference)); 
         SmartDashboard.putNumber("Hub Angle", hubAngle.getRadians()); 
         return hubAngle; 
     }
