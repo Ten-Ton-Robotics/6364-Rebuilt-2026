@@ -146,8 +146,11 @@ public class Shooter extends SubsystemBase {
             new_speed = speedCap(new_speed);
             SmartDashboard.putNumber(kname + "Shooter Target (RPS)", new_speed);
              
-            if (isOn) { setMotorSpeed(new_speed); } 
-            else{targetSpeed = new_speed;}
+            if (isOn) { 
+                setMotorSpeed(new_speed); 
+            } else{
+                targetSpeed = new_speed;
+            }
         });   
     }
 
@@ -169,8 +172,8 @@ public class Shooter extends SubsystemBase {
         return this.runOnce(() -> { 
             isOn = !isOn;
             if (isOn) {
-                m_output.Velocity = speedCap(speed); 
-                m_motor.setControl(m_output);   
+                m_output.Velocity = speedCap(speed);
+                m_motor.setControl(m_output);
             } else {
                 m_output.Velocity = 0; 
                 m_motor.setControl(m_output);

@@ -48,7 +48,6 @@ public class FieldUtil {
         double rangeDelta = rangeMap.get(rangeMap.firstKey()); 
         double rangeKey = rangeMap.firstKey();
 
-
         for(double range: rangeMap.keySet()){
             double tempDelta = distance - range;
             if(Math.abs(tempDelta) < Math.abs(rangeDelta)){

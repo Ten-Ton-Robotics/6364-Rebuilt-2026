@@ -45,7 +45,7 @@ public class RobotContainer {
     private double MaxAngularRate = RotationsPerSecond.of(.50).in(RadiansPerSecond); // 1/2 of a rotation per second max angular velocity
 
     private double hubDistance = 0; 
-    private double reccomendedPower = 0; 
+    private double recommendedPower = 0;
 
 
     /* Setting up bindings for necessary control of the swerve m_drive platform */
@@ -110,7 +110,7 @@ public class RobotContainer {
         m_controller.x().onTrue(toggleShooting());
 
         //Shooter Set Speed 
-        m_controller.b().onTrue(changeReccomendedPower().andThen(toggleShooterWithSpeed(Math.round(reccomendedPower))));
+        m_controller.b().onTrue(changeRecommendedPower().andThen(toggleShooterWithSpeed(Math.round(recommendedPower))));
 
         // Shooter speed control
         m_controller.povUp().onTrue(changeShooterSpeed(true));
@@ -199,11 +199,11 @@ public class RobotContainer {
         );
     }
 
-    private Command changeReccomendedPower(){
+    private Command changeRecommendedPower(){
         return new InstantCommand(() -> {
-            reccomendedPower = FieldUtil.getPowerFromRange();
-            Commands.print("New power:" + reccomendedPower);
-        }); 
+            recommendedPower = FieldUtil.getPowerFromRange();
+            Commands.print("New power:" + recommendedPower);
+        });
     }
 
     private Command toggleSnappingToHub() {
@@ -213,7 +213,7 @@ public class RobotContainer {
         });
     }
     
-    private Command toggleShooterWithSpeed(double Speed){ 
+    private Command toggleShooterWithSpeed(double Speed){
         return new SequentialCommandGroup(
             m_Left_Shooter.toggleWithSetShooterSpeed(Speed), 
             m_Middle_Shooter.toggleWithSetShooterSpeed(Speed),

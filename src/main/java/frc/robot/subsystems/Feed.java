@@ -68,7 +68,7 @@ public class Feed extends SubsystemBase {
         });
     }
 
-    // Fuctions
+    // Functions
     private void setMotorSpeed(double new_speed) {
         if(new_speed < 0.0){ 
             new_speed = 0.0;
