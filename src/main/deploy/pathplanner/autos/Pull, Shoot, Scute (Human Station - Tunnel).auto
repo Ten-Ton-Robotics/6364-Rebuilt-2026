@@ -7,7 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Pull (Human Station - Ramp)"
+            "pathName": "Copy of Pull (Human Station - Tunnel)"
           }
         },
         {
@@ -32,6 +32,12 @@
           "type": "named",
           "data": {
             "name": "Stop Feed"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Away From Human Spot"
           }
         }
       ]

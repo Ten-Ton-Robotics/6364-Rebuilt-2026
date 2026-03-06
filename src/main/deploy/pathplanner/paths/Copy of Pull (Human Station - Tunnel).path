@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.5,
-        "y": 2.0
+        "x": 3.443880171184022,
+        "y": 0.7421112696148362
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.5,
-        "y": 2.0
+        "x": 3.3013619607802136,
+        "y": 1.026848567182122
       },
       "isLocked": false,
       "linkedName": null
@@ -20,12 +20,12 @@
         "y": 2.0
       },
       "prevControl": {
-        "x": 1.7999999999999998,
-        "y": 2.0
+        "x": 2.947501342754127,
+        "y": 1.7981501699635851
       },
       "nextControl": null,
       "isLocked": true,
-      "linkedName": null
+      "linkedName": "Human Player Shoot Spot"
     }
   ],
   "rotationTargets": [],

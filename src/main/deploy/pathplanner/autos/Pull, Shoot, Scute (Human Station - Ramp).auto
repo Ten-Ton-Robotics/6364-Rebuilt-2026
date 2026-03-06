@@ -33,6 +33,12 @@
           "data": {
             "name": "Stop Feed"
           }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Away From Human Spot"
+          }
         }
       ]
     }

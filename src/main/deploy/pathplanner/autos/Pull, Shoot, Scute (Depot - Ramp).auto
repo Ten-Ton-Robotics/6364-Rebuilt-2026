@@ -7,13 +7,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Pull (Human Station - Ramp)"
+            "pathName": "Pull (Depot-Ramp) "
           }
         },
         {
           "type": "named",
           "data": {
             "name": "Toggle Shooter with Speed"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.2
           }
         },
         {
@@ -32,6 +38,12 @@
           "type": "named",
           "data": {
             "name": "Stop Feed"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Away From Depot Spot"
           }
         }
       ]
