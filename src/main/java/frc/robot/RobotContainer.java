@@ -240,6 +240,8 @@ public class RobotContainer {
         return new InstantCommand(() -> {
             hubTargetAngle = FieldUtil.getAngleToHub();
             isHubSnappingOn = !isHubSnappingOn;
+            FieldUtil.getPowerFromRange(); 
+            FieldUtil.GetHubDistance(); 
         });
     }
     

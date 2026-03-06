@@ -62,6 +62,8 @@ public class FieldUtil {
         double maxRange = (rangeDelta > 0) ? Optional.ofNullable(rangeMap.higherKey(rangeKey)).orElse(rangeKey) : rangeKey; 
         double minRange = (rangeDelta > 0) ? rangeKey : Optional.ofNullable(rangeMap.lowerKey(rangeKey)).orElse(rangeKey); 
 
+                SmartDashboard.putNumber("Reccomended Power", rangeMap.get(rangeKey)); 
+
         if(maxRange == minRange){
             return rangeMap.get(rangeKey); 
         }
@@ -102,5 +104,11 @@ public class FieldUtil {
         double hubDistance = Math.sqrt(Math.pow(xDifference, 2) + Math.pow(yDifference, 2)); 
 
         return hubDistance;
+    }
+
+    public static void FieldUtilInit(){
+        getAngleToHub(); 
+        GetHubDistance(); 
+        getPowerFromRange();  
     }
 }
