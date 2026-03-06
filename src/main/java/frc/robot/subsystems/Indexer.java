@@ -13,6 +13,7 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -56,6 +57,7 @@ public class Indexer extends SubsystemBase {
         m_motor.setNeutralMode(NeutralModeValue.Coast);
     }
 
+    
     // Commands
     public Command intake() {
         return this.run(() -> {
@@ -63,6 +65,19 @@ public class Indexer extends SubsystemBase {
         });
     }
 
+        public Command toggleIntaking() {
+        return this.runOnce(() -> {
+            isOn = !isOn;
+            if (isOn) {
+                setMotorSpeed(TargetSpeed);
+            } else {
+                m_output.Velocity = 0; 
+                m_motor.setControl(m_output);
+            }
+        });
+    }
+
+    
     public Command putOutIntake() {
         return this.run(() -> {
             setMotorSpeed(-10);

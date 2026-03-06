@@ -2,6 +2,8 @@ package frc.robot.subsystems;
 
 import static edu.wpi.first.units.Units.*;
 
+import java.security.cert.TrustAnchor;
+
 import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
@@ -13,6 +15,7 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -58,9 +61,35 @@ public class Intake extends SubsystemBase {
     }
 
     // Commands
+
+    public Command toggleIntaking() {
+        return this.runOnce(() -> {
+            isOn = !isOn;
+            SmartDashboard.putBoolean("Intake Is On:", isOn); 
+            if (isOn) {
+                setMotorSpeed(TargetSpeed);
+            } else {
+                m_output.Velocity = 0; 
+                m_motor.setControl(m_output);
+            }
+        });
+    }
     public Command intake() {
         return this.run(() -> {
             setMotorSpeed(TargetSpeed);
+        });
+    }
+
+     public Command toggleIntakingInverse() {
+        return this.runOnce(() -> {
+            isOn = !isOn;
+            SmartDashboard.putBoolean("Intake Is On:", isOn); 
+            if (isOn) {
+                setMotorSpeed(-TargetSpeed);
+            } else {
+                m_output.Velocity = 0; 
+                m_motor.setControl(m_output);
+            }
         });
     }
 
@@ -72,21 +101,22 @@ public class Intake extends SubsystemBase {
 
     // Functions
     private void setMotorSpeed(double new_speed) {
-        if(new_speed < 0.0){ 
-            new_speed = 0.0;
+        if(new_speed < -(TargetSpeed -1)){ 
+            new_speed = -TargetSpeed;
         }
 
         if(new_speed > MaxSpeed){
             new_speed = MaxSpeed;
         }
 
-        TargetSpeed = new_speed;
 
-        m_output.Velocity = TargetSpeed; 
+        isOn = true; 
+        m_output.Velocity = new_speed; 
         m_motor.setControl(m_output);
         m_motor.setNeutralMode(NeutralModeValue.Brake);
         
         if (TargetSpeed == 0.0) {
+            isOn = false; 
             stopMotor();
         }
     }

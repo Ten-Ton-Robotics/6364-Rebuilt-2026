@@ -85,7 +85,7 @@ public class RobotContainer {
                 if (isHubSnappingOn) {
                     return baseDrive
                         .withTargetDirection(hubTargetAngle)
-                        .withHeadingPID(5, 0, 0)
+                        .withHeadingPID(5, 0, 0) //5 is figured experimentally 
                         .withMaxAbsRotationalRate(MaxAngularRate);
                 } else {
                     double rightJoyStick = Math.abs(m_controller.getRightX()) < 0.1 ? 0 : m_controller.getRightX() ;
@@ -116,30 +116,33 @@ public class RobotContainer {
 
         
         // Shooter toggle
+        m_test_controller.x().onTrue(toggleShooting());
         m_controller.x().onTrue(toggleShooting());
 
+
         //Shooter Set Speed 
-        m_controller.b().onTrue(changeRecommendedPower().andThen(toggleShooterWithSpeed(Math.round(recommendedPower))));
+        m_controller.b().onTrue(changeRecommendedPower());
+        m_test_controller.b().onTrue(changeRecommendedPower()); 
 
         // Shooter speed control
-        m_controller.povUp().onTrue(changeShooterSpeed(true));
-        m_controller.povDown().onTrue(changeShooterSpeed(false));
+        m_test_controller.povUp().onTrue(changeShooterSpeed(true));
+        m_test_controller.povDown().onTrue(changeShooterSpeed(false));
         
         // Shooter speed precise control
+        m_test_controller.leftTrigger().onTrue(changeShooterSpeedDifference(1));
+        m_test_controller.leftTrigger().onFalse(changeShooterSpeedDifference(5));
+
         m_controller.leftTrigger().onTrue(changeShooterSpeedDifference(1));
         m_controller.leftTrigger().onFalse(changeShooterSpeedDifference(5));
-
         // Feed
-        m_controller.rightTrigger().onTrue(m_Feed.intake()); 
-        m_controller.rightTrigger().onFalse(m_Feed.stop()); 
+        m_test_controller.rightTrigger().onTrue(m_Feed.intake()); 
+        m_test_controller.rightTrigger().onFalse(m_Feed.stop()); 
         
-        // Indexer
-        m_controller.rightBumper().onTrue(m_Indexer.intake());
-        m_controller.rightBumper().onFalse(m_Indexer.stop());
+            
         
         // Intake
-        m_controller.rightBumper().onTrue(m_Intake.intake()); 
-        m_controller.rightBumper().onFalse(m_Intake.stop()); 
+        m_controller.rightBumper().onTrue(toggleIntaking());
+        m_controller.leftBumper().onTrue(toggleIntakingInverse());
         
 
         // m_controller.b().onTrue(m_drivetrain.FindAndFollowPath()); 
@@ -151,8 +154,6 @@ public class RobotContainer {
         m_controller.start().and(m_controller.y()).whileTrue(m_drivetrain.sysIdQuasistatic(Direction.kForward));
         m_controller.start().and(m_controller.x()).whileTrue(m_drivetrain.sysIdQuasistatic(Direction.kReverse));
 
-        // reset the field-centric heading on left bumper press
-        m_controller.leftBumper().onTrue(m_drivetrain.runOnce(() -> m_drivetrain.seedFieldCentric()));
 
         m_drivetrain.registerTelemetry(logger::telemeterize);
 
@@ -160,7 +161,7 @@ public class RobotContainer {
         NamedCommands.registerCommand("Stop Intake", m_Intake.stop());
         NamedCommands.registerCommand("Toggle Shooter with Speed", toggleShooterWithSpeed(50));
         NamedCommands.registerCommand("Start Feed", m_Feed.intake());
-        NamedCommands.registerCommand("Stop Feed", m_Feed.intake());
+        NamedCommands.registerCommand("Stop Feed", m_Feed.stop());
     }  
 
     private Command toggleSequentialShoot() {
@@ -186,12 +187,26 @@ public class RobotContainer {
 
     private Command toggleShooting() {
         return new ParallelCommandGroup(
-            Commands.print("Toggling"),
             m_Middle_Shooter.toggleShooting(),
             m_Left_Shooter.toggleShooting(),
             m_Right_Shooter.toggleShooting()
         );
     }
+
+    private Command toggleIntaking() {
+        return new ParallelCommandGroup(
+            m_Indexer.toggleIntaking(),
+            m_Intake.toggleIntaking()
+        );
+    }
+
+     private Command toggleIntakingInverse() {
+        return new ParallelCommandGroup(
+            m_Indexer.toggleIntaking(),
+            m_Intake.toggleIntakingInverse()
+        );
+    }
+
 
     private Command changeShooterSpeed(boolean speedUp) {
         return new ParallelCommandGroup(
@@ -214,12 +229,6 @@ public class RobotContainer {
         );
     }
 
-    private Command pushIntakeOut(){
-        return new ParallelCommandGroup(
-            m_pivot.pivot(), 
-            m_Indexer.putOutIntake()
-        ); 
-    }
 
     public Command stopPushingIntake(){
         return new ParallelCommandGroup(
@@ -244,11 +253,19 @@ public class RobotContainer {
         });
     }
     
+    
     private Command toggleShooterWithSpeed(double Speed){
-        return new SequentialCommandGroup(
+        return new ParallelCommandGroup(
             m_Left_Shooter.toggleWithSetShooterSpeed(Speed), 
             m_Middle_Shooter.toggleWithSetShooterSpeed(Speed),
             m_Right_Shooter.toggleWithSetShooterSpeed(Speed)
+        ); 
+    } 
+
+        private Command toggleShooterFromRange(){
+        return new SequentialCommandGroup(
+            changeRecommendedPower(), 
+            toggleShooterWithSpeed(recommendedPower)
         ); 
     } 
 
