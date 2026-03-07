@@ -132,8 +132,7 @@ public class RobotContainer {
         m_test_controller.leftTrigger().onTrue(changeShooterSpeedDifference(1));
         m_test_controller.leftTrigger().onFalse(changeShooterSpeedDifference(5));
 
-        m_controller.leftTrigger().onTrue(changeShooterSpeedDifference(1));
-        m_controller.leftTrigger().onFalse(changeShooterSpeedDifference(5));
+        m_controller.leftTrigger().onTrue(toggleSequentialShoot());
         // Feed
         m_test_controller.rightTrigger().onTrue(m_Feed.intake()); 
         m_test_controller.rightTrigger().onFalse(m_Feed.stop()); 
@@ -174,16 +173,22 @@ public class RobotContainer {
                 if (!sequentialShootingCommand.isFinished()) {
                     sequentialShootingCommand.end(true);
                 }
-                m_Left_Shooter.stopShooting();
-                m_Middle_Shooter.stopShooting();
-                m_Right_Shooter.stopShooting();
-                m_Intake.stop();
-                m_Feed.stop();
+                stopEverything(); 
             }
         });
     }
 
 
+    private Command stopEverything(){
+        return new ParallelCommandGroup(
+                m_Left_Shooter.stopShooting(),
+                m_Middle_Shooter.stopShooting(),
+                m_Right_Shooter.stopShooting(),
+                m_Intake.stop(),
+                m_Feed.stop()
+
+        ); 
+    }
 
     private Command toggleShooting() {
         return new ParallelCommandGroup(
@@ -271,9 +276,11 @@ public class RobotContainer {
 
     SequentialCommandGroup sequentialShootingCommand = new SequentialCommandGroup(
         
-        m_Left_Shooter.startShooting(),
-        m_Middle_Shooter.startShooting(),
-        m_Right_Shooter.startShooting(),
+        new ParallelCommandGroup(
+            m_Left_Shooter.startShooting(),
+            m_Middle_Shooter.startShooting(),
+            m_Right_Shooter.startShooting()
+        ), 
 
         new InstantCommand(() -> {
             while (!areAllShootersWithinTargetSpeedRange()) {
