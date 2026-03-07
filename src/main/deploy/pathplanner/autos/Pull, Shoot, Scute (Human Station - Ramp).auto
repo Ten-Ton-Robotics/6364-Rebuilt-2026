@@ -17,15 +17,22 @@
           }
         },
         {
-          "type": "named",
+          "type": "race",
           "data": {
-            "name": "Start Feed"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 5.0
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Start Feed"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 5.0
+                }
+              }
+            ]
           }
         },
         {
@@ -37,7 +44,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Away From Human Spot"
+            "pathName": "Away From Human Spot (Close)"
           }
         }
       ]

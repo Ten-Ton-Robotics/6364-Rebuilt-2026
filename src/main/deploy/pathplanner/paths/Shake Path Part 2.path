@@ -3,32 +3,41 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.5,
-        "y": 6.0
+        "x": 2.382910128388017,
+        "y": 2.035977175463623
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.5,
-        "y": 6.0
+        "x": 3.382910128388017,
+        "y": 2.035977175463623
       },
-      "isLocked": true,
-      "linkedName": null
+      "isLocked": false,
+      "linkedName": "Shake Part 1 End"
     },
     {
       "anchor": {
-        "x": 2.8,
-        "y": 6.0
+        "x": 2.162952924393723,
+        "y": 2.035977175463623
       },
       "prevControl": {
-        "x": 1.7999999999999998,
-        "y": 6.0
+        "x": 1.1537375178316687,
+        "y": 2.0230385164051357
       },
       "nextControl": null,
-      "isLocked": true,
-      "linkedName": "Depot Shoot Spot"
+      "isLocked": false,
+      "linkedName": "Shake Part 1 Start"
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.25,
+      "rotationDegrees": 90.0
+    },
+    {
+      "waypointRelativePos": 0.25,
+      "rotationDegrees": 0.0
+    }
+  ],
   "constraintZones": [],
   "pointTowardsZones": [],
   "eventMarkers": [],
@@ -42,13 +51,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 133.0
+    "rotation": 180.0
   },
   "reversed": false,
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 135.0
+    "rotation": 0.0
   },
   "useDefaultConstraints": true
 }

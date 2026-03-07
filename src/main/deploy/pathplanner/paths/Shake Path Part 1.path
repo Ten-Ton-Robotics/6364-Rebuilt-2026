@@ -3,52 +3,61 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.8,
-        "y": 2.0
+        "x": 2.162952924393723,
+        "y": 2.035977175463623
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.3859761846931584,
-        "y": 2.165395188342962
+        "x": 3.162952924393723,
+        "y": 2.035977175463623
       },
       "isLocked": false,
-      "linkedName": "Human Player Shoot Spot"
+      "linkedName": "Shake Part 1 Start"
     },
     {
       "anchor": {
-        "x": 0.8690870185449355,
-        "y": 0.6774179743223976
+        "x": 2.382910128388017,
+        "y": 2.035977175463623
       },
       "prevControl": {
-        "x": 0.4868586647016886,
-        "y": 0.45345742151426816
+        "x": 1.3736947218259625,
+        "y": 2.0230385164051357
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Shake Part 1 End"
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.25,
+      "rotationDegrees": 90.0
+    },
+    {
+      "waypointRelativePos": 0.25,
+      "rotationDegrees": 0.0
+    }
+  ],
   "constraintZones": [],
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 3.0,
     "maxAcceleration": 3.0,
-    "maxAngularVelocity": 540.0,
-    "maxAngularAcceleration": 720.0,
+    "maxAngularVelocity": 360.0,
+    "maxAngularAcceleration": 180.0,
     "nominalVoltage": 12.0,
     "unlimited": false
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 180.0
+    "rotation": 0.0
   },
   "reversed": false,
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -137.0
+    "rotation": 180.0
   },
   "useDefaultConstraints": true
 }
