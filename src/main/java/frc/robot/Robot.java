@@ -5,6 +5,8 @@
 package frc.robot;
 
 
+import com.pathplanner.lib.commands.FollowPathCommand;
+
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
@@ -17,25 +19,34 @@ import frc.robot.subsystems.PhotonHandler;
 public class Robot extends TimedRobot {
   private CommandSwerveDrivetrain drivetrain = RobotContainer.m_drivetrain;
   private Command m_autonomousCommand;
-  public static PhotonHandler m_vision;
+
+  public static PhotonHandler m_vision_top;
+  public static PhotonHandler m_vision_back;
 
   private final RobotContainer m_robotContainer;
-
+  
   public Robot() {
     m_robotContainer = new RobotContainer();
-    Transform3d cameraToRobot = new Transform3d(new Translation3d(-0.09, -0.09, 0.660), new Rotation3d(0,0.107,0));
-    m_vision = new PhotonHandler(drivetrain::addVisionMeasurement, "Practice_Cam" , cameraToRobot.inverse());
+
+    Transform3d cameraToRobotForTopCamera = new Transform3d(new Translation3d(-0.06, 0.11, 0.738), new Rotation3d(0, 0.5759586532, Math.PI));
+    m_vision_top = new PhotonHandler(drivetrain::addVisionMeasurement, "ShooterCam" , cameraToRobotForTopCamera.inverse());
+
+    Transform3d cameraToRobotForBackCamera = new Transform3d(new Translation3d(-0.038, 0, 0.703), new Rotation3d(0, -0.9, 0));
+    m_vision_back = new PhotonHandler(drivetrain::addVisionMeasurement, "IntakeCam" , cameraToRobotForBackCamera.inverse());
+
     // CameraServer.startAutomaticCapture();
   }
 
-  // @Override
-  // public void robotInit(){
-  //     }
+  @Override
+  public void robotInit(){
+    CommandScheduler.getInstance().schedule(FollowPathCommand.warmupCommand());
+    FieldUtil.FieldUtilInit();
+      }
 
   @Override
   public void robotPeriodic() {
     CommandScheduler.getInstance().run(); 
-    m_vision.periodic(); 
+    m_vision_top.periodic(); 
   }
 
   @Override

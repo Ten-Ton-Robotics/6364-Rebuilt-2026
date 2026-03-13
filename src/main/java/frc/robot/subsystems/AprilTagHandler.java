@@ -20,7 +20,7 @@ public class AprilTagHandler {
 
     public double getYawToTargetInRadian() {        
         try {
-            List<PhotonPipelineResult> latestResults = Robot.m_vision.latestResults;
+            List<PhotonPipelineResult> latestResults = Robot.m_vision_top.latestResults;
 
             PhotonPipelineResult latestResult = latestResults.get(0);
 
@@ -46,7 +46,7 @@ public class AprilTagHandler {
     // This Command is purely for testing whether the AprilTag filtering works
     public Command testWhetherTheBestTargetAprilTagIsFromAlliance() {
         return new InstantCommand(() -> {
-            List<PhotonPipelineResult> latestResults = Robot.m_vision.latestResults;
+            List<PhotonPipelineResult> latestResults = Robot.m_vision_top.latestResults;
 
             try {
                 PhotonPipelineResult latestResult = latestResults.get(0);

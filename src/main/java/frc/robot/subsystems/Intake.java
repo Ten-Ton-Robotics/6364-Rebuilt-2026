@@ -1,38 +1,31 @@
 package frc.robot.subsystems;
 
+import static edu.wpi.first.units.Units.*;
+
+import java.security.cert.TrustAnchor;
+
 import com.ctre.phoenix6.CANBus;
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
+import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.StaticBrake;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Intake extends SubsystemBase {
     // Constants
     private static final CANBus kMotorBus = new CANBus("CANCAN");
-// DUNCAN 
-// ██████╗ ██╗   ██╗███╗   ██╗ ██████╗ █████╗ ███╗   ██╗
-// ██╔══██╗██║   ██║████╗  ██║██╔════╝██╔══██╗████╗  ██║
-// ██║  ██║██║   ██║██╔██╗ ██║██║     ███████║██╔██╗ ██║
-// ██║  ██║██║   ██║██║╚██╗██║██║     ██╔══██║██║╚██╗██║
-// ██████╔╝╚██████╔╝██║ ╚████║╚██████╗██║  ██║██║ ╚████║
-// ╚═════╝  ╚═════╝ ╚═╝  ╚═══╝ ╚═════╝╚═╝  ╚═╝╚═╝  ╚═══╝
 
-    private static final int kMotorID = 13; //Get motor ID from TunerX put that one here
-    private static double TargetSpeed = 30; //If the motor is going the wrong way add a negative sign here
-    private static double MaxSpeed = 40;
-
-
-// ██████╗ ██╗   ██╗███╗   ██╗ ██████╗ █████╗ ███╗   ██╗
-// ██╔══██╗██║   ██║████╗  ██║██╔════╝██╔══██╗████╗  ██║
-// ██║  ██║██║   ██║██╔██╗ ██║██║     ███████║██╔██╗ ██║
-// ██║  ██║██║   ██║██║╚██╗██║██║     ██╔══██║██║╚██╗██║
-// ██████╔╝╚██████╔╝██║ ╚████║╚██████╗██║  ██║██║ ╚████║
-// ╚═════╝  ╚═════╝ ╚═╝  ╚═══╝ ╚═════╝╚═╝  ╚═╝╚═╝  ╚═══╝
+    private static final int kMotorID = 34; //Get motor ID from TunerX put that one here
+    private static double TargetSpeed = 50; 
+    private static double MaxSpeed = 50;
 
     // Motor
     private final TalonFX m_motor = new TalonFX(kMotorID, kMotorBus);
@@ -53,16 +46,50 @@ public class Intake extends SubsystemBase {
             .withKV(0.12);  // Velocity feedforward - tune this value
 
         var motorConfig = new TalonFXConfiguration()
-            .withSlot0(slot0Configs);
+        .withCurrentLimits(
+                new CurrentLimitsConfigs()
+                    .withStatorCurrentLimit(Amps.of(40))
+                    .withStatorCurrentLimitEnable(true)
+            )
+        .withSlot0(slot0Configs)
+        .withMotorOutput(
+            new MotorOutputConfigs().withInverted(InvertedValue.Clockwise_Positive)
+            );
         m_motor.getConfigurator().apply(motorConfig);
         m_motor.setNeutralMode(NeutralModeValue.Coast);
 
     }
 
     // Commands
+
+    public Command toggleIntaking() {
+        return this.runOnce(() -> {
+            isOn = !isOn;
+            SmartDashboard.putBoolean("Intake Is On:", isOn); 
+            if (isOn) {
+                setMotorSpeed(TargetSpeed);
+            } else {
+                m_output.Velocity = 0; 
+                m_motor.setControl(m_output);
+            }
+        });
+    }
     public Command intake() {
         return this.run(() -> {
             setMotorSpeed(TargetSpeed);
+        });
+    }
+
+     public Command toggleIntakingInverse() {
+        return this.runOnce(() -> {
+            isOn = !isOn;
+            SmartDashboard.putBoolean("Intake Is On:", isOn); 
+            if (isOn) {
+                setMotorSpeed(-TargetSpeed);
+            } else {
+                m_output.Velocity = 0; 
+                m_motor.setControl(m_output);
+            }
         });
     }
 
@@ -72,23 +99,24 @@ public class Intake extends SubsystemBase {
         });
     }
 
-    // Fuctions
+    // Functions
     private void setMotorSpeed(double new_speed) {
-        if(new_speed > 0.0){ //DO NOT GO BACKWARDS
-            new_speed = 0.0;
+        if(new_speed < -(TargetSpeed -1)){ 
+            new_speed = -TargetSpeed;
         }
 
-        if(new_speed < MaxSpeed){
+        if(new_speed > MaxSpeed){
             new_speed = MaxSpeed;
         }
 
-        TargetSpeed = new_speed;
 
-        m_output.Velocity = TargetSpeed; 
+        isOn = true; 
+        m_output.Velocity = new_speed; 
         m_motor.setControl(m_output);
         m_motor.setNeutralMode(NeutralModeValue.Brake);
         
         if (TargetSpeed == 0.0) {
+            isOn = false; 
             stopMotor();
         }
     }
