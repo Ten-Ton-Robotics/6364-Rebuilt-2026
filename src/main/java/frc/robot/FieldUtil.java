@@ -8,6 +8,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Commands;
 
 public class FieldUtil {
     public static final Translation2d kBlueHub = new Translation2d(4.6, 4.03);
@@ -44,7 +45,7 @@ public class FieldUtil {
             fillTable();
         }
         double distance = FieldUtil.GetHubDistance();
-        SmartDashboard.putNumber("Hub Distance", distance); 
+        SmartDashboard.putNumber("Hub Distance", distance);
         double rangeDelta = rangeMap.get(rangeMap.firstKey()); 
         double rangeKey = rangeMap.firstKey();
 
@@ -62,9 +63,10 @@ public class FieldUtil {
         double maxRange = (rangeDelta > 0) ? Optional.ofNullable(rangeMap.higherKey(rangeKey)).orElse(rangeKey) : rangeKey; 
         double minRange = (rangeDelta > 0) ? rangeKey : Optional.ofNullable(rangeMap.lowerKey(rangeKey)).orElse(rangeKey); 
 
-                SmartDashboard.putNumber("Reccomended Power", rangeMap.get(rangeKey)); 
+        SmartDashboard.putNumber("Reccomended Power", rangeMap.get(rangeKey)); 
 
         if(maxRange == minRange){
+            Commands.print("Early Return with" + rangeMap.get(rangeKey)); 
             return rangeMap.get(rangeKey); 
         }
          
@@ -77,6 +79,7 @@ public class FieldUtil {
         //The smaller power plus an extra based on far it is from the next range point 
         double power = rangeMap.get(minRange) + (powerDifference * percentOfRange);  
         SmartDashboard.putNumber("Reccomended Power", power); 
+        Commands.print("Late return with:" + power); 
         return power;   
     }
 

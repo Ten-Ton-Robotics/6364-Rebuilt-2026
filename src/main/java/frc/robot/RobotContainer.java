@@ -58,7 +58,7 @@ public class RobotContainer {
     private final Telemetry logger = new Telemetry(MaxSpeed);
 
     private final CommandXboxController m_controller = new CommandXboxController(1);
-    private final CommandXboxController m_test_controller = new CommandXboxController(0); 
+    private final CommandXboxController m_shooter_controller = new CommandXboxController(0); 
     public final static CommandSwerveDrivetrain m_drivetrain = TunerConstants.createDrivetrain();
     private final SendableChooser<Command> autoChooser; 
 
@@ -108,34 +108,35 @@ public class RobotContainer {
         m_controller.a().onTrue(toggleSnappingToHub());
 
         // Sequential Commands
-        m_test_controller.y().onTrue(m_Indexer.putOutIntake());
-        m_test_controller.y().onFalse(m_Indexer.stop()); 
+        m_shooter_controller.y().onTrue(m_Indexer.putOutIntake());
+        m_shooter_controller.y().onFalse(m_Indexer.stop()); 
 
-        m_test_controller.a().onTrue(m_pivot.pivot()); 
-        m_test_controller.a().onFalse(m_pivot.stop()); 
+        m_shooter_controller.a().onTrue(m_pivot.pivot()); 
+        m_shooter_controller.a().onFalse(m_pivot.stop()); 
 
         
         // Shooter toggle
-        m_test_controller.x().onTrue(toggleShooting());
+        m_shooter_controller.x().onTrue(toggleShooting());
         m_controller.x().onTrue(toggleShooting());
 
 
         //Shooter Set Speed 
-        m_controller.b().onTrue(changeRecommendedPower());
-        m_test_controller.b().onTrue(changeRecommendedPower()); 
-
+        m_shooter_controller.b().onTrue(changeRecommendedPower()); 
+        m_controller.b().onTrue(changeRecommendedPower()); 
         // Shooter speed control
-        m_test_controller.povUp().onTrue(changeShooterSpeed(true));
-        m_test_controller.povDown().onTrue(changeShooterSpeed(false));
+        m_shooter_controller.povUp().onTrue(changeShooterSpeed(true));
+        m_shooter_controller.povDown().onTrue(changeShooterSpeed(false));
+        m_shooter_controller.povRight().onTrue(changeShooterSpeed(10));
+        m_shooter_controller.povLeft().onTrue(changeShooterSpeed(-10));
         
         // Shooter speed precise control
-        m_test_controller.leftTrigger().onTrue(changeShooterSpeedDifference(1));
-        m_test_controller.leftTrigger().onFalse(changeShooterSpeedDifference(5));
+        m_shooter_controller.leftTrigger().onTrue(changeShooterSpeedDifference(1));
+        m_shooter_controller.leftTrigger().onFalse(changeShooterSpeedDifference(5));
 
         m_controller.leftTrigger().onTrue(toggleSequentialShoot());
         // Feed
-        m_test_controller.rightTrigger().onTrue(m_Feed.intake()); 
-        m_test_controller.rightTrigger().onFalse(m_Feed.stop()); 
+        m_shooter_controller.rightTrigger().onTrue(m_Feed.intake());
+        m_shooter_controller.rightTrigger().onFalse(m_Feed.stop()); 
         
             
         
@@ -221,6 +222,13 @@ public class RobotContainer {
         );
     }
 
+    private Command changeShooterSpeed(double difference) {
+        return new ParallelCommandGroup(
+            m_Middle_Shooter.changeSpeed(difference),
+            m_Left_Shooter.changeSpeed(difference),
+            m_Right_Shooter.changeSpeed(difference)
+        ); 
+    }
     /**
      * Changes the value that shooter uses to change the target speed
      * @param difference The difference you want to use
@@ -256,7 +264,7 @@ public class RobotContainer {
             FieldUtil.getPowerFromRange(); 
             FieldUtil.GetHubDistance(); 
         });
-    }
+    } 
     
     
     private Command toggleShooterWithSpeed(double Speed){
