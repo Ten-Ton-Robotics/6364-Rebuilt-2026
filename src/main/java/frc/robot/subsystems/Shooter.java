@@ -97,7 +97,7 @@ public class Shooter extends SubsystemBase {
     }
 
     /**
-     * Sets the speed of the motor. Note that we want the motor to spin backwards so the speed should be negative.  
+     * Sets the speed of the motor.
      * @param new_speed The new speed of the motor. Gets capped between zero and the max speed.    
      */
     private void setMotorSpeed(double new_speed) {
@@ -124,7 +124,7 @@ public class Shooter extends SubsystemBase {
     }
 
     /**
-     * Changes the speed of the motor. Note currently starts the motor on when called. 
+     * Changes the speed of the motor. 
      * @param difference How much you want to speed the motor up. Positive number speeds up motor and negative number slows down motor  
      */
     public Command changeSpeed(double difference) {
@@ -135,7 +135,7 @@ public class Shooter extends SubsystemBase {
     }
 
     /**
-     * Changes the speed of the motor. Note currently starts the motor on when called. 
+     * Changes the speed of the motor. 
      * @param difference How much you want to speed the motor up. Positive number speeds up motor and negative number slows down motor  
      */
     public Command changeSpeed(Boolean SpeedUp) {
