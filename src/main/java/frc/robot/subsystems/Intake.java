@@ -2,8 +2,6 @@ package frc.robot.subsystems;
 
 import static edu.wpi.first.units.Units.*;
 
-import java.security.cert.TrustAnchor;
-
 import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;

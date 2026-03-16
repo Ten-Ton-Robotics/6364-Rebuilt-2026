@@ -2,6 +2,8 @@ package frc.robot.subsystems;
 
 import static edu.wpi.first.units.Units.*;
 
+import java.util.function.DoubleSupplier;
+
 import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
@@ -172,7 +174,25 @@ public class Shooter extends SubsystemBase {
         return this.runOnce(() -> { 
             isOn = !isOn;
             if (isOn) {
+                System.out.println( kname + "Motor toggled at " + speed + " power");
                 m_output.Velocity = speedCap(speed);
+                m_motor.setControl(m_output);
+            } else {
+                m_output.Velocity = 0; 
+                m_motor.setControl(m_output);
+            }
+        }); 
+    }
+
+    /**
+     * Sets the speed of the motor.
+     * @param speed Speed of the motor in RPS 
+     */
+    public Command toggleWithSetShooterSpeed(DoubleSupplier speedSup){
+        return this.runOnce(() -> { 
+            isOn = !isOn;
+            if (isOn) {
+                m_output.Velocity = speedCap(speedSup.getAsDouble());
                 m_motor.setControl(m_output);
             } else {
                 m_output.Velocity = 0; 

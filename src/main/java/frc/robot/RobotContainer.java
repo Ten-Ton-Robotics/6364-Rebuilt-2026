@@ -6,6 +6,8 @@ package frc.robot;
 
 import static edu.wpi.first.units.Units.*;
 
+import java.util.function.DoubleSupplier;
+
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
@@ -44,10 +46,8 @@ public class RobotContainer {
 
     public static final AprilTagHandler m_AprilTagHandler = new AprilTagHandler();
     
-    private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
+    private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond) * 0.3; // kSpeedAt12Volts desired top speed
     private double MaxAngularRate = RotationsPerSecond.of(1).in(RadiansPerSecond); // 1/2 of a rotation per second max angular velocity
-
-    private double recommendedPower = 0;
 
 
     /* Setting up bindings for necessary control of the swerve m_drive platform */
@@ -57,8 +57,8 @@ public class RobotContainer {
 
     private final Telemetry logger = new Telemetry(MaxSpeed);
 
-    private final CommandXboxController m_controller = new CommandXboxController(1);
-    private final CommandXboxController m_shooter_controller = new CommandXboxController(0); 
+    private final CommandXboxController m_controller = new CommandXboxController(0);
+    private final CommandXboxController m_shooter_controller = new CommandXboxController(1); 
     public final static CommandSwerveDrivetrain m_drivetrain = TunerConstants.createDrivetrain();
     private final SendableChooser<Command> autoChooser; 
 
@@ -122,8 +122,10 @@ public class RobotContainer {
 
         //Shooter Set Speed 
         m_shooter_controller.b().onTrue(changeRecommendedPower()); 
-        m_controller.b().onTrue(changeRecommendedPower()); 
-        // Shooter speed control
+        m_controller.povUp().onTrue(toggleShooterWithSpeed(50)); 
+        m_controller.povDown().onTrue(toggleShooterWithSpeed(()-> FieldUtil.getPowerFromRange()));
+
+        // Shooter speed control    
         m_shooter_controller.povUp().onTrue(changeShooterSpeed(true));
         m_shooter_controller.povDown().onTrue(changeShooterSpeed(false));
         m_shooter_controller.povRight().onTrue(changeShooterSpeed(10));
@@ -137,8 +139,6 @@ public class RobotContainer {
         // Feed
         m_shooter_controller.rightTrigger().onTrue(m_Feed.intake());
         m_shooter_controller.rightTrigger().onFalse(m_Feed.stop()); 
-        
-            
         
         // Intake
         m_controller.rightBumper().onTrue(toggleIntaking());
@@ -252,8 +252,8 @@ public class RobotContainer {
 
     private Command changeRecommendedPower(){
         return new InstantCommand(() -> {
-            recommendedPower = FieldUtil.getPowerFromRange();
-            Commands.print("New power:" + recommendedPower);
+            DoubleSupplier recommendedPowerSup = () -> FieldUtil.getPowerFromRange();
+            toggleShooterWithSpeed(recommendedPowerSup);  
         });
     }
 
@@ -269,16 +269,18 @@ public class RobotContainer {
     
     private Command toggleShooterWithSpeed(double Speed){
         return new ParallelCommandGroup(
+            Commands.print("test"),
             m_Left_Shooter.toggleWithSetShooterSpeed(Speed), 
             m_Middle_Shooter.toggleWithSetShooterSpeed(Speed),
             m_Right_Shooter.toggleWithSetShooterSpeed(Speed)
         ); 
     } 
 
-        private Command toggleShooterFromRange(){
-        return new SequentialCommandGroup(
-            changeRecommendedPower(), 
-            toggleShooterWithSpeed(recommendedPower)
+    private Command toggleShooterWithSpeed(DoubleSupplier speedSup){
+        return new ParallelCommandGroup(
+            m_Left_Shooter.toggleWithSetShooterSpeed(speedSup), 
+            m_Middle_Shooter.toggleWithSetShooterSpeed(speedSup),
+            m_Right_Shooter.toggleWithSetShooterSpeed(speedSup)
         ); 
     } 
 
