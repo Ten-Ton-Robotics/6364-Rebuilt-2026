@@ -138,8 +138,8 @@ public class RobotContainer {
 
         m_controller.leftTrigger().onTrue(toggleSequentialShoot());
         // Feed
-        m_shooter_controller.rightTrigger().onTrue(m_Feed.intake());
-        m_shooter_controller.rightTrigger().onFalse(m_Feed.stop()); 
+        m_shooter_controller.rightTrigger().onTrue(feedOn());
+        m_shooter_controller.rightTrigger().onFalse(feedOff()); 
         
         // Intake
         m_controller.rightBumper().onTrue(toggleIntaking());
@@ -200,12 +200,27 @@ public class RobotContainer {
         );
     }
 
+    private Command feedOn(){
+        return new ParallelCommandGroup(
+            m_Feed.intake(), 
+            m_Indexer.intake()
+        );
+    }
+
+    private Command feedOff(){
+        return new ParallelCommandGroup(
+            m_Feed.stop(), 
+            m_Indexer.stop()
+        );
+    }
+
     private Command toggleIntaking() {
         return new ParallelCommandGroup(
             //_Indexer.toggleIntaking(),
             m_Intake.toggleIntaking()
         );
     }
+
 
      private Command toggleIntakingInverse() {
         return new ParallelCommandGroup(
