@@ -112,7 +112,7 @@
           {
             "title": "Auto Chooser",
             "x": 720.0,
-            "y": 240.0,
+            "y": 160.0,
             "width": 320.0,
             "height": 160.0,
             "type": "ComboBox Chooser",
@@ -146,9 +146,9 @@
           {
             "title": "Hub Snap Toggle",
             "x": 720.0,
-            "y": 400.0,
-            "width": 160.0,
-            "height": 160.0,
+            "y": 320.0,
+            "width": 120.0,
+            "height": 80.0,
             "type": "Boolean Box",
             "properties": {
               "topic": "/SmartDashboard/Hub Snap Toggle",
@@ -186,6 +186,35 @@
               "period": 0.06,
               "data_type": "double",
               "show_submit_button": false
+            }
+          },
+          {
+            "title": "PDH",
+            "x": 1120.0,
+            "y": 0.0,
+            "width": 400.0,
+            "height": 640.0,
+            "type": "PowerDistribution",
+            "properties": {
+              "topic": "/SmartDashboard/PDH",
+              "period": 0.06
+            }
+          },
+          {
+            "title": "TotalCurrent",
+            "x": 720.0,
+            "y": 400.0,
+            "width": 400.0,
+            "height": 360.0,
+            "type": "Graph",
+            "properties": {
+              "topic": "/SmartDashboard/PDH/TotalCurrent",
+              "period": 0.33,
+              "data_type": "double",
+              "time_displayed": 50.0,
+              "min_value": 0.0,
+              "color": 4278238420,
+              "line_width": 2.0
             }
           }
         ]
