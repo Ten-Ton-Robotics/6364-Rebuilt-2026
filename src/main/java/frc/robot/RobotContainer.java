@@ -14,6 +14,7 @@ import com.pathplanner.lib.auto.NamedCommands;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -43,7 +44,7 @@ public class RobotContainer {
     public static final Indexer m_Indexer = new Indexer(21);
     public static final Intake m_Intake = new Intake();
     public static final Pivot m_pivot = new Pivot();
-
+    public static final PowerDistribution m_PDH = new PowerDistribution(1, PowerDistribution.ModuleType.kRev);
     public static final AprilTagHandler m_AprilTagHandler = new AprilTagHandler();
     
     private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond) * 0.3; // kSpeedAt12Volts desired top speed
@@ -67,7 +68,7 @@ public class RobotContainer {
         configureBindings();
         autoChooser = AutoBuilder.buildAutoChooser(); 
         SmartDashboard.putData("Auto Chooser", autoChooser); 
-
+        SmartDashboard.putData("PDH", m_PDH);
     }
 
     private void configureBindings() {
@@ -91,7 +92,7 @@ public class RobotContainer {
                     double rightJoyStick = Math.abs(m_controller.getRightX()) < 0.1 ? 0 : m_controller.getRightX() ;
                     return baseDrive
                         .withTargetRateFeedforward(MaxAngularRate * rightJoyStick)
-                        .withHeadingPID(0, 0, 0);
+                        .withHeadingPID(0,0,0); 
                 }
             })
         );
@@ -102,7 +103,7 @@ public class RobotContainer {
         RobotModeTriggers.disabled().whileTrue(
             m_drivetrain.applyRequest(() -> idle).ignoringDisable(true)
         );
-    
+        m_drivetrain.getCurrentCommand();
 
         // Hub Snapping
         m_controller.a().onTrue(toggleSnappingToHub());
@@ -201,14 +202,14 @@ public class RobotContainer {
 
     private Command toggleIntaking() {
         return new ParallelCommandGroup(
-            m_Indexer.toggleIntaking(),
+            //_Indexer.toggleIntaking(),
             m_Intake.toggleIntaking()
         );
     }
 
      private Command toggleIntakingInverse() {
         return new ParallelCommandGroup(
-            m_Indexer.toggleIntaking(),
+            //m_Indexer.toggleIntaking(),
             m_Intake.toggleIntakingInverse()
         );
     }
