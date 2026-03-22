@@ -18,14 +18,12 @@ import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.*;
@@ -109,9 +107,6 @@ public class RobotContainer {
         m_controller.a().onTrue(toggleSnappingToHub());
 
         // Sequential Commands
-        m_shooter_controller.y().onTrue(m_Indexer.putOutIntake());
-        m_shooter_controller.y().onFalse(m_Indexer.stop()); 
-
         m_shooter_controller.a().onTrue(m_pivot.pivot()); 
         m_shooter_controller.a().onFalse(m_pivot.stop()); 
 
@@ -136,7 +131,6 @@ public class RobotContainer {
         m_shooter_controller.leftTrigger().onTrue(changeShooterSpeedDifference(1));
         m_shooter_controller.leftTrigger().onFalse(changeShooterSpeedDifference(5));
 
-        m_controller.leftTrigger().onTrue(toggleSequentialShoot());
         // Feed
         m_shooter_controller.rightTrigger().onTrue(feedOn());
         m_shooter_controller.rightTrigger().onFalse(feedOff()); 
@@ -145,15 +139,12 @@ public class RobotContainer {
         m_controller.rightBumper().onTrue(toggleIntaking());
         m_controller.leftBumper().onTrue(toggleIntakingInverse());
         
-
-        // m_controller.b().onTrue(m_drivetrain.FindAndFollowPath()); 
-        
         // Run SysId routines when holding back/start and X/Y.
         // Note that each routine should be run exactly once in a single log.
-        m_controller.back().and(m_controller.y()).whileTrue(m_drivetrain.sysIdDynamic(Direction.kForward));
-        m_controller.back().and(m_controller.x()).whileTrue(m_drivetrain.sysIdDynamic(Direction.kReverse));
-        m_controller.start().and(m_controller.y()).whileTrue(m_drivetrain.sysIdQuasistatic(Direction.kForward));
-        m_controller.start().and(m_controller.x()).whileTrue(m_drivetrain.sysIdQuasistatic(Direction.kReverse));
+        // m_controller.back().and(m_controller.y()).whileTrue(m_drivetrain.sysIdDynamic(Direction.kForward));
+        // m_controller.back().and(m_controller.x()).whileTrue(m_drivetrain.sysIdDynamic(Direction.kReverse));
+        // m_controller.start().and(m_controller.y()).whileTrue(m_drivetrain.sysIdQuasistatic(Direction.kForward));
+        // m_controller.start().and(m_controller.x()).whileTrue(m_drivetrain.sysIdQuasistatic(Direction.kReverse));
 
 
         m_drivetrain.registerTelemetry(logger::telemeterize);
@@ -165,32 +156,35 @@ public class RobotContainer {
         NamedCommands.registerCommand("Stop Feed", m_Feed.stop());
     }  
 
-    private Command toggleSequentialShoot() {
-        return new InstantCommand(() -> {
-            isSequentialShootingOn = !isSequentialShootingOn;
 
-            if (isSequentialShootingOn) {
-                sequentialShootingCommand.execute();
-            } else {
-                if (!sequentialShootingCommand.isFinished()) {
-                    sequentialShootingCommand.end(true);
-                }
-                stopEverything(); 
-            }
-        });
-    }
+    //COMMENTED OUT TILL FURTHER USE 
+
+    // private Command toggleSequentialShoot() {
+    //     return new InstantCommand(() -> {
+    //         isSequentialShootingOn = !isSequentialShootingOn;
+
+    //         if (isSequentialShootingOn) {
+    //             sequentialShootingCommand.execute();
+    //         } else {
+    //             if (!sequentialShootingCommand.isFinished()) {
+    //                 sequentialShootingCommand.end(true);
+    //             }
+    //             stopEverything(); 
+    //         }
+    //     });
+    // }
 
 
-    private Command stopEverything(){
-        return new ParallelCommandGroup(
-                m_Left_Shooter.stopShooting(),
-                m_Middle_Shooter.stopShooting(),
-                m_Right_Shooter.stopShooting(),
-                m_Intake.stop(),
-                m_Feed.stop()
+    // private Command stopEverything(){
+    //     return new ParallelCommandGroup(
+    //             m_Left_Shooter.stopShooting(),
+    //             m_Middle_Shooter.stopShooting(),
+    //             m_Right_Shooter.stopShooting(),
+    //             m_Intake.stop(),
+    //             m_Feed.stop()
 
-        ); 
-    }
+    //     ); 
+    // }
 
     private Command toggleShooting() {
         return new ParallelCommandGroup(
@@ -285,7 +279,6 @@ public class RobotContainer {
     
     private Command toggleShooterWithSpeed(double Speed){
         return new ParallelCommandGroup(
-            Commands.print("test"),
             m_Left_Shooter.toggleWithSetShooterSpeed(Speed), 
             m_Middle_Shooter.toggleWithSetShooterSpeed(Speed),
             m_Right_Shooter.toggleWithSetShooterSpeed(Speed)
