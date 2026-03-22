@@ -37,19 +37,13 @@ public class Shooter extends SubsystemBase {
     // Toggle Boolean
     public boolean isOn = false;
 
-    public Shooter(int id, String name) {
+    public Shooter(int id, String name, Slot0Configs slot0Configs) {
         kMotorID = id; 
         kname = name; 
         m_motor = new TalonFX(kMotorID, kMotorBus);
 
         // Configure PID/feedforward gains for velocity control
-        var slot0Configs = new Slot0Configs()
-            .withKP(0.1)    // Proportional gain - adjust as needed
-            .withKI(0.0)    // Integral gain
-            .withKD(0.0)    // Derivative gain
-            .withKS(0.0)    // Static friction feedforward
-            .withKV(0.12);  // Velocity feedforward - tune this value
-
+            
         var motorConfig = new TalonFXConfiguration()
         .withCurrentLimits(
                 new CurrentLimitsConfigs()
