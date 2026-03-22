@@ -110,7 +110,7 @@ public class RobotContainer {
                 if (isHubSnappingOn) {
                     return baseDrive
                         .withTargetDirection(hubTargetAngle)
-                        .withHeadingPID(5, 0, 0) //5 is figured experimentally 
+                        .withHeadingPID(7, 0, 0) //5 is figured experimentally 
                         .withMaxAbsRotationalRate(MaxAngularRate);
                 } else {
                     double rightJoyStick = Math.abs(m_controller.getRightX()) < 0.1 ? 0 : m_controller.getRightX() ;
