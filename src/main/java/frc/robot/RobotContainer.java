@@ -160,6 +160,8 @@ public class RobotContainer {
         // Feed
         m_shooter_controller.rightTrigger().onTrue(feedOn());
         m_shooter_controller.rightTrigger().onFalse(feedOff()); 
+        m_controller.rightTrigger().onTrue(feedOn());
+        m_controller.rightTrigger().onFalse(feedOff()); 
         
         // Intake
         m_controller.rightBumper().onTrue(toggleIntaking());
