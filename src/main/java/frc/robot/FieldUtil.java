@@ -10,8 +10,13 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class FieldUtil {
-    public static final Translation2d kBlueHub = new Translation2d(4.6, 4.03);
-    public static final Translation2d kRedHub = new Translation2d(11.915394, 4.034536);
+    // public static final Translation2d kBlueHub = new Translation2d(4.6, 4.03);
+    // public static final Translation2d kRedHub = new Translation2d(11.915394, 4.034536);
+    
+    //Classroom SETTINGS
+    public static final Translation2d kBlueHub = new Translation2d(11.915394, 4.034536);
+    public static final Translation2d kRedHub = new Translation2d(4.6, 4.03);
+
     private static TreeMap<Double, Double> rangeMap = new TreeMap<>();   
     
     /** 
@@ -44,7 +49,7 @@ public class FieldUtil {
             fillTable();
         }
         double distance = FieldUtil.GetHubDistance();
-        SmartDashboard.putNumber("Hub Distance", distance); 
+        SmartDashboard.putNumber("Hub Distance", distance);
         double rangeDelta = rangeMap.get(rangeMap.firstKey()); 
         double rangeKey = rangeMap.firstKey();
 
@@ -62,7 +67,7 @@ public class FieldUtil {
         double maxRange = (rangeDelta > 0) ? Optional.ofNullable(rangeMap.higherKey(rangeKey)).orElse(rangeKey) : rangeKey; 
         double minRange = (rangeDelta > 0) ? rangeKey : Optional.ofNullable(rangeMap.lowerKey(rangeKey)).orElse(rangeKey); 
 
-                SmartDashboard.putNumber("Reccomended Power", rangeMap.get(rangeKey)); 
+        SmartDashboard.putNumber("Reccomended Power", rangeMap.get(rangeKey)); 
 
         if(maxRange == minRange){
             return rangeMap.get(rangeKey); 

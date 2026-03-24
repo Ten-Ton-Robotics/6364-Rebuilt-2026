@@ -2,8 +2,6 @@ package frc.robot.subsystems;
 
 import static edu.wpi.first.units.Units.*;
 
-import java.security.cert.TrustAnchor;
-
 import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
@@ -24,8 +22,8 @@ public class Intake extends SubsystemBase {
     private static final CANBus kMotorBus = new CANBus("CANCAN");
 
     private static final int kMotorID = 34; //Get motor ID from TunerX put that one here
-    private static double TargetSpeed = 50; 
-    private static double MaxSpeed = 50;
+    private static double TargetSpeed = 75; 
+    private static double MaxSpeed = 75;
 
     // Motor
     private final TalonFX m_motor = new TalonFX(kMotorID, kMotorBus);
@@ -48,7 +46,7 @@ public class Intake extends SubsystemBase {
         var motorConfig = new TalonFXConfiguration()
         .withCurrentLimits(
                 new CurrentLimitsConfigs()
-                    .withStatorCurrentLimit(Amps.of(40))
+                    .withStatorCurrentLimit(Amps.of(45))
                     .withStatorCurrentLimitEnable(true)
             )
         .withSlot0(slot0Configs)
