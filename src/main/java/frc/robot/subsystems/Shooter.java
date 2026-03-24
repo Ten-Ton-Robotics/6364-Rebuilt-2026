@@ -55,7 +55,6 @@ public class Shooter extends SubsystemBase {
         m_motor.getConfigurator().apply(motorConfig);
         m_motor.setNeutralMode(NeutralModeValue.Coast);
         SmartDashboard.putNumber(kname + "Shooter Target (RPS)", targetSpeed);
-
     }
 
     // Commands
@@ -73,6 +72,9 @@ public class Shooter extends SubsystemBase {
         });
     }
 
+    /**
+     * Sets the motor speed to the target speed variable in its motor object
+     */
     public Command startShooting() {
         return this.runOnce(() -> {
             if (!isOn) {
@@ -81,6 +83,9 @@ public class Shooter extends SubsystemBase {
         });
     }
 
+    /**
+     * Sets the motor speed to 0
+     */
     public Command stopShooting() {
         return this.runOnce(() -> {
             if (isOn) {
@@ -115,6 +120,11 @@ public class Shooter extends SubsystemBase {
         return new_speed;
     }
 
+    /**
+     * Returns the current velocity of the motor
+     * 
+     * @return The motor velocity in RPS as a double
+     */
     public double getCurrentMotorRPS() {
         return m_motor.getVelocity().getValueAsDouble();
     }

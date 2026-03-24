@@ -141,14 +141,11 @@ public class RobotContainer {
 
         // Shooter Set Speed
         m_shooter_controller.b().onTrue(changeRecommendedPower());
-        m_controller.povUp().onTrue(toggleShooterWithSpeed(50));
         m_controller.povDown().onTrue(toggleShooterWithSpeed(() -> FieldUtil.getPowerFromRange()));
 
         // Shooter speed control
         m_shooter_controller.povUp().onTrue(changeShooterSpeed(true));
         m_shooter_controller.povDown().onTrue(changeShooterSpeed(false));
-        m_shooter_controller.povRight().onTrue(changeShooterSpeed(10));
-        m_shooter_controller.povLeft().onTrue(changeShooterSpeed(-10));
 
         // Shooter speed precise control
         m_shooter_controller.leftTrigger().onTrue(changeShooterSpeedDifference(1));
@@ -226,7 +223,6 @@ public class RobotContainer {
      */
     private Command toggleIntaking() {
         return new ParallelCommandGroup(
-                // _Indexer.toggleIntaking(),
                 m_Intake.toggleIntaking());
     }
 
@@ -239,7 +235,6 @@ public class RobotContainer {
      */
     private Command toggleOuttaking() {
         return new ParallelCommandGroup(
-                // m_Indexer.toggleIntaking(),
                 m_Intake.toggleIntakingInverse());
     }
 
@@ -250,6 +245,13 @@ public class RobotContainer {
                 m_Right_Shooter.changeSpeed(speedUp));
     }
 
+    /**
+     * 
+     * 
+     * @param difference
+     * @return
+     */
+    @SuppressWarnings("unused")
     private Command changeShooterSpeed(double difference) {
         return new ParallelCommandGroup(
                 m_Middle_Shooter.changeSpeed(difference),
@@ -299,11 +301,17 @@ public class RobotContainer {
                 m_Right_Shooter.toggleWithSetShooterSpeed(Speed));
     }
 
-    private Command toggleShooterWithSpeed(DoubleSupplier speedSup) {
+    /**
+     * Sets the speed of all three shooters by a supplied double
+     * 
+     * @param speedUp the value in RPS of the new motor speed.
+     * @return ParallelCommandGroup
+     */
+    private Command toggleShooterWithSpeed(DoubleSupplier speedSupplier) {
         return new ParallelCommandGroup(
-                m_Left_Shooter.toggleWithSetShooterSpeed(speedSup),
-                m_Middle_Shooter.toggleWithSetShooterSpeed(speedSup),
-                m_Right_Shooter.toggleWithSetShooterSpeed(speedSup));
+                m_Left_Shooter.toggleWithSetShooterSpeed(speedSupplier),
+                m_Middle_Shooter.toggleWithSetShooterSpeed(speedSupplier),
+                m_Right_Shooter.toggleWithSetShooterSpeed(speedSupplier));
     }
 
     SequentialCommandGroup sequentialShootingCommand = new SequentialCommandGroup(
