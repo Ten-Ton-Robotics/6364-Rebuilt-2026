@@ -14,7 +14,9 @@ import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 public class Pivot extends SubsystemBase {
     // Constants
@@ -73,6 +75,18 @@ public class Pivot extends SubsystemBase {
         return this.runOnce(() -> {
             stopMotor();
         });
+    }
+
+    public Command pivotChooChoo() {
+        return new SequentialCommandGroup(
+            pivotUp(),
+            new WaitCommand(0.5),
+            stop(),
+            new WaitCommand(0.3),
+            pivotDown(),
+            new WaitCommand(0.5),
+            stop()
+        );
     }
 
     // Functions
