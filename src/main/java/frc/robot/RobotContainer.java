@@ -134,6 +134,7 @@ public class RobotContainer {
         // Sequential Commands
         m_shooter_controller.a().onTrue(m_pivot.pivotDown()); 
         m_shooter_controller.a().onFalse(m_pivot.stop()); 
+        m_shooter_controller.leftTrigger().onTrue(m_pivot.pivotChooChoo());
 
         m_shooter_controller.y().onTrue(m_pivot.pivotUp()); 
         m_shooter_controller.y().onFalse(m_pivot.stop());
