@@ -101,21 +101,21 @@ public class RobotContainer {
         m_drivetrain.setDefaultCommand(
             // Drivetrain will execute this command periodically
             m_drivetrain.applyRequest(() -> {
-                var baseDrive = m_drive
+                var baseDrive = m_drive 
                     .withVelocityX(-m_controller.getLeftY() * MaxSpeed) // Drive forward with negative Y (forward)
                     .withVelocityY(-m_controller.getLeftX() * MaxSpeed); // Drive left with negative X (left)
-
+                
                 SmartDashboard.putBoolean("Hub Snap Toggle", isHubSnappingOn);
 
                 if (isHubSnappingOn) {
                     return baseDrive
                         .withTargetDirection(hubTargetAngle)
-                        .withHeadingPID(7, 0, 0) //5 is figured experimentally 
+                        .withHeadingPID(7, 0, 0) //7 is figured experimentally 
                         .withMaxAbsRotationalRate(MaxAngularRate);
                 } else {
                     double rightJoyStick = Math.abs(m_controller.getRightX()) < 0.1 ? 0 : m_controller.getRightX() ;
                     return baseDrive
-                        .withTargetRateFeedforward(MaxAngularRate * rightJoyStick)
+                        .withTargetRateFeedforward(MaxAngularRate * -rightJoyStick) //Changed turning
                         .withHeadingPID(0,0,0); 
                 }
             })
@@ -148,7 +148,7 @@ public class RobotContainer {
         m_controller.povUp().onTrue(toggleShooterWithSpeed(50)); 
         m_controller.povDown().onTrue(toggleShooterWithSpeed(()-> FieldUtil.getPowerFromRange()));
 
-        // Shooter speed control    
+        // Shooter speed control       
         m_shooter_controller.povUp().onTrue(changeShooterSpeed(true));
         m_shooter_controller.povDown().onTrue(changeShooterSpeed(false));
         m_shooter_controller.povRight().onTrue(changeShooterSpeed(10));
