@@ -130,17 +130,18 @@ public class RobotContainer {
         m_drivetrain.getCurrentCommand();
 
         // Hub Snapping
-        m_controller.a().onTrue(toggleSnappingToHub());
+        m_controller.a().onTrue(toggleSnappingToHub());;
 
         // Sequential Commands
-        m_shooter_controller.a().onTrue(m_pivot.pivot()); 
+        m_shooter_controller.a().onTrue(m_pivot.pivotDown()); 
         m_shooter_controller.a().onFalse(m_pivot.stop()); 
 
+        m_shooter_controller.y().onTrue(m_pivot.pivotUp()); 
+        m_shooter_controller.y().onFalse(m_pivot.stop());
         
         // Shooter toggle
         m_shooter_controller.x().onTrue(toggleShooting());
         m_controller.x().onTrue(toggleShooting());
-
 
         //Shooter Set Speed 
         m_shooter_controller.b().onTrue(changeRecommendedPower()); 

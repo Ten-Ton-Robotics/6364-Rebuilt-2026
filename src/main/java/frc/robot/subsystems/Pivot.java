@@ -21,7 +21,7 @@ public class Pivot extends SubsystemBase {
     private static final CANBus kMotorBus = new CANBus("CANCAN");
 
     private static final int kMotorID = 18; //Get motor ID from TunerX put that one here
-    private static double TargetSpeed = 10; 
+    private static double TargetSpeed = 30; 
 
     // Motor
     private final TalonFX m_motor = new TalonFX(kMotorID, kMotorBus);
@@ -44,12 +44,12 @@ public class Pivot extends SubsystemBase {
         var motorConfig = new TalonFXConfiguration()
         .withCurrentLimits(
                 new CurrentLimitsConfigs()
-                    .withStatorCurrentLimit(Amps.of(40))
+                    .withStatorCurrentLimit(Amps.of(80))
                     .withStatorCurrentLimitEnable(true)
             )
         .withSlot0(slot0Configs)
         .withMotorOutput(
-            new MotorOutputConfigs().withInverted(InvertedValue.CounterClockwise_Positive)
+            new MotorOutputConfigs().withInverted(InvertedValue.Clockwise_Positive) //Fowards pushes the intake down
             );
         m_motor.getConfigurator().apply(motorConfig);
         m_motor.setNeutralMode(NeutralModeValue.Coast);
@@ -57,9 +57,15 @@ public class Pivot extends SubsystemBase {
     }
 
     // Commands
-    public Command pivot() {
+    public Command pivotDown() {
         return this.run(() -> {
             setMotorSpeed(TargetSpeed);
+        });
+    }
+
+    public Command pivotUp() {
+        return this.run(() -> {
+            setMotorSpeed(-TargetSpeed);
         });
     }
 
