@@ -145,7 +145,6 @@ public class RobotContainer {
         //Shooter Set Speed 
         m_shooter_controller.b().onTrue(changeRecommendedPower()); 
         m_controller.povUp().onTrue(toggleShooterWithSpeed(50)); 
-        m_controller.povDown().onTrue(toggleShooterWithSpeed(()-> FieldUtil.getPowerFromRange()));
 
         // Shooter speed control
         m_shooter_controller.povUp().onTrue(changeShooterSpeed(true));
@@ -164,6 +163,9 @@ public class RobotContainer {
         // Intake
         m_controller.rightBumper().onTrue(toggleIntaking());
         m_controller.leftBumper().onTrue(toggleOuttaking());
+
+        //Shoot
+        m_shooter_controller.rightBumper().onTrue(turnAndShoot());
 
         // Run SysId routines when holding back/start and X/Y.
         // Note that each routine should be run exactly once in a single log.
@@ -305,6 +307,12 @@ public class RobotContainer {
                 m_Right_Shooter.toggleWithSetShooterSpeed(Speed));
     }
 
+    private Command turnAndShoot(){
+        return new SequentialCommandGroup(
+            toggleSnappingToHub(), 
+            toggleShooterWithSpeed(()-> FieldUtil.getPowerFromRange()) 
+        );
+    }
     /**
      * Sets the speed of all three shooters by a supplied double
      * 
