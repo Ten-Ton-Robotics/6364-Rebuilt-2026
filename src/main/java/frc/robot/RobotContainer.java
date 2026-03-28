@@ -269,7 +269,7 @@ public class RobotContainer {
      * @param difference The difference you want to use
      * @return A ParallelCommandGroup
      */
-    private Command changeShooterSpeedDifference(int difference) {
+    private Command changeShooterSpeedDifference(double difference) {
         return new ParallelCommandGroup(
                 m_Middle_Shooter.changeShooterSpeedDifference(difference),
                 m_Left_Shooter.changeShooterSpeedDifference(difference),
