@@ -34,14 +34,16 @@ public class FieldUtil {
     }
     
     private static void fillTable(){
-        rangeMap.put(1.823, 43.0);
-        rangeMap.put(2.182, 45.0);
-        rangeMap.put(2.670, 50.0);
-        rangeMap.put(3.157, 51.0);
-        rangeMap.put(3.573, 53.0); 
-        rangeMap.put(4.021, 58.0); 
-        rangeMap.put(4.436, 60.0);
-        rangeMap.put(5.185, 64.0);  
+        rangeMap.put(1.85, 43.16);
+        rangeMap.put(2.46, 48.5);
+        rangeMap.put(2.57, 49.5);
+        rangeMap.put(2.99, 51.5);
+        rangeMap.put(3.28, 54.0);
+        rangeMap.put(3.51, 56.5);
+        rangeMap.put(4.1, 60.5);
+        rangeMap.put(4.42, 62.5);
+        rangeMap.put(5.10,65.0);
+        rangeMap.put(5.31, 69.5);
     }
 
     public static double getPowerFromRange(){
