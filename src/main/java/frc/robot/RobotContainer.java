@@ -102,24 +102,24 @@ public class RobotContainer {
                 // Drivetrain will execute this command periodically
                 m_drivetrain.applyRequest(() -> {
                     var baseDrive = m_drive
-                            .withVelocityX(-m_controller.getLeftY() * MaxSpeed) // Drive forward with negative Y
-                                                                                // (forward)
+                            .withVelocityX(-m_controller.getLeftY() * MaxSpeed) // Drive forward with negative Y (forward)
                             .withVelocityY(-m_controller.getLeftX() * MaxSpeed); // Drive left with negative X (left)
-
+                
                     SmartDashboard.putBoolean("Hub Snap Toggle", isHubSnappingOn);
 
-                    if (isHubSnappingOn) {
-                        return baseDrive
-                                .withTargetDirection(hubTargetAngle)
-                                .withHeadingPID(7, 0, 0) // 5 is figured experimentally
-                                .withMaxAbsRotationalRate(MaxAngularRate);
-                    } else {
-                        double rightJoyStick = Math.abs(m_controller.getRightX()) < 0.1 ? 0 : m_controller.getRightX();
-                        return baseDrive
-                                .withTargetRateFeedforward(MaxAngularRate * rightJoyStick)
-                                .withHeadingPID(0, 0, 0);
-                    }
-                }));
+                if (isHubSnappingOn) {
+                    return baseDrive
+                        .withTargetDirection(hubTargetAngle)
+                        .withHeadingPID(7, 0, 0) //7 is figured experimentally 
+                        .withMaxAbsRotationalRate(MaxAngularRate);
+                } else {
+                    double rightJoyStick = Math.abs(m_controller.getRightX()) < 0.1 ? 0 : m_controller.getRightX() ;
+                    return baseDrive
+                        .withTargetRateFeedforward(MaxAngularRate * rightJoyStick)
+                        .withHeadingPID(0,0,0); 
+                }
+            })
+        );
 
         // Idle while the robot is disabled. This ensures the configured
         // neutral mode is applied to the m_drive motors while disabled.
@@ -129,19 +129,23 @@ public class RobotContainer {
         m_drivetrain.getCurrentCommand();
 
         // Hub Snapping
-        m_controller.a().onTrue(toggleSnappingToHub());
+        m_controller.a().onTrue(toggleSnappingToHub());;
 
         // Sequential Commands
-        m_shooter_controller.a().onTrue(m_pivot.pivot());
-        m_shooter_controller.a().onFalse(m_pivot.stop());
+        m_shooter_controller.a().onTrue(m_pivot.pivotDown()); 
+        m_shooter_controller.a().onFalse(m_pivot.stop()); 
+        m_shooter_controller.leftBumper().onTrue(m_pivot.pivotChooChoo());
 
+        m_shooter_controller.y().onTrue(m_pivot.pivotUp()); 
+        m_shooter_controller.y().onFalse(m_pivot.stop());
+        
         // Shooter toggle
         m_shooter_controller.x().onTrue(toggleShooting());
         m_controller.x().onTrue(toggleShooting());
 
-        // Shooter Set Speed
-        m_shooter_controller.b().onTrue(changeRecommendedPower());
-        m_controller.povDown().onTrue(toggleShooterWithSpeed(() -> FieldUtil.getPowerFromRange()));
+        //Shooter Set Speed 
+        m_shooter_controller.b().onTrue(changeRecommendedPower()); 
+        m_controller.povUp().onTrue(toggleShooterWithSpeed(50)); 
 
         // Shooter speed control
         m_shooter_controller.povUp().onTrue(changeShooterSpeed(true));
@@ -160,6 +164,9 @@ public class RobotContainer {
         // Intake
         m_controller.rightBumper().onTrue(toggleIntaking());
         m_controller.leftBumper().onTrue(toggleOuttaking());
+
+        //Shoot
+        m_shooter_controller.rightBumper().onTrue(turnAndShoot());
 
         // Run SysId routines when holding back/start and X/Y.
         // Note that each routine should be run exactly once in a single log.
@@ -265,7 +272,7 @@ public class RobotContainer {
      * @param difference The difference you want to use
      * @return A ParallelCommandGroup
      */
-    private Command changeShooterSpeedDifference(int difference) {
+    private Command changeShooterSpeedDifference(double difference) {
         return new ParallelCommandGroup(
                 m_Middle_Shooter.changeShooterSpeedDifference(difference),
                 m_Left_Shooter.changeShooterSpeedDifference(difference),
@@ -301,6 +308,12 @@ public class RobotContainer {
                 m_Right_Shooter.toggleWithSetShooterSpeed(Speed));
     }
 
+    private Command turnAndShoot(){
+        return new SequentialCommandGroup(
+            toggleSnappingToHub(), 
+            toggleShooterWithSpeed(()-> FieldUtil.getPowerFromRange()) 
+        );
+    }
     /**
      * Sets the speed of all three shooters by a supplied double
      * 

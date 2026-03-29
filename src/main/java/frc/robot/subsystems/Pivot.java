@@ -14,14 +14,17 @@ import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 public class Pivot extends SubsystemBase {
     // Constants
     private static final CANBus kMotorBus = new CANBus("CANCAN");
 
     private static final int kMotorID = 18; //Get motor ID from TunerX put that one here
-    private static double TargetSpeed = 10; 
+    private static double TargetSpeed = 30; 
 
     // Motor
     private final TalonFX m_motor = new TalonFX(kMotorID, kMotorBus);
@@ -44,12 +47,12 @@ public class Pivot extends SubsystemBase {
         var motorConfig = new TalonFXConfiguration()
         .withCurrentLimits(
                 new CurrentLimitsConfigs()
-                    .withStatorCurrentLimit(Amps.of(40))
+                    .withStatorCurrentLimit(Amps.of(80))
                     .withStatorCurrentLimitEnable(true)
             )
         .withSlot0(slot0Configs)
         .withMotorOutput(
-            new MotorOutputConfigs().withInverted(InvertedValue.CounterClockwise_Positive)
+            new MotorOutputConfigs().withInverted(InvertedValue.Clockwise_Positive) //Fowards pushes the intake down
             );
         m_motor.getConfigurator().apply(motorConfig);
         m_motor.setNeutralMode(NeutralModeValue.Coast);
@@ -57,9 +60,15 @@ public class Pivot extends SubsystemBase {
     }
 
     // Commands
-    public Command pivot() {
+    public Command pivotDown() {
         return this.run(() -> {
             setMotorSpeed(TargetSpeed);
+        });
+    }
+
+    public Command pivotUp() {
+        return this.run(() -> {
+            setMotorSpeed(-TargetSpeed);
         });
     }
 
@@ -67,6 +76,24 @@ public class Pivot extends SubsystemBase {
         return this.runOnce(() -> {
             stopMotor();
         });
+    }
+
+    public Command pivotChooChoo() {
+        return new SequentialCommandGroup(
+            new ParallelRaceGroup(
+                pivotUp(),
+                new WaitCommand(0.4)
+            ),
+            new ParallelRaceGroup(
+                stop(),
+                new WaitCommand(0.2)
+            ),
+            new ParallelRaceGroup(
+                pivotDown(),
+                new WaitCommand(0.3)
+            ),
+            stop()
+        );
     }
 
     // Functions

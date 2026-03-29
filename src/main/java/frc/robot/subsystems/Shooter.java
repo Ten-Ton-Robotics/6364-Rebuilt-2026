@@ -27,7 +27,7 @@ public class Shooter extends SubsystemBase {
 
     // Speed Variables
     public double targetSpeed = 45;
-    private double maxSpeed = 65;
+    private double maxSpeed = 70;
     private double defaultSpeedChange = 5;
 
     // Motor Output
@@ -150,7 +150,7 @@ public class Shooter extends SubsystemBase {
      */
     public Command changeSpeed(Boolean SpeedUp) {
         return this.runOnce(() -> {
-            int SpeedChanger = SpeedUp ? 1 : -1;
+            double SpeedChanger = SpeedUp ? 1 : -1;
             double new_speed = targetSpeed + (defaultSpeedChange * SpeedChanger);
 
             new_speed = speedCap(new_speed);
@@ -169,7 +169,7 @@ public class Shooter extends SubsystemBase {
      * 
      * @param change how much the speed should change by
      */
-    public Command changeShooterSpeedDifference(int change) {
+    public Command changeShooterSpeedDifference(double change) {
         return this.runOnce(() -> {
             defaultSpeedChange = change;
         });
