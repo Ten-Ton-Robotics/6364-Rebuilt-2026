@@ -36,26 +36,27 @@ public class RobotContainer {
 
     // Subsystems
     public static final Shooter m_Left_Shooter = new Shooter(37, "Left",
-            new Slot0Configs()
-                    .withKV(0.118) // A velocity target of 1 rps results in 0.1234 V output
-                    .withKA(0.1175) // An acceleration of 1 rps/s requires 0.01 V output
-                    .withKS(0.28) // Add 0.28 V output to overcome static friction
-                    .withKP(0.08) // An error of 1 rps results in 0.1 V output
-                    .withKI(0.0) // no output for integrated error
-                    .withKD(0.02) // no output for error derivative (Upper Limit 0.2)
+        new Slot0Configs()
+            .withKV(0.118) // A velocity target of 1 rps results in 0.1234 V output
+            .withKA(0.1175) // An acceleration of 1 rps/s requires 0.01 V output
+            .withKS(0.28) // Add 0.28 V output to overcome static friction
+            .withKP(0.08) // An error of 1 rps results in 0.1 V output
+            .withKI(0.0) // no output for integrated error
+            .withKD(0.02) // no output for error derivative (Upper Limit 0.2)
     );
 
     public static final Shooter m_Middle_Shooter = new Shooter(44, "Middle",
-            new Slot0Configs()
-                    .withKV(0.12) // A velocity target of 1 rps results in 0.1256 V output
-                    .withKA(0.1132) // An acceleration of 1 rps/s requires 0.01 V output
-                    .withKS(0.31) // Add 0.31 V output to overcome static friction
-                    .withKP(0.08) // An error of 1 rps results in 0.1 V output
-                    .withKI(0.0) // no output for integrated error
-                    .withKD(0.02) // no output for error derivative (Upper Limit 0.2)
+        new Slot0Configs()
+            .withKV(0.12) // A velocity target of 1 rps results in 0.1256 V output
+            .withKA(0.1132) // An acceleration of 1 rps/s requires 0.01 V output
+            .withKS(0.31) // Add 0.31 V output to overcome static friction
+            .withKP(0.08) // An error of 1 rps results in 0.1 V output
+            .withKI(0.0) // no output for integrated error
+            .withKD(0.02) // no output for error derivative (Upper Limit 0.2)
     );
 
-    public static final Shooter m_Right_Shooter = new Shooter(35, "Right", new Slot0Configs()
+    public static final Shooter m_Right_Shooter = new Shooter(35, "Right", 
+        new Slot0Configs()
             .withKV(0.1224) // A velocity target of 1 rps results in 0.1274 V output
             .withKA(0.1044) // An acceleration of 1 rps/s requires 0.01 V output
             .withKS(0.30) // Add 0.25 V output to overcome static friction
@@ -115,7 +116,7 @@ public class RobotContainer {
                 } else {
                     double rightJoyStick = Math.abs(m_controller.getRightX()) < 0.1 ? 0 : m_controller.getRightX() ;
                     return baseDrive
-                        .withTargetRateFeedforward(MaxAngularRate * rightJoyStick)
+                        .withTargetRateFeedforward(MaxAngularRate * -   rightJoyStick)
                         .withHeadingPID(0,0,0); 
                 }
             })
