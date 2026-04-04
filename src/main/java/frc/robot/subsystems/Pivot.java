@@ -14,10 +14,7 @@ import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 public class Pivot extends SubsystemBase {
     // Constants
@@ -78,23 +75,6 @@ public class Pivot extends SubsystemBase {
         });
     }
 
-    public Command pivotChooChoo() {
-        return new SequentialCommandGroup(
-            new ParallelRaceGroup(
-                pivotUp(),
-                new WaitCommand(0.4)
-            ),
-            new ParallelRaceGroup(
-                stop(),
-                new WaitCommand(0.2)
-            ),
-            new ParallelRaceGroup(
-                pivotDown(),
-                new WaitCommand(0.3)
-            ),
-            stop()
-        );
-    }
 
     // Functions
     private void setMotorSpeed(double new_speed) {

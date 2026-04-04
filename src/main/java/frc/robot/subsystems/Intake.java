@@ -32,7 +32,7 @@ public class Intake extends SubsystemBase {
     private final VelocityVoltage m_output = new VelocityVoltage(TargetSpeed);
 
     // Toggle Boolean
-    public boolean isOn = false;
+    private boolean isOn = false;
 
     public Intake() {
         // Configure PID/feedforward gains for velocity control
@@ -73,7 +73,7 @@ public class Intake extends SubsystemBase {
         });
     }
     public Command intake() {
-        return this.run(() -> {
+        return this.runOnce(() -> {
             setMotorSpeed(TargetSpeed);
         });
     }
@@ -122,5 +122,10 @@ public class Intake extends SubsystemBase {
     private void stopMotor() {
         m_motor.setControl(new StaticBrake());
     }
+
+    public boolean getIsOn(){
+        return isOn;
+    }
+    
 }
 
