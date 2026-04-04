@@ -10,12 +10,12 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class FieldUtil {
-    // public static final Translation2d kBlueHub = new Translation2d(4.6, 4.03);
-    // public static final Translation2d kRedHub = new Translation2d(11.915394, 4.034536);
+    public static final Translation2d kBlueHub = new Translation2d(4.6, 4.03);
+    public static final Translation2d kRedHub = new Translation2d(11.915394, 4.034536);
     
     //Classroom SETTINGS
-    public static final Translation2d kBlueHub = new Translation2d(11.915394, 4.034536);
-    public static final Translation2d kRedHub = new Translation2d(4.6, 4.03);
+    // public static final Translation2d kBlueHub = new Translation2d(11.915394, 4.034536);
+    // public static final Translation2d kRedHub = new Translation2d(4.6, 4.03);
 
     private static TreeMap<Double, Double> rangeMap = new TreeMap<>();   
     
