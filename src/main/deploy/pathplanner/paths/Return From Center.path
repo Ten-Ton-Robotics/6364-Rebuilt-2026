@@ -53,7 +53,7 @@
   "constraintZones": [
     {
       "name": "Ramp Zone",
-      "minWaypointRelativePos": 0.5077650236326808,
+      "minWaypointRelativePos": 0.39432815665091947,
       "maxWaypointRelativePos": 1.3558406482106506,
       "constraints": {
         "maxVelocity": 1.4,
@@ -90,7 +90,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -125.00000000000001
+    "rotation": -135.225
   },
   "reversed": false,
   "folder": null,
