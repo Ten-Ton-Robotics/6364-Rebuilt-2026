@@ -187,9 +187,12 @@ public class RobotContainer {
         // Named Commands for FRC Pathplaner
         NamedCommands.registerCommand("Turn on Intake", m_Intake.intake());
         NamedCommands.registerCommand("Stop Intake", m_Intake.stop());
-        NamedCommands.registerCommand("Toggle Shooter with Speed", toggleShooterWithSpeed(50));
-        NamedCommands.registerCommand("Start Feed", m_Feed.intake());
-        NamedCommands.registerCommand("Stop Feed", m_Feed.stop());
+        NamedCommands.registerCommand("Toggle Shooter with Speed", toggleShooterWithSpeed(51));
+        NamedCommands.registerCommand("Start Feed", feedOn());
+        NamedCommands.registerCommand("Stop Feed", feedOff());  
+        NamedCommands.registerCommand("Intake Down", m_pivot.pivotDown());
+        NamedCommands.registerCommand("Stop Pivot", m_pivot.stop());
+        NamedCommands.registerCommand("Turn and Shoot", turnAndShoot());
     }
 
     /**
