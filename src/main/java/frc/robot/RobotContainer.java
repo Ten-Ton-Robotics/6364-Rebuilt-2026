@@ -193,9 +193,10 @@ public class RobotContainer {
         NamedCommands.registerCommand("Intake Down", m_pivot.pivotDown());
         NamedCommands.registerCommand("Stop Pivot", m_pivot.stop());
         NamedCommands.registerCommand("Turn and Shoot", turnAndShoot());
+        NamedCommands.registerCommand("Burp Balls", pivotChooChoo());
     }
 
-    /**
+    /**     
      * Toggles all three shooters in parralel
      * 
      * @return ParallelCommandGroup
