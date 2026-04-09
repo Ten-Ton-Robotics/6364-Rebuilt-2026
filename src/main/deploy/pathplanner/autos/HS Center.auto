@@ -7,13 +7,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Shake Path Part 1"
+            "pathName": "HS Ramp Cross"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Turn on Intake"
           }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": "PRC",
+  "folder": "Montreal",
   "choreoAuto": false
 }

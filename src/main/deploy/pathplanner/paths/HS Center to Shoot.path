@@ -3,41 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.8,
-        "y": 2.0
+        "x": 7.5971897289586305,
+        "y": 2.747603423680457
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.0437049845621087,
-        "y": 2.055748367685362
+        "x": 8.59718972895863,
+        "y": 2.7476034236804576
       },
       "isLocked": false,
-      "linkedName": "Human Player Shoot Spot"
+      "linkedName": "HS Ball Collection End"
     },
     {
       "anchor": {
-        "x": 3.5862054208273886,
-        "y": 2.42413694721826
+        "x": 3.3783146067415726,
+        "y": 2.598067415730337
       },
       "prevControl": {
-        "x": 2.3613714691618117,
-        "y": 2.0560985921063897
-      },
-      "nextControl": {
-        "x": 4.265307902130916,
-        "y": 2.6281937990319015
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 6.549158345221112,
-        "y": 2.889928673323824
-      },
-      "prevControl": {
-        "x": 6.797987178291195,
-        "y": 2.9140991477292006
+        "x": 2.3783146067415726,
+        "y": 2.598067415730337
       },
       "nextControl": null,
       "isLocked": false,
@@ -46,17 +30,21 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.5445821671331481,
+      "waypointRelativePos": 0.5,
+      "rotationDegrees": 0.0
+    },
+    {
+      "waypointRelativePos": 0.7808630393996212,
       "rotationDegrees": 0.0
     }
   ],
   "constraintZones": [
     {
-      "name": "Constraints Zone",
-      "minWaypointRelativePos": 0.9074949358541523,
-      "maxWaypointRelativePos": 1.5124915597569208,
+      "name": "Ramp",
+      "minWaypointRelativePos": 0.44449339207047617,
+      "maxWaypointRelativePos": 0.7511013215859004,
       "constraints": {
-        "maxVelocity": 2.5,
+        "maxVelocity": 1.4,
         "maxAcceleration": 3.0,
         "maxAngularVelocity": 360.0,
         "maxAngularAcceleration": 180.0,
@@ -77,13 +65,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0.7440592028886865
+    "rotation": -129.844
   },
   "reversed": false,
-  "folder": "PRC",
+  "folder": "Montreal",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -137.0
+    "rotation": 107.90444750624823
   },
   "useDefaultConstraints": true
 }

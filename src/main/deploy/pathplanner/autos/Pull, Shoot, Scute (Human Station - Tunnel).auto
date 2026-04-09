@@ -7,7 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Copy of Pull (Human Station - Tunnel)"
+            "pathName": "Pull (Human Station - Tunnel)"
           }
         },
         {
@@ -51,6 +51,6 @@
     }
   },
   "resetOdom": true,
-  "folder": null,
+  "folder": "PRC",
   "choreoAuto": false
 }
