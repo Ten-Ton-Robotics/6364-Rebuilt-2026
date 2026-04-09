@@ -17,6 +17,12 @@
           }
         },
         {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.5
+          }
+        },
+        {
           "type": "race",
           "data": {
             "commands": [
@@ -29,10 +35,16 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 5.0
+                  "waitTime": 2.0
                 }
               }
             ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Toggle Shooter with Speed"
           }
         },
         {
@@ -42,9 +54,107 @@
           }
         },
         {
+          "type": "race",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Intake Down"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 0.7
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Stop Pivot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Turn on Intake"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": " Away From Human Spot (Center)"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Return From Center"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Turn and Shoot"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.4
+          }
+        },
+        {
+          "type": "race",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Start Feed"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 1.0
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Burp Balls"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 1.0
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Stop Feed"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Turn and Shoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Stop Intake"
           }
         }
       ]

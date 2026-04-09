@@ -32,16 +32,18 @@ public class Intake extends SubsystemBase {
     private final VelocityVoltage m_output = new VelocityVoltage(TargetSpeed);
 
     // Toggle Boolean
-    public boolean isOn = false;
+    private boolean isOn = false;
 
     public Intake() {
         // Configure PID/feedforward gains for velocity control
-        var slot0Configs = new Slot0Configs()
-            .withKP(0.1)    // Proportional gain - adjust as needed
-            .withKI(0.0)    // Integral gain
-            .withKD(0.0)    // Derivative gain
-            .withKS(0.0)    // Static friction feedforward
-            .withKV(0.12);  // Velocity feedforward - tune this value
+        var slot0Configs =
+            new Slot0Configs()
+            .withKV(0.097) // A velocity target of 1 rps results in 0.097 V output
+            .withKA(0.1) // An acceleration of 1 rps/s requires 0.01 V output
+            .withKS(0.42) // Add 0.42 V output to overcome static friction
+            .withKP(0.08) // An error of 1 rps results in 0.08 V output
+            .withKI(0.0) // no output for integrated error
+            .withKD(0.0); // no output for error derivative (Upper Limit 0.2)
 
         var motorConfig = new TalonFXConfiguration()
         .withCurrentLimits(
@@ -73,7 +75,7 @@ public class Intake extends SubsystemBase {
         });
     }
     public Command intake() {
-        return this.run(() -> {
+        return this.runOnce(() -> {
             setMotorSpeed(TargetSpeed);
         });
     }
@@ -122,5 +124,10 @@ public class Intake extends SubsystemBase {
     private void stopMotor() {
         m_motor.setControl(new StaticBrake());
     }
+
+    public boolean getIsOn(){
+        return isOn;
+    }
+    
 }
 
