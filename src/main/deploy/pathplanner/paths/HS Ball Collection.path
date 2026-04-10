@@ -42,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 107.90444750624823
+    "rotation": 80.0
   },
   "reversed": false,
   "folder": "Montreal",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 113.334
+    "rotation": 80.0
   },
   "useDefaultConstraints": false
 }

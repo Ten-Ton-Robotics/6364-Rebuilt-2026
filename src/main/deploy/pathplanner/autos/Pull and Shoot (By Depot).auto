@@ -13,7 +13,7 @@
         {
           "type": "named",
           "data": {
-            "name": "Toggle Shooter with Speed"
+            "name": "Turn and Shoot"
           }
         },
         {
@@ -32,6 +32,12 @@
           "type": "named",
           "data": {
             "name": "Stop Feed"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Turn and Shoot"
           }
         }
       ]

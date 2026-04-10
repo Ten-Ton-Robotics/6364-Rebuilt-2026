@@ -13,7 +13,7 @@
         {
           "type": "named",
           "data": {
-            "name": "Toggle Shooter with Speed"
+            "name": "Turn and Shoot"
           }
         },
         {
@@ -26,6 +26,12 @@
           "type": "wait",
           "data": {
             "waitTime": 5.0
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Turn and Shoot"
           }
         },
         {
