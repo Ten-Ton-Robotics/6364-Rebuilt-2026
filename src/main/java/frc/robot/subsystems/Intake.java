@@ -39,7 +39,7 @@ public class Intake extends SubsystemBase {
         var slot0Configs =
             new Slot0Configs()
             .withKV(0.097) // A velocity target of 1 rps results in 0.097 V output
-            .withKA(0.1) // An acceleration of 1 rps/s requires 0.01 V output
+            .withKA(0.1) // An acceleration of 1 rps/s requires 0.1 V output
             .withKS(0.42) // Add 0.42 V output to overcome static friction
             .withKP(0.08) // An error of 1 rps results in 0.08 V output
             .withKI(0.0) // no output for integrated error
@@ -48,7 +48,7 @@ public class Intake extends SubsystemBase {
         var motorConfig = new TalonFXConfiguration()
         .withCurrentLimits(
                 new CurrentLimitsConfigs()
-                    .withStatorCurrentLimit(Amps.of(45))
+                    .withStatorCurrentLimit(Amps.of(60))
                     .withStatorCurrentLimitEnable(true)
             )
         .withSlot0(slot0Configs)
