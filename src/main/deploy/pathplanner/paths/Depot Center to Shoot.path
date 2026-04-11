@@ -4,12 +4,12 @@
     {
       "anchor": {
         "x": 7.8,
-        "y": 5.0
+        "y": 4.8
       },
       "prevControl": null,
       "nextControl": {
         "x": 8.038660921505938,
-        "y": 5.074437655430142
+        "y": 4.874437655430142
       },
       "isLocked": false,
       "linkedName": "Depot Ball Collection End Point"
