@@ -16,16 +16,32 @@
     },
     {
       "anchor": {
-        "x": 5.630513552068472,
-        "y": 5.1930099857346645
+        "x": 6.665606276747502,
+        "y": 4.8
       },
       "prevControl": {
-        "x": 6.00573466476462,
-        "y": 4.887332382310984
+        "x": 7.295889923886159,
+        "y": 4.460616497694567
       },
       "nextControl": {
-        "x": 4.840292929693787,
-        "y": 5.8367710584733175
+        "x": 6.160998573466475,
+        "y": 5.071711840228246
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 5.7340228245363765,
+        "y": 5.477660485021398
+      },
+      "prevControl": {
+        "x": 6.212753209700426,
+        "y": 5.322396576319544
+      },
+      "nextControl": {
+        "x": 5.389150328657969,
+        "y": 5.589511024225207
       },
       "isLocked": false,
       "linkedName": null
@@ -46,11 +62,15 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.3584814992791945,
+      "waypointRelativePos": 0.43969245555021463,
       "rotationDegrees": 161.3002324610271
     },
     {
-      "waypointRelativePos": 1.55,
+      "waypointRelativePos": 2.1,
+      "rotationDegrees": 180.0
+    },
+    {
+      "waypointRelativePos": 2.6943777030273877,
       "rotationDegrees": 180.0
     }
   ],
@@ -58,7 +78,7 @@
     {
       "name": "Ramp",
       "minWaypointRelativePos": 0.9,
-      "maxWaypointRelativePos": 1.5,
+      "maxWaypointRelativePos": 2.0,
       "constraints": {
         "maxVelocity": 1.4,
         "maxAcceleration": 3.0,
