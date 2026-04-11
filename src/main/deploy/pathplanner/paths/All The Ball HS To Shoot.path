@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.396136128573557,
-        "y": 3.086052829429782
+        "x": 7.0186650376840545,
+        "y": 2.6023692377988046
       },
       "isLocked": false,
       "linkedName": "All the Ball Collection End Point"
@@ -20,24 +20,24 @@
         "y": 2.465584269662921
       },
       "prevControl": {
-        "x": 6.7033583334681435,
-        "y": 2.511257514917893
+        "x": 6.230741680396471,
+        "y": 2.5275995560269653
       },
       "nextControl": {
-        "x": 4.396463253719474,
-        "y": 2.3682031490192577
+        "x": 5.537046638036524,
+        "y": 2.364590723907712
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 3.3477415730337077,
-        "y": 2.465584269662921
+        "x": 2.654621968616262,
+        "y": 2.6182168330955777
       },
       "prevControl": {
-        "x": 3.105261901846972,
-        "y": 2.526441554035234
+        "x": 2.269346759161292,
+        "y": 2.6927237288086903
       },
       "nextControl": null,
       "isLocked": false,
@@ -54,7 +54,7 @@
       "rotationDegrees": 0.0
     },
     {
-      "waypointRelativePos": 1.567729831144465,
+      "waypointRelativePos": 1.4694858241230184,
       "rotationDegrees": 0.0
     }
   ],
@@ -85,7 +85,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -129.249
+    "rotation": -142.57999999999998
   },
   "reversed": false,
   "folder": "Montreal",
