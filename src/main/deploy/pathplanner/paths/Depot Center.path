@@ -1,0 +1,68 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 7.8,
+        "y": 4.8
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 8.075920114122681,
+        "y": 4.455506419400857
+      },
+      "isLocked": false,
+      "linkedName": "Depot Ball Collection End Point"
+    },
+    {
+      "anchor": {
+        "x": 6.587974322396576,
+        "y": 4.8
+      },
+      "prevControl": {
+        "x": 6.6411128965154544,
+        "y": 5.044287314326005
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [
+    {
+      "name": "Ramp",
+      "minWaypointRelativePos": 0.25,
+      "maxWaypointRelativePos": 0.5,
+      "constraints": {
+        "maxVelocity": 1.4,
+        "maxAcceleration": 3.0,
+        "maxAngularVelocity": 360.0,
+        "maxAngularAcceleration": 180.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    }
+  ],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 360.0,
+    "maxAngularAcceleration": 180.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 132.461
+  },
+  "reversed": false,
+  "folder": "Montreal",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": -110.0
+  },
+  "useDefaultConstraints": true
+}

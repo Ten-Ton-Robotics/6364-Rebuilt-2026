@@ -1,0 +1,37 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Depot Ramp Cross"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Turn on Intake"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Depot Ball Collection"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Depot Center"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": "Montreal",
+  "choreoAuto": false
+}
