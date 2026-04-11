@@ -8,24 +8,24 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 8.038660921505938,
-        "y": 4.874437655430142
+        "x": 8.075920114122681,
+        "y": 4.455506419400857
       },
       "isLocked": false,
       "linkedName": "Depot Ball Collection End Point"
     },
     {
       "anchor": {
-        "x": 5.488188302425106,
-        "y": 5.568231098430813
+        "x": 5.630513552068472,
+        "y": 5.1930099857346645
       },
       "prevControl": {
-        "x": 6.4799460196623535,
-        "y": 5.453276657118814
+        "x": 6.00573466476462,
+        "y": 4.887332382310984
       },
       "nextControl": {
-        "x": 4.810933837329763,
-        "y": 5.646731529844615
+        "x": 4.840292929693787,
+        "y": 5.8367710584733175
       },
       "isLocked": false,
       "linkedName": null
@@ -46,12 +46,12 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 1.0,
-      "rotationDegrees": 0.0
+      "waypointRelativePos": 0.3584814992791945,
+      "rotationDegrees": 161.3002324610271
     },
     {
       "waypointRelativePos": 1.55,
-      "rotationDegrees": 0.0
+      "rotationDegrees": 180.0
     }
   ],
   "constraintZones": [
@@ -87,7 +87,7 @@
   "folder": "Montreal",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -80.0
+    "rotation": -110.0
   },
   "useDefaultConstraints": true
 }

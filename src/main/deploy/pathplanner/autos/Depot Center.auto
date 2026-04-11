@@ -23,9 +23,9 @@
           }
         },
         {
-          "type": "wait",
+          "type": "path",
           "data": {
-            "waitTime": 0.3
+            "pathName": "Depot Center to Shoot"
           }
         },
         {
@@ -35,9 +35,9 @@
           }
         },
         {
-          "type": "path",
+          "type": "wait",
           "data": {
-            "pathName": "Depot Center to Shoot"
+            "waitTime": 0.3
           }
         },
         {
@@ -59,7 +59,7 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 3.0
+                  "waitTime": 2.0
                 }
               }
             ]
