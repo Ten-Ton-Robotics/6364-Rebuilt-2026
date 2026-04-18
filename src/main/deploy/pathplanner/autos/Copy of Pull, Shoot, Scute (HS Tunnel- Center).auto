@@ -7,13 +7,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Copy of Pull (Human Station - Tunnel)"
+            "pathName": "Pull (Human Station - Tunnel)"
           }
         },
         {
           "type": "named",
           "data": {
             "name": "Toggle Shooter with Speed"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.5
           }
         },
         {
@@ -51,6 +57,6 @@
     }
   },
   "resetOdom": true,
-  "folder": null,
+  "folder": "PRC",
   "choreoAuto": false
 }

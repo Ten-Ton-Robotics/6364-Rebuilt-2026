@@ -21,6 +21,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -36,26 +37,27 @@ public class RobotContainer {
 
     // Subsystems
     public static final Shooter m_Left_Shooter = new Shooter(37, "Left",
-            new Slot0Configs()
-                    .withKV(0.118) // A velocity target of 1 rps results in 0.1234 V output
-                    .withKA(0.1175) // An acceleration of 1 rps/s requires 0.01 V output
-                    .withKS(0.28) // Add 0.28 V output to overcome static friction
-                    .withKP(0.08) // An error of 1 rps results in 0.1 V output
-                    .withKI(0.0) // no output for integrated error
-                    .withKD(0.02) // no output for error derivative (Upper Limit 0.2)
+        new Slot0Configs()
+            .withKV(0.118) // A velocity target of 1 rps results in 0.1234 V output
+            .withKA(0.1175) // An acceleration of 1 rps/s requires 0.01 V output
+            .withKS(0.28) // Add 0.28 V output to overcome static friction
+            .withKP(0.08) // An error of 1 rps results in 0.1 V output
+            .withKI(0.0) // no output for integrated error
+            .withKD(0.02) // no output for error derivative (Upper Limit 0.2)
     );
 
     public static final Shooter m_Middle_Shooter = new Shooter(44, "Middle",
-            new Slot0Configs()
-                    .withKV(0.12) // A velocity target of 1 rps results in 0.1256 V output
-                    .withKA(0.1132) // An acceleration of 1 rps/s requires 0.01 V output
-                    .withKS(0.31) // Add 0.31 V output to overcome static friction
-                    .withKP(0.08) // An error of 1 rps results in 0.1 V output
-                    .withKI(0.0) // no output for integrated error
-                    .withKD(0.02) // no output for error derivative (Upper Limit 0.2)
+        new Slot0Configs()
+            .withKV(0.12) // A velocity target of 1 rps results in 0.1256 V output
+            .withKA(0.1132) // An acceleration of 1 rps/s requires 0.01 V output
+            .withKS(0.31) // Add 0.31 V output to overcome static friction
+            .withKP(0.08) // An error of 1 rps results in 0.1 V output
+            .withKI(0.0) // no output for integrated error
+            .withKD(0.02) // no output for error derivative (Upper Limit 0.2)
     );
 
-    public static final Shooter m_Right_Shooter = new Shooter(35, "Right", new Slot0Configs()
+    public static final Shooter m_Right_Shooter = new Shooter(35, "Right", 
+        new Slot0Configs()
             .withKV(0.1224) // A velocity target of 1 rps results in 0.1274 V output
             .withKA(0.1044) // An acceleration of 1 rps/s requires 0.01 V output
             .withKS(0.30) // Add 0.25 V output to overcome static friction
@@ -71,14 +73,14 @@ public class RobotContainer {
     public static final PowerDistribution m_PDH = new PowerDistribution(1, PowerDistribution.ModuleType.kRev);
     public static final AprilTagHandler m_AprilTagHandler = new AprilTagHandler();
 
-    private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond) * 0.3; // kSpeedAt12Volts desired top
+    private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top
                                                                                         // speed
     private double MaxAngularRate = RotationsPerSecond.of(1).in(RadiansPerSecond); // 1/2 of a rotation per second max
                                                                                    // angular velocity
 
     /* Setting up bindings for necessary control of the swerve m_drive platform */
     private final SwerveRequest.FieldCentricFacingAngle m_drive = new SwerveRequest.FieldCentricFacingAngle()
-            .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.01)
+            .withDeadband(MaxSpeed * 0.01).withRotationalDeadband(MaxAngularRate * 0.01)
             .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for m_drive motors
 
     private final Telemetry logger = new Telemetry(MaxSpeed);
@@ -102,8 +104,13 @@ public class RobotContainer {
                 // Drivetrain will execute this command periodically
                 m_drivetrain.applyRequest(() -> {
                     var baseDrive = m_drive
-                            .withVelocityX(-m_controller.getLeftY() * MaxSpeed) // Drive forward with negative Y (forward)
-                            .withVelocityY(-m_controller.getLeftX() * MaxSpeed); // Drive left with negative X (left)
+                            .withVelocityX( 
+                                m_controller.getLeftY() > 0 ? 
+                                    -Math.pow(m_controller.getLeftY(), 2) * MaxSpeed : 
+                                    Math.pow(m_controller.getLeftY(), 2) * MaxSpeed) // Drive forward with negative Y (forward)
+                            .withVelocityY(m_controller.getLeftX() > 0 ? 
+                                    -Math.pow(m_controller.getLeftX(), 2) * MaxSpeed : 
+                                    Math.pow(m_controller.getLeftX(), 2) * MaxSpeed); // Drive left with negative X (left)
                 
                     SmartDashboard.putBoolean("Hub Snap Toggle", isHubSnappingOn);
 
@@ -115,7 +122,7 @@ public class RobotContainer {
                 } else {
                     double rightJoyStick = Math.abs(m_controller.getRightX()) < 0.1 ? 0 : m_controller.getRightX() ;
                     return baseDrive
-                        .withTargetRateFeedforward(MaxAngularRate * rightJoyStick)
+                        .withTargetRateFeedforward(MaxAngularRate * -   rightJoyStick)
                         .withHeadingPID(0,0,0); 
                 }
             })
@@ -134,7 +141,7 @@ public class RobotContainer {
         // Sequential Commands
         m_shooter_controller.a().onTrue(m_pivot.pivotDown()); 
         m_shooter_controller.a().onFalse(m_pivot.stop()); 
-        m_shooter_controller.leftBumper().onTrue(m_pivot.pivotChooChoo());
+        m_shooter_controller.leftBumper().onTrue(pivotChooChoo());
 
         m_shooter_controller.y().onTrue(m_pivot.pivotUp()); 
         m_shooter_controller.y().onFalse(m_pivot.stop());
@@ -180,12 +187,16 @@ public class RobotContainer {
         // Named Commands for FRC Pathplaner
         NamedCommands.registerCommand("Turn on Intake", m_Intake.intake());
         NamedCommands.registerCommand("Stop Intake", m_Intake.stop());
-        NamedCommands.registerCommand("Toggle Shooter with Speed", toggleShooterWithSpeed(50));
-        NamedCommands.registerCommand("Start Feed", m_Feed.intake());
-        NamedCommands.registerCommand("Stop Feed", m_Feed.stop());
+        NamedCommands.registerCommand("Toggle Shooter with Speed", toggleShooterWithSpeed(51));
+        NamedCommands.registerCommand("Start Feed", feedOn());
+        NamedCommands.registerCommand("Stop Feed", feedOff());  
+        NamedCommands.registerCommand("Intake Down", m_pivot.pivotDown());
+        NamedCommands.registerCommand("Stop Pivot", m_pivot.stop());
+        NamedCommands.registerCommand("Turn and Shoot", turnAndShoot());
+        NamedCommands.registerCommand("Burp Balls", pivotChooChoo());
     }
 
-    /**
+    /**     
      * Toggles all three shooters in parralel
      * 
      * @return ParallelCommandGroup
@@ -224,8 +235,8 @@ public class RobotContainer {
     /**
      * Intakes the balls using the using the intake motor
      * 
-     * @version 2.0
-     * @since version 2.0 the command no longer uses the indexer to help intake
+     * @version 2
+     * @since version 2, the command no longer uses the indexer to help intake
      * @return ParallelCommandGroup
      */
     private Command toggleIntaking() {
@@ -236,8 +247,8 @@ public class RobotContainer {
     /**
      * Intakes the balls using the using the intake motor
      * 
-     * @version 2.0
-     * @since version 2.0 the command no longer uses the indexer to help outtake
+     * @version 2
+     * @since version 2, the command no longer uses the indexer to help outtake
      * @return ParallelCommandGroup
      */
     private Command toggleOuttaking() {
@@ -279,6 +290,24 @@ public class RobotContainer {
                 m_Right_Shooter.changeShooterSpeedDifference(difference));
     }
 
+    public Command pivotChooChoo() {
+        return new SequentialCommandGroup(
+            m_Intake.intake(),
+            new ParallelRaceGroup(
+                m_pivot.pivotUp(),
+                new WaitCommand(0.4)
+            ),
+            new ParallelRaceGroup(
+                m_pivot.stop(),
+                new WaitCommand(0.2)
+            ),
+            new ParallelRaceGroup(
+                m_pivot.pivotDown(),
+                new WaitCommand(0.3)
+            ),
+            m_pivot.stop()
+        );
+    }
     public Command stopPushingIntake() {
         return new ParallelCommandGroup(
                 m_pivot.stop(),

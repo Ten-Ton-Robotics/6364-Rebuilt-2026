@@ -1,0 +1,77 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 7.5971897289586305,
+        "y": 2.747603423680457
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 8.59718972895863,
+        "y": 2.7476034236804576
+      },
+      "isLocked": false,
+      "linkedName": "HS Ball Collection End"
+    },
+    {
+      "anchor": {
+        "x": 3.3783146067415726,
+        "y": 2.598067415730337
+      },
+      "prevControl": {
+        "x": 2.3783146067415726,
+        "y": 2.598067415730337
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.5,
+      "rotationDegrees": 0.0
+    },
+    {
+      "waypointRelativePos": 0.7808630393996212,
+      "rotationDegrees": 0.0
+    }
+  ],
+  "constraintZones": [
+    {
+      "name": "Ramp",
+      "minWaypointRelativePos": 0.44449339207047617,
+      "maxWaypointRelativePos": 0.7511013215859004,
+      "constraints": {
+        "maxVelocity": 1.4,
+        "maxAcceleration": 3.0,
+        "maxAngularVelocity": 360.0,
+        "maxAngularAcceleration": 180.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    }
+  ],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 360.0,
+    "maxAngularAcceleration": 180.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": -129.844
+  },
+  "reversed": false,
+  "folder": "Montreal",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 107.90444750624823
+  },
+  "useDefaultConstraints": true
+}

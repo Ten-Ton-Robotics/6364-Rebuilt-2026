@@ -8,68 +8,55 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.0437049845621087,
-        "y": 2.055748367685362
+        "x": 3.220033141299629,
+        "y": 2.1462347427360515
       },
       "isLocked": false,
       "linkedName": "Human Player Shoot Spot"
     },
     {
       "anchor": {
-        "x": 3.5862054208273886,
-        "y": 2.42413694721826
+        "x": 6.238630527817403,
+        "y": 2.0
       },
       "prevControl": {
-        "x": 2.3613714691618117,
-        "y": 2.0560985921063897
+        "x": 4.777655713938529,
+        "y": 3.0395397714138133
       },
       "nextControl": {
-        "x": 4.265307902130916,
-        "y": 2.6281937990319015
+        "x": 7.584251069900143,
+        "y": 1.042539229671898
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 6.80793152639087,
-        "y": 2.5405848787446508
+        "x": 7.5971897289586305,
+        "y": 0.8068045649072757
       },
       "prevControl": {
-        "x": 7.056760359460953,
-        "y": 2.5647553531500273
+        "x": 7.661883024251068,
+        "y": 0.4703994293865923
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "HS Center"
+      "linkedName": "HS Ramp End Point"
     }
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.5445821671331481,
-      "rotationDegrees": 0.0
+      "waypointRelativePos": 0.9770078740157426,
+      "rotationDegrees": -179.45402662520596
     }
   ],
   "constraintZones": [
     {
-      "name": "Ramp Zone",
-      "minWaypointRelativePos": 0.9074949358541523,
-      "maxWaypointRelativePos": 1.4854827819041414,
+      "name": "Ramp",
+      "minWaypointRelativePos": 0.2928057553956836,
+      "maxWaypointRelativePos": 1.277302943969611,
       "constraints": {
         "maxVelocity": 1.4,
-        "maxAcceleration": 1.0,
-        "maxAngularVelocity": 180.0,
-        "maxAngularAcceleration": 180.0,
-        "nominalVoltage": 12.0,
-        "unlimited": false
-      }
-    },
-    {
-      "name": "Ball Zone",
-      "minWaypointRelativePos": 1.5935178933153191,
-      "maxWaypointRelativePos": 2.0,
-      "constraints": {
-        "maxVelocity": 0.5,
         "maxAcceleration": 3.0,
         "maxAngularVelocity": 360.0,
         "maxAngularAcceleration": 180.0,
@@ -89,11 +76,11 @@
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 0,
-    "rotation": 0.0
+    "velocity": 0.5,
+    "rotation": 113.33404127670958
   },
   "reversed": false,
-  "folder": "PRC",
+  "folder": "Montreal",
   "idealStartingState": {
     "velocity": 0,
     "rotation": -137.0

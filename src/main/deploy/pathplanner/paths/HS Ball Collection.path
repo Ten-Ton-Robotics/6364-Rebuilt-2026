@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.5,
-        "y": 6.0
+        "x": 7.5971897289586305,
+        "y": 0.8068045649072757
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.5,
-        "y": 6.0
+        "x": 7.576986053689549,
+        "y": 2.0759795194562694
       },
-      "isLocked": true,
-      "linkedName": null
+      "isLocked": false,
+      "linkedName": "HS Ramp End Point"
     },
     {
       "anchor": {
-        "x": 2.8,
-        "y": 6.0
+        "x": 7.5971897289586305,
+        "y": 2.747603423680457
       },
       "prevControl": {
-        "x": 1.7999999999999998,
-        "y": 6.0
+        "x": 7.61738835449734,
+        "y": 2.0921505707324757
       },
       "nextControl": null,
-      "isLocked": true,
-      "linkedName": "Depot Shoot Spot"
+      "isLocked": false,
+      "linkedName": "HS Ball Collection End"
     }
   ],
   "rotationTargets": [],
@@ -33,7 +33,7 @@
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 3.0,
+    "maxVelocity": 1.5,
     "maxAcceleration": 3.0,
     "maxAngularVelocity": 360.0,
     "maxAngularAcceleration": 180.0,
@@ -42,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 133.0
+    "rotation": 107.90444750624823
   },
   "reversed": false,
-  "folder": "PRC",
+  "folder": "Montreal",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 135.0
+    "rotation": 113.334
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }
