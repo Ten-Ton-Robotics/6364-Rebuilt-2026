@@ -22,8 +22,8 @@ public class Intake extends SubsystemBase {
     private static final CANBus kMotorBus = new CANBus("CANCAN");
 
     private static final int kMotorID = 34; //Get motor ID from TunerX put that one here
-    private static double TargetSpeed = 75; 
-    private static double MaxSpeed = 75;
+    private static double TargetSpeed = 85; 
+    private static double MaxSpeed = 85;
 
     // Motor
     private final TalonFX m_motor = new TalonFX(kMotorID, kMotorBus);

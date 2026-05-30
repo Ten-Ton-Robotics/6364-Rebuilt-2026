@@ -73,7 +73,7 @@ public class RobotContainer {
     public static final PowerDistribution m_PDH = new PowerDistribution(1, PowerDistribution.ModuleType.kRev);
     public static final AprilTagHandler m_AprilTagHandler = new AprilTagHandler();
 
-    private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top
+    private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond) * 0.3; // kSpeedAt12Volts desired top
                                                                                         // speed
     private double MaxAngularRate = RotationsPerSecond.of(1).in(RadiansPerSecond); // 1/2 of a rotation per second max
                                                                                    // angular velocity
@@ -136,7 +136,7 @@ public class RobotContainer {
         m_drivetrain.getCurrentCommand();
 
         // Hub Snapping
-        m_controller.a().onTrue(toggleSnappingToHub());;
+        m_controller.a().onTrue(toggleSnappingToHub());
 
         // Sequential Commands
         m_shooter_controller.a().onTrue(m_pivot.pivotDown()); 
