@@ -175,13 +175,6 @@ public class RobotContainer {
         //Shoot
         m_shooter_controller.rightBumper().onTrue(turnAndShoot());
 
-        // Run SysId routines when holding back/start and X/Y.
-        // Note that each routine should be run exactly once in a single log.
-        // m_controller.back().and(m_controller.y()).whileTrue(m_drivetrain.sysIdDynamic(Direction.kForward));
-        // m_controller.back().and(m_controller.x()).whileTrue(m_drivetrain.sysIdDynamic(Direction.kReverse));
-        // m_controller.start().and(m_controller.y()).whileTrue(m_drivetrain.sysIdQuasistatic(Direction.kForward));
-        // m_controller.start().and(m_controller.x()).whileTrue(m_drivetrain.sysIdQuasistatic(Direction.kReverse));
-
         m_drivetrain.registerTelemetry(logger::telemeterize);
 
         // Named Commands for FRC Pathplaner
