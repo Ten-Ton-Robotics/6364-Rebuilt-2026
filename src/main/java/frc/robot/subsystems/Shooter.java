@@ -213,4 +213,13 @@ public class Shooter extends SubsystemBase {
         });
     }
 
+
+
+    public Command setMotorSpeed(DoubleSupplier speedSupplier){
+       return this.runOnce(() -> {
+        m_output.Velocity = speedCap(speedSupplier.getAsDouble());
+        m_motor.setControl(m_output);
+       }
+       );
+    }
 }

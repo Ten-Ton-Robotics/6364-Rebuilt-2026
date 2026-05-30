@@ -19,9 +19,11 @@ import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
+import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -151,7 +153,7 @@ public class RobotContainer {
         m_controller.x().onTrue(toggleShooting());
 
         //Shooter Set Speed 
-        m_shooter_controller.b().onTrue(changeRecommendedPower()); 
+        m_shooter_controller.b().onTrue(updateData()); 
         m_controller.povUp().onTrue(toggleShooterWithSpeed(50)); 
 
         // Shooter speed control
@@ -173,7 +175,7 @@ public class RobotContainer {
         m_controller.leftBumper().onTrue(toggleOuttaking());
 
         //Shoot
-        m_shooter_controller.rightBumper().onTrue(turnAndShoot());
+        m_shooter_controller.rightBumper().onTrue(turnAndShootToggle());
 
         m_drivetrain.registerTelemetry(logger::telemeterize);
 
@@ -330,12 +332,37 @@ public class RobotContainer {
                 m_Right_Shooter.toggleWithSetShooterSpeed(Speed));
     }
 
+    private Command setShooterSpeed(DoubleSupplier speedSupplier){
+        return new ParallelCommandGroup(
+                m_Left_Shooter.setMotorSpeed(speedSupplier), 
+                m_Middle_Shooter.setMotorSpeed(speedSupplier),
+                m_Right_Shooter.setMotorSpeed(speedSupplier));
+    }
+
     private Command turnAndShoot(){
         return new SequentialCommandGroup(
             toggleSnappingToHub(), 
             toggleShooterWithSpeed(()-> FieldUtil.getPowerFromRange()) 
         );
     }
+
+    private Command turnAndShootToggle(){
+        return new SequentialCommandGroup(
+            toggleSnappingToHub()
+            //new ConditionalCommand(new RepeatCommand(updateData()), setShooterSpeed(() -> 0), () -> !isHubSnappingOn)
+            ); 
+    }
+
+    private InstantCommand updateData(){
+        return new InstantCommand(() -> {
+                hubTargetAngle = FieldUtil.getAngleToHub();
+                FieldUtil.GetHubDistance(); 
+                setShooterSpeed(()-> FieldUtil.getPowerFromRange());
+        });
+    }
+ 
+
+
     /**
      * Sets the speed of all three shooters by a supplied double
      * 
