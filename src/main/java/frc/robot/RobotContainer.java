@@ -23,7 +23,6 @@ import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
-import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -310,13 +309,6 @@ public class RobotContainer {
                 m_Indexer.stop());
     }
 
-    private Command changeRecommendedPower() {
-        return new InstantCommand(() -> {
-            DoubleSupplier recommendedPowerSup = () -> FieldUtil.getPowerFromRange();
-            toggleShooterWithSpeed(recommendedPowerSup);
-        });
-    }
-
     private Command toggleSnappingToHub() {
         return new InstantCommand(() -> {
             hubTargetAngle = FieldUtil.getAngleToHub();
@@ -350,7 +342,7 @@ public class RobotContainer {
     private Command turnAndShootToggle(){
         return new SequentialCommandGroup(
             toggleSnappingToHub(),
-            new ConditionalCommand( new PrintCommand("Snapping on"), new PrintCommand("Snapping Off"), () -> isHubSnappingOn)
+            new ConditionalCommand(new RepeatCommand(setShooterSpeed(()-> FieldUtil.getPowerFromRange())).until(() -> isHubSnappingOn), setShooterSpeed(() -> 0.0), () -> isHubSnappingOn)
             //new ConditionalCommand(new RepeatCommand(updateData()), setShooterSpeed(() -> 0), () -> !isHubSnappingOn)
             ); 
     }
