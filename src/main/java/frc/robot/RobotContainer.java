@@ -23,6 +23,7 @@ import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -118,7 +119,7 @@ public class RobotContainer {
 
                 if (isHubSnappingOn) {
                     return baseDrive
-                        .withTargetDirection(hubTargetAngle)
+                        .withTargetDirection(FieldUtil.getAngleToHub())
                         .withHeadingPID(7, 0, 0) //7 is figured experimentally 
                         .withMaxAbsRotationalRate(MaxAngularRate);
                 } else {
@@ -348,7 +349,8 @@ public class RobotContainer {
 
     private Command turnAndShootToggle(){
         return new SequentialCommandGroup(
-            toggleSnappingToHub()
+            toggleSnappingToHub(),
+            new ConditionalCommand( new PrintCommand("Snapping on"), new PrintCommand("Snapping Off"), () -> isHubSnappingOn)
             //new ConditionalCommand(new RepeatCommand(updateData()), setShooterSpeed(() -> 0), () -> !isHubSnappingOn)
             ); 
     }
