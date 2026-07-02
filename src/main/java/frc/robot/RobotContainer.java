@@ -154,7 +154,6 @@ public class RobotContainer {
 
         //Shooter Set Speed 
         m_shooter_controller.b().onTrue(updateData()); 
-        m_controller.povUp().onTrue(toggleShooterWithSpeed(50)); 
 
         // Shooter speed control
         m_shooter_controller.povUp().onTrue(changeShooterSpeed(true));
@@ -172,7 +171,9 @@ public class RobotContainer {
 
         // Intake
         m_controller.rightBumper().onTrue(toggleIntaking());
+        m_shooter_controller.b().onTrue(toggleIntaking());
         m_controller.leftBumper().onTrue(toggleOuttaking());
+
 
         //Shoot
         m_shooter_controller.rightBumper().onTrue(turnAndShootToggle());
