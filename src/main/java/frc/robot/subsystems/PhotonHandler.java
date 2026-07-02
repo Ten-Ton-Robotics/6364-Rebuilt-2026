@@ -82,7 +82,7 @@ import org.photonvision.targeting.PhotonTrackedTarget;
          latestResults = camera.getAllUnreadResults();
 
          for (var change : latestResults) {
-             visionEst = photonEstimator.estimateLowestAmbiguityPose(change);
+             visionEst = photonEstimator.estimateCoprocMultiTagPose(change);
              updateEstimationStdDevs(visionEst, change.getTargets());
  
              if (Robot.isSimulation()) {
