@@ -176,7 +176,7 @@ public class RobotContainer {
 
 
         //Shoot
-        m_shooter_controller.rightBumper().onTrue(turnAndShootToggle());
+        m_shooter_controller.rightBumper().onTrue(turnAndConstantlyAdjustAim());
 
         m_drivetrain.registerTelemetry(logger::telemeterize);
 
@@ -188,7 +188,7 @@ public class RobotContainer {
         NamedCommands.registerCommand("Stop Feed", feedOff());  
         NamedCommands.registerCommand("Intake Down", m_pivot.pivotDown());
         NamedCommands.registerCommand("Stop Pivot", m_pivot.stop());
-        NamedCommands.registerCommand("Turn and Shoot", turnAndShoot());
+        NamedCommands.registerCommand("Turn and Shoot", turnAndSetAimOnce());
         NamedCommands.registerCommand("Burp Balls", pivotChooChoo());
     }
 
@@ -333,18 +333,31 @@ public class RobotContainer {
                 m_Right_Shooter.setMotorSpeed(speedSupplier));
     }
 
-    private Command turnAndShoot(){
+     /**
+     *  Toggle snapping to hub and set the power once. 
+     * 
+     * @return SequentialCommandGroup
+     */
+    private Command turnAndSetAimOnce(){
         return new SequentialCommandGroup(
             toggleSnappingToHub(), 
             toggleShooterWithSpeed(()-> FieldUtil.getPowerFromRange()) 
         );
     }
 
-    private Command turnAndShootToggle(){
+ /**
+     * Toggles snapping to hub and constantly updating the power of the shooters. 
+     * 
+     * @return SequentialCommandGroup
+     */
+    private Command turnAndConstantlyAdjustAim(){
         return new SequentialCommandGroup(
             toggleSnappingToHub(),
-            new ConditionalCommand(new RepeatCommand(setShooterSpeed(()-> FieldUtil.getPowerFromRange())).until(() -> isHubSnappingOn), setShooterSpeed(() -> 0.0), () -> isHubSnappingOn)
-            //new ConditionalCommand(new RepeatCommand(updateData()), setShooterSpeed(() -> 0), () -> !isHubSnappingOn)
+            new ConditionalCommand(
+                new RepeatCommand( //Sets shooter speed until isHubSnappingSpeed is off and then stops the shooter
+                setShooterSpeed(()-> FieldUtil.getPowerFromRange())).until(() -> !isHubSnappingOn), //OnTrue command
+                setShooterSpeed(() -> 0.0), //OnFalse command
+                () -> isHubSnappingOn) //Condition 
             ); 
     }
 
