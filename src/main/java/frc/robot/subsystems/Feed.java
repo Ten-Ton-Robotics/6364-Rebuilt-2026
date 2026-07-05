@@ -57,7 +57,7 @@ public class Feed extends SubsystemBase {
 
     // Commands
     public Command intake() {
-        return this.run(() -> {
+        return this.runOnce(() -> {
             setMotorSpeed(TargetSpeed);
         });
     }
