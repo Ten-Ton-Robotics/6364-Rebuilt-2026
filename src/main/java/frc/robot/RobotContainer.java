@@ -75,7 +75,7 @@ public class RobotContainer {
     public static final PowerDistribution m_PDH = new PowerDistribution(1, PowerDistribution.ModuleType.kRev);
     public static final AprilTagHandler m_AprilTagHandler = new AprilTagHandler();
 
-    private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond) * 0.3; // kSpeedAt12Volts desired top
+    private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond) * 0.6; // kSpeedAt12Volts desired top
                                                                                         // speed
     private double MaxAngularRate = RotationsPerSecond.of(1).in(RadiansPerSecond); // 1/2 of a rotation per second max
                                                                                    // angular velocity
@@ -173,10 +173,13 @@ public class RobotContainer {
         m_controller.rightBumper().onTrue(toggleIntaking());
         m_shooter_controller.b().onTrue(toggleIntaking());
         m_controller.leftBumper().onTrue(toggleOuttaking());
+        
 
 
         //Shoot
-        m_shooter_controller.rightBumper().onTrue(turnAndConstantlyAdjustAim());
+        m_shooter_controller.rightBumper().onTrue(toggleSnappingToHub());
+        m_shooter_controller.rightBumper().onTrue(constantlyAdjustAim());
+        
 
         m_drivetrain.registerTelemetry(logger::telemeterize);
 
@@ -345,20 +348,17 @@ public class RobotContainer {
         );
     }
 
+
  /**
-     * Toggles snapping to hub and constantly updating the power of the shooters. 
+     * Toggles constantly updating the power of the shooters. 
      * 
-     * @return SequentialCommandGroup
+     * @return ParallelCommandGroup
      */
-    private Command turnAndConstantlyAdjustAim(){
-        return new SequentialCommandGroup(
-            toggleSnappingToHub(),
-            new ConditionalCommand(
-                new RepeatCommand( //Sets shooter speed until isHubSnappingSpeed is off and then stops the shooter
-                setShooterSpeed(()-> FieldUtil.getPowerFromRange())).until(() -> !isHubSnappingOn), //OnTrue command
+    private Command constantlyAdjustAim(){
+        return new ConditionalCommand( //Sets shooter speed until isHubSnappingSpeed is off and then stops the shooter
+                setShooterSpeed(()-> FieldUtil.getPowerFromRange()), //OnTrue command
                 setShooterSpeed(() -> 0.0), //OnFalse command
-                () -> isHubSnappingOn) //Condition 
-            ); 
+                () -> isHubSnappingOn).repeatedly(); //Condition  
     }
 
     private InstantCommand updateData(){
